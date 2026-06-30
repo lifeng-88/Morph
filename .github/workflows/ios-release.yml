@@ -31,18 +31,23 @@ defaults:
 
 jobs:
   release:
-    runs-on: macos-15
+    runs-on: macos-26
     timeout-minutes: 60
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Select Xcode
-        run: sudo xcode-select -s /Applications/Xcode.app
-
-      - name: Show Xcode version
-        run: xcodebuild -version
+      - name: Select Xcode 26.5
+        run: |
+          if [[ ! -d /Applications/Xcode_26.5.app ]]; then
+            echo "::error::未找到 Xcode 26.5，App Store 要求 iOS 26 SDK"
+            ls /Applications | grep Xcode || true
+            exit 1
+          fi
+          sudo xcode-select -s /Applications/Xcode_26.5.app/Contents/Developer
+          xcodebuild -version
+          xcodebuild -showsdks | grep iphoneos
 
       - name: Resolve Marketing Version
         id: version

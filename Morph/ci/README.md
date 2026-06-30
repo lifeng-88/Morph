@@ -14,6 +14,8 @@
 
 无需 `.p12` 证书：使用 **Automatic Signing** + **App Store Connect API Key**。
 
+> **Runner 要求**：App Store Connect 现要求 **iOS 26 SDK（Xcode 26+）**。Workflow 使用 `macos-26` 并固定 `Xcode_26.5.app`。
+
 ---
 
 ## 一、Apple 后台准备
@@ -86,6 +88,7 @@ Workflow 只负责上传构建。还需在 App Store Connect：
 | `No profiles for 'com.morph.net'` | 确认 `APPLE_TEAM_ID` 正确；重新 Run workflow |
 | Build Number 重复 | 重新 Run（CI 自动 Connect 最新 +1）或手动填更大 build_number |
 | Bundle ID 不匹配 | 工程须为 `com.morph.net` |
+| SDK version issue (iOS 18.x) | 确认 workflow 使用 `macos-26` + `Xcode_26.5.app` |
 
 ---
 
