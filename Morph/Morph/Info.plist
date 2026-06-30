@@ -44,14 +44,14 @@
 	<string></string>
 	<key>MORPH_B_SIDE_URL</key>
 	<string>https://glamvid.xin/h5/landing?channel=IOS10065</string>
-	<key>ResBaseURL</key>
-	<string>https://res.glamvid.xin</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Morph needs camera access to capture your reference photo.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Morph needs access to save your AI transformation results.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Morph needs access to your photos for face swap transformations.</string>
+	<key>ResBaseURL</key>
+	<string>https://res.glamvid.xin</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

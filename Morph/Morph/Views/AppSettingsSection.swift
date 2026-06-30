@@ -24,12 +24,6 @@ struct AppSettingsSection: View {
             VStack(spacing: 0) {
                 settingsRow(title: L10n.settingsVersion, value: appVersion)
                 divider
-                settingsRow(
-                    title: L10n.settingsAPIStatus,
-                    value: MorphAPIConfig.isConfigured ? L10n.settingsAPIConnected : L10n.settingsAPILocal,
-                    valueColor: MorphAPIConfig.isConfigured ? MorphColors.success : MorphColors.tertiary
-                )
-                divider
                 Button {
                     restorePurchases()
                 } label: {
