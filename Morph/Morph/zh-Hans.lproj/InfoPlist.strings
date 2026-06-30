@@ -1,0 +1,4 @@
+CFBundleDisplayName = "Morph";
+NSPhotoLibraryAddUsageDescription = "Morph 需要访问权限以保存 AI 变换结果。";
+NSPhotoLibraryUsageDescription = "Morph 需要访问您的照片以进行换脸变换。";
+NSCameraUsageDescription = "Morph 需要相机权限以拍摄参考照片。";

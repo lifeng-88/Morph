@@ -1,0 +1,180 @@
+{
+  "identifier" : "A1000001",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "4.99",
+      "familyShareable" : false,
+      "internalID" : "6670000201",
+      "localizations" : [
+        {
+          "description" : "20 coins for AI transformations",
+          "displayName" : "20 Coins",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.morph.app.coins_20",
+      "referenceName" : "20 Coins",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "9.99",
+      "familyShareable" : false,
+      "internalID" : "6670000202",
+      "localizations" : [
+        {
+          "description" : "50 coins for AI transformations",
+          "displayName" : "40+10 Coins",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.morph.app.coins_40",
+      "referenceName" : "40+10 Coins",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "19.99",
+      "familyShareable" : false,
+      "internalID" : "6670000203",
+      "localizations" : [
+        {
+          "description" : "120 coins for AI transformations",
+          "displayName" : "80+40 Coins",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.morph.app.coins_80",
+      "referenceName" : "80+40 Coins",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "49.99",
+      "familyShareable" : false,
+      "internalID" : "6670000204",
+      "localizations" : [
+        {
+          "description" : "340 coins for AI transformations",
+          "displayName" : "200+140 Coins",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.morph.app.coins_200",
+      "referenceName" : "200+140 Coins",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "99.99",
+      "familyShareable" : false,
+      "internalID" : "6670000205",
+      "localizations" : [
+        {
+          "description" : "800 coins for AI transformations",
+          "displayName" : "400+400 Coins",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.morph.app.coins_400",
+      "referenceName" : "400+400 Coins",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "199.99",
+      "familyShareable" : false,
+      "internalID" : "6670000206",
+      "localizations" : [
+        {
+          "description" : "2000 coins for AI transformations",
+          "displayName" : "800+1200 Coins",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.morph.app.coins_800",
+      "referenceName" : "800+1200 Coins",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "299.99",
+      "familyShareable" : false,
+      "internalID" : "6670000207",
+      "localizations" : [
+        {
+          "description" : "3600 coins for AI transformations",
+          "displayName" : "1200+2400 Coins",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.morph.app.coins_1200",
+      "referenceName" : "1200+2400 Coins",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "0.99",
+      "familyShareable" : false,
+      "internalID" : "6670000101",
+      "localizations" : [
+        {
+          "description" : "100 coins for AI transformations",
+          "displayName" : "Starter Pack",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.morph.app.coins.starter",
+      "referenceName" : "Starter Coins",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "2.99",
+      "familyShareable" : false,
+      "internalID" : "6670000102",
+      "localizations" : [
+        {
+          "description" : "300 coins for AI transformations",
+          "displayName" : "Popular Pack",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.morph.app.coins.popular",
+      "referenceName" : "Popular Coins",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "6.99",
+      "familyShareable" : false,
+      "internalID" : "6670000103",
+      "localizations" : [
+        {
+          "description" : "800 coins for AI transformations",
+          "displayName" : "Pro Pack",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.morph.app.coins.pro",
+      "referenceName" : "Pro Coins",
+      "type" : "Consumable"
+    }
+  ],
+  "settings" : {
+    "_failTransactionsEnabled" : false,
+    "_storeKitErrors" : [
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Load Products"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Purchase"
+      }
+    ]
+  },
+  "subscriptionGroups" : [
+
+  ],
+  "version" : {
+    "major" : 4,
+    "minor" : 0
+  }
+}

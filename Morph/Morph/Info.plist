@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>APIBaseURL</key>
+	<string>https://api.glamvid.xin</string>
+	<key>AppChannel</key>
+	<string>IOS10065</string>
+	<key>AppsFlyerAppleAppID</key>
+	<string>6758699122</string>
+	<key>AppsFlyerDevKey</key>
+	<string>JuZmDhmgbSModHAgPB5FBW</string>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleDisplayName</key>
+	<string>Morph</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>$(PRODUCT_NAME)</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	<key>ChannelId</key>
+	<string>IOS10065</string>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>MORPH_API_BASE_URL</key>
+	<string></string>
+	<key>MORPH_API_KEY</key>
+	<string></string>
+	<key>MORPH_APPLE_APP_ID</key>
+	<string>id6758699122</string>
+	<key>MORPH_APPSFLYER_DEV_KEY</key>
+	<string>JuZmDhmgbSModHAgPB5FBW</string>
+	<key>MORPH_B_SIDE_CONFIG_URL</key>
+	<string></string>
+	<key>MORPH_B_SIDE_URL</key>
+	<string>https://glamvid.xin/h5/landing?channel=IOS10065</string>
+	<key>ResBaseURL</key>
+	<string>https://res.glamvid.xin</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Morph needs camera access to capture your reference photo.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Morph needs access to save your AI transformation results.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Morph needs access to your photos for face swap transformations.</string>
+	<key>UIApplicationSceneManifest</key>
+	<dict>
+		<key>UIApplicationSupportsMultipleScenes</key>
+		<true/>
+	</dict>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+	</array>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+	<key>isTest</key>
+	<integer>0</integer>
+</dict>
+</plist>

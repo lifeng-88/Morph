@@ -1,0 +1,199 @@
+/* App */
+"app.name" = "Morph";
+
+/* Tabs */
+"tab.home" = "Home";
+"tab.templates" = "Templates";
+"tab.draw" = "Draw";
+"tab.my" = "My";
+
+/* Draw */
+"draw.hint" = "Draw freely with your finger or Apple Pencil";
+"draw.select_brush.hint" = "Select a brush color to start drawing";
+"draw.cancel_brush" = "Cancel Brush";
+"draw.clear" = "Clear";
+"draw.save" = "Save";
+"draw.creation" = "Sketch";
+"draw.smart.title" = "Smart Draw";
+"draw.smart.subtitle" = "Pick a reference photo and generate art in sketch, anime, chibi, or other styles.";
+"draw.smart.pick" = "Reference";
+"draw.smart.generate" = "Generate";
+"draw.smart.processing" = "Creating your artwork…";
+"draw.smart.failed" = "Could not generate the drawing. Please try another photo.";
+"draw.restore.initial" = "Restore Generated";
+"draw.zoom.in" = "Zoom In";
+"draw.zoom.out" = "Zoom Out";
+"draw.zoom.reset" = "Reset Zoom";
+"draw.style.sketch" = "Pencil Sketch";
+"draw.style.ink" = "Ink Lines";
+"draw.style.neon" = "Neon Glow";
+"draw.style.watercolor" = "Watercolor";
+"draw.style.anime" = "Anime";
+"draw.style.chibi" = "Chibi";
+"draw.fullscreen" = "Full Screen";
+"draw.exit_fullscreen" = "Exit";
+"draw.fullscreen.hint" = "Immersive canvas · tap to show or hide tools";
+"draw.brush.size" = "Brush Size";
+"draw.color.custom" = "Custom Color";
+"draw.color.hex" = "Color %@";
+"draw.fullscreen.tools" = "Tools";
+"draw.fullscreen.immersive" = "Tap brush icon for colors & size";
+
+/* Home */
+"home.hero.title" = "Digital Metamorphosis";
+"home.hero.subtitle" = "Elevate your identity through AI. Upload your reference photo to begin the swap.";
+"home.continue.title" = "Continue Metamorphosis";
+"home.continue.subtitle" = "Your photo is ready — pick a template";
+"home.recent.title" = "Recent Creations";
+"home.upload_photo" = "Upload Reference Photo";
+"guide.best_results" = "Best Results";
+"guide.pro_tips" = "Pro Tips";
+"guide.good_reference" = "Good Upload Reference";
+"guide.select_gallery" = "Select from Gallery";
+"tip.front_facing.title" = "Front-facing only";
+"tip.front_facing.subtitle" = "Look directly at the camera for best feature mapping.";
+"tip.lighting.title" = "Even lighting";
+"tip.lighting.subtitle" = "Avoid harsh shadows or backlighting on your face.";
+"tip.no_covering.title" = "No face coverings";
+"tip.no_covering.subtitle" = "Keep hair, hats, and sunglasses away from facial features.";
+
+/* Templates */
+"templates.title" = "Templates";
+"templates.header.title" = "Timeless Elegance";
+"templates.header.subtitle" = "Refined and sophisticated portrait templates inspired by classical photography. Perfect for professional headshots and high-fashion transformations.";
+"templates.header.classic.title" = "Timeless Elegance";
+"templates.header.classic.subtitle" = "Refined portrait templates inspired by classical photography and high-fashion editorials.";
+"templates.header.cyberpunk.title" = "Neon Future";
+"templates.header.cyberpunk.subtitle" = "High-contrast cyberpunk aesthetics with electric glow and digital edge.";
+"templates.header.goddess.title" = "Divine Radiance";
+"templates.header.goddess.subtitle" = "Ethereal goddess-inspired looks with luminous skin and celestial aura.";
+"templates.header.anime.title" = "Anime Dimension";
+"templates.header.anime.subtitle" = "Stylized anime portraits with vibrant colors and expressive features.";
+"category.classic_portraits" = "Classic Portraits";
+"category.cyberpunk" = "Cyberpunk";
+"category.goddess" = "Goddess";
+"category.anime" = "Anime";
+"templates.search" = "Search templates…";
+"templates.load_more" = "Load More";
+"templates.loading_more" = "Loading more…";
+"templates.no_more" = "All templates loaded";
+"templates.empty.category" = "No templates in this category yet.";
+"templates.empty.favorites" = "No favorite templates in this category.";
+"coins.format" = "%lld coins";
+
+/* Template names */
+"template.royal_noir" = "Royal Noir";
+"template.silk_whisper" = "Silk Whisper";
+"template.ceo_core" = "CEO Core";
+"template.vogue_edge" = "Vogue Edge";
+"template.digital_bloom" = "Digital Bloom";
+"template.cyber_monolith" = "Cyber Monolith";
+"template.cyber_glitch" = "Cyber Glitch";
+"template.goddess_celestial" = "Celestial Goddess";
+"template.anime_sakura" = "Sakura Dream";
+"template.anime_neon_dream" = "Neon Dream";
+"template.pearl_glow" = "Pearl Glow";
+"template.ivory_grace" = "Ivory Grace";
+"template.neon_ronin" = "Neon Ronin";
+"template.chrome_phantom" = "Chrome Phantom";
+"template.ethereal_light" = "Ethereal Light";
+"template.moonlit_queen" = "Moonlit Queen";
+"template.cherry_bloom" = "Cherry Bloom";
+"template.pastel_wave" = "Pastel Wave";
+
+/* Confirm */
+"confirm.source_photo" = "Source Photo";
+"confirm.selected_template" = "Selected Template";
+"confirm.processing_settings" = "Processing Settings";
+"confirm.hd_quality" = "HD Quality";
+"confirm.hd_quality.subtitle" = "4K Resolution upscaling";
+"confirm.face_enhancement" = "Face Enhancement";
+"confirm.face_enhancement.subtitle" = "Skin smoothing & micro-expressions";
+"confirm.info" = "Transformation typically takes 30-45 seconds. Results will be saved to your \"My\" gallery.";
+"confirm.start" = "Start Transformation";
+"confirm.change_source" = "Change Source Photo";
+"confirm.take_photo" = "Take Photo";
+"confirm.change_template" = "Choose Another Template";
+
+/* Processing */
+"processing.title" = "Neural Swap in Progress";
+"processing.subtitle" = "Initiating metamorphosis...";
+"processing.subtitle.remote" = "Connecting to AI server...";
+"processing.error.title" = "Transformation Failed";
+"processing.error.no_photo" = "Could not load your source photo.";
+
+/* Result */
+"result.watermark" = "Created with Morph";
+"result.share_title" = "SHARE THE METAMORPHOSIS";
+"result.download" = "Download High Res";
+"result.saving" = "Saving...";
+"result.saved" = "Saved to Gallery";
+"result.try_another" = "Try Another Template";
+"result.share" = "Share";
+"result.share.message" = "Check out my AI metamorphosis created with Morph!";
+
+/* Gallery */
+"gallery.title" = "My Gallery";
+"gallery.empty.title" = "No Transformations Yet";
+"gallery.empty.subtitle" = "Your AI metamorphosis results will appear here.";
+"gallery.browse" = "Browse Templates";
+"gallery.delete" = "Delete";
+"gallery.delete.confirm" = "Remove this creation from your gallery?";
+
+/* Onboarding */
+"onboarding.page1.title" = "Welcome to Morph";
+"onboarding.page1.subtitle" = "Transform your look with AI-powered face swap magic.";
+"onboarding.page2.title" = "Upload Your Photo";
+"onboarding.page2.subtitle" = "Choose a clear front-facing photo for the best results.";
+"onboarding.page3.title" = "Pick & Transform";
+"onboarding.page3.subtitle" = "Browse stunning templates and watch your metamorphosis unfold.";
+"onboarding.next" = "Next";
+"onboarding.skip" = "Skip";
+"onboarding.start" = "Get Started";
+
+/* Settings */
+"settings.general" = "General";
+"settings.version" = "Version";
+"settings.api_status" = "AI Engine";
+"settings.api.connected" = "Cloud API";
+"settings.api.local" = "Local Demo";
+"settings.restore_purchases" = "Restore Purchases";
+"settings.restore.title" = "Restore Complete";
+"settings.restore.message" = "Your App Store purchases have been synced. Consumable coin packs cannot be restored.";
+"settings.language" = "Language";
+"settings.language.hint" = "Changes apply instantly across the app.";
+"settings.language.system" = "System Default";
+"settings.language.english" = "English";
+"settings.language.traditional_chinese" = "Traditional Chinese";
+"settings.language.simplified_chinese" = "Simplified Chinese";
+"settings.appearance" = "Appearance";
+"settings.appearance.hint" = "Choose light, dark, or follow system settings.";
+"settings.appearance.system" = "System Default";
+"settings.appearance.light" = "Light";
+"settings.appearance.dark" = "Dark";
+"settings.bside.title" = "Discover";
+"settings.bside.hint" = "Open the web experience in the app.";
+"settings.bside.open" = "Open Web Version";
+"bside.close" = "Back to App";
+"my.section.gallery" = "My Gallery";
+"my.section.favorites" = "Favorite Templates";
+
+/* Coins */
+"coin_store.title" = "Get Coins";
+"coin_store.balance" = "Current Balance";
+"coin_store.packs" = "Coin Packs";
+"coin_store.recommended" = "Popular";
+"coin_store.product_unavailable" = "This product is currently unavailable.";
+"coin_pack.starter.price" = "Mock · $0.99";
+"coin_pack.popular.price" = "Mock · $2.99";
+"coin_pack.pro.price" = "Mock · $6.99";
+"coins.insufficient.title" = "Not Enough Coins";
+"coins.insufficient.message" = "You need more coins to start this transformation.";
+"coins.insufficient.draw.message" = "You need more coins to generate this artwork.";
+"coins.get" = "Get Coins";
+"coin_store.sandbox_hint" = "Products not loaded — sandbox purchase will still grant coins for testing.";
+
+/* Common */
+"common.cancel" = "Cancel";
+"common.retry" = "Retry";
+"common.done" = "Done";

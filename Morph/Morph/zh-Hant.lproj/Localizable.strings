@@ -1,0 +1,199 @@
+/* App */
+"app.name" = "Morph";
+
+/* Tabs */
+"tab.home" = "首頁";
+"tab.templates" = "模板";
+"tab.draw" = "繪圖";
+"tab.my" = "我的";
+
+/* Draw */
+"draw.hint" = "用手指或 Apple Pencil 自由繪製";
+"draw.select_brush.hint" = "選擇畫筆顏色後開始繪製";
+"draw.cancel_brush" = "取消畫筆";
+"draw.clear" = "清空";
+"draw.save" = "儲存";
+"draw.creation" = "手繪作品";
+"draw.smart.title" = "智能繪圖";
+"draw.smart.subtitle" = "選擇參考圖片，可生成素描、二次元、Q版等多種風格畫作。";
+"draw.smart.pick" = "參考圖";
+"draw.smart.generate" = "智能生成";
+"draw.smart.processing" = "正在生成畫作…";
+"draw.smart.failed" = "生成失敗，請換一張圖片重試。";
+"draw.restore.initial" = "恢復生成圖";
+"draw.zoom.in" = "放大";
+"draw.zoom.out" = "縮小";
+"draw.zoom.reset" = "重置縮放";
+"draw.style.sketch" = "鉛筆素描";
+"draw.style.ink" = "墨線風格";
+"draw.style.neon" = "霓虹描邊";
+"draw.style.watercolor" = "水彩暈染";
+"draw.style.anime" = "二次元";
+"draw.style.chibi" = "Q版";
+"draw.fullscreen" = "滿屏繪畫";
+"draw.exit_fullscreen" = "退出";
+"draw.fullscreen.hint" = "沉浸式畫布 · 點擊可顯示或隱藏工具列";
+"draw.brush.size" = "畫筆大小";
+"draw.color.custom" = "自訂顏色";
+"draw.color.hex" = "色值 %@";
+"draw.fullscreen.tools" = "工具";
+"draw.fullscreen.immersive" = "點擊畫筆圖示調整顏色與粗細";
+
+/* Home */
+"home.hero.title" = "數位蛻變";
+"home.hero.subtitle" = "透過 AI 昇華你的形象。上傳參考照片，開始換臉之旅。";
+"home.continue.title" = "繼續蛻變";
+"home.continue.subtitle" = "照片已就緒，前往選擇模板";
+"home.recent.title" = "最近作品";
+"home.upload_photo" = "上傳參考照片";
+"guide.best_results" = "最佳效果";
+"guide.pro_tips" = "專業提示";
+"guide.good_reference" = "良好上傳範例";
+"guide.select_gallery" = "從相簿選擇";
+"tip.front_facing.title" = "僅限正臉";
+"tip.front_facing.subtitle" = "請直視鏡頭，以獲得最佳面部特徵對應。";
+"tip.lighting.title" = "均勻光線";
+"tip.lighting.subtitle" = "避免臉部出現強烈陰影或背光。";
+"tip.no_covering.title" = "勿遮擋面部";
+"tip.no_covering.subtitle" = "請避免頭髮、帽子或墨鏡遮擋面部特徵。";
+
+/* Templates */
+"templates.title" = "模板";
+"templates.header.title" = "永恆優雅";
+"templates.header.subtitle" = "靈感源自古典攝影的精緻人像模板，適合專業形象照與時尚大片變換。";
+"templates.header.classic.title" = "永恆優雅";
+"templates.header.classic.subtitle" = "靈感源自古典攝影的精緻人像，適合專業形象照與時尚大片。";
+"templates.header.cyberpunk.title" = "霓虹未來";
+"templates.header.cyberpunk.subtitle" = "高對比賽博美学，電光霓虹與數位邊緣感。";
+"templates.header.goddess.title" = "神聖光輝";
+"templates.header.goddess.subtitle" = "空靈女神風造型，光澤肌膚與 celestial 氣場。";
+"templates.header.anime.title" = "動漫次元";
+"templates.header.anime.subtitle" = "風格化動漫人像，鮮豔色彩與生動表情。";
+"category.classic_portraits" = "經典人像";
+"category.cyberpunk" = "賽博龐克";
+"category.goddess" = "女神風";
+"category.anime" = "動漫風";
+"templates.search" = "搜尋模板…";
+"templates.load_more" = "載入更多";
+"templates.loading_more" = "載入中…";
+"templates.no_more" = "已載入全部模板";
+"templates.empty.category" = "此分類尚無模板。";
+"templates.empty.favorites" = "此分類中沒有收藏的模板。";
+"coins.format" = "%lld 枚金幣";
+
+/* Template names */
+"template.royal_noir" = "皇家暗黑";
+"template.silk_whisper" = "絲語低吟";
+"template.ceo_core" = "總裁氣場";
+"template.vogue_edge" = "時尚前線";
+"template.digital_bloom" = "數位綻放";
+"template.cyber_monolith" = "賽博巨像";
+"template.cyber_glitch" = "賽博故障";
+"template.goddess_celestial" = "天界女神";
+"template.anime_sakura" = "櫻花夢境";
+"template.anime_neon_dream" = "霓虹夢境";
+"template.pearl_glow" = "珠光微漾";
+"template.ivory_grace" = "象牙雅韻";
+"template.neon_ronin" = "霓虹浪客";
+"template.chrome_phantom" = "鉻影幽靈";
+"template.ethereal_light" = "空靈輝光";
+"template.moonlit_queen" = "月輝女王";
+"template.cherry_bloom" = "櫻瓣初綻";
+"template.pastel_wave" = "粉彩浪潮";
+
+/* Confirm */
+"confirm.source_photo" = "來源照片";
+"confirm.selected_template" = "已選模板";
+"confirm.processing_settings" = "處理設定";
+"confirm.hd_quality" = "HD 高畫質";
+"confirm.hd_quality.subtitle" = "4K 解析度升頻";
+"confirm.face_enhancement" = "面部增強";
+"confirm.face_enhancement.subtitle" = "膚質平滑與微表情優化";
+"confirm.info" = "變換通常需要 30 至 45 秒，結果將儲存至「我的」畫廊。";
+"confirm.start" = "開始變換";
+"confirm.change_source" = "更換來源照片";
+"confirm.take_photo" = "拍照";
+"confirm.change_template" = "重新選擇模板";
+
+/* Processing */
+"processing.title" = "神經換臉進行中";
+"processing.subtitle" = "正在啟動蛻變程序…";
+"processing.subtitle.remote" = "正在連線 AI 伺服器…";
+"processing.error.title" = "變換失敗";
+"processing.error.no_photo" = "無法載入來源照片。";
+
+/* Result */
+"result.watermark" = "由 Morph 創作";
+"result.share_title" = "分享你的蛻變";
+"result.download" = "下載高解析度";
+"result.saving" = "儲存中…";
+"result.saved" = "已儲存至相簿";
+"result.try_another" = "嘗試其他模板";
+"result.share" = "分享";
+"result.share.message" = "看看我用 Morph 創作的 AI 蛻變作品！";
+
+/* Gallery */
+"gallery.title" = "我的畫廊";
+"gallery.empty.title" = "尚無變換作品";
+"gallery.empty.subtitle" = "你的 AI 蛻變結果將顯示於此。";
+"gallery.browse" = "瀏覽模板";
+"gallery.delete" = "刪除";
+"gallery.delete.confirm" = "確定要從畫廊移除此作品嗎？";
+
+/* Onboarding */
+"onboarding.page1.title" = "歡迎使用 Morph";
+"onboarding.page1.subtitle" = "以 AI 換臉魔法，開啟你的形象蛻變。";
+"onboarding.page2.title" = "上傳你的照片";
+"onboarding.page2.subtitle" = "選擇清晰的正臉照片，獲得最佳效果。";
+"onboarding.page3.title" = "選模板、開始變換";
+"onboarding.page3.subtitle" = "瀏覽精美模板，見證你的數位蛻變。";
+"onboarding.next" = "下一步";
+"onboarding.skip" = "跳過";
+"onboarding.start" = "開始體驗";
+
+/* Settings */
+"settings.general" = "一般";
+"settings.version" = "版本";
+"settings.api_status" = "AI 引擎";
+"settings.api.connected" = "雲端 API";
+"settings.api.local" = "本地演示";
+"settings.restore_purchases" = "恢復購買";
+"settings.restore.title" = "恢復完成";
+"settings.restore.message" = "已同步 App Store 購買記錄。消耗型金幣包無法恢復。";
+"settings.language" = "語言";
+"settings.language.hint" = "切換後立即套用至整個 App。";
+"settings.language.system" = "跟隨系統";
+"settings.language.english" = "English";
+"settings.language.traditional_chinese" = "繁體中文";
+"settings.language.simplified_chinese" = "简体中文";
+"settings.appearance" = "外觀";
+"settings.appearance.hint" = "可選擇淺色、深色或跟隨系統。";
+"settings.appearance.system" = "跟隨系統";
+"settings.appearance.light" = "淺色";
+"settings.appearance.dark" = "深色";
+"settings.bside.title" = "探索";
+"settings.bside.hint" = "在應用內打開網頁版體驗。";
+"settings.bside.open" = "打開網頁版";
+"bside.close" = "返回應用";
+"my.section.gallery" = "我的畫廊";
+"my.section.favorites" = "收藏模板";
+
+/* Coins */
+"coin_store.title" = "取得金幣";
+"coin_store.balance" = "目前餘額";
+"coin_store.packs" = "金幣套餐";
+"coin_store.recommended" = "熱門";
+"coin_store.product_unavailable" = "該商品暫不可用，請稍後重試。";
+"coin_pack.starter.price" = "模擬 · $0.99";
+"coin_pack.popular.price" = "模擬 · $2.99";
+"coin_pack.pro.price" = "模擬 · $6.99";
+"coins.insufficient.title" = "金幣不足";
+"coins.insufficient.message" = "你需要更多金幣才能開始這次變換。";
+"coins.insufficient.draw.message" = "你需要更多金幣才能進行智能生成。";
+"coins.get" = "取得金幣";
+"coin_store.sandbox_hint" = "商品尚未載入 — 沙盒測試仍會發放金幣。";
+
+/* Common */
+"common.cancel" = "取消";
+"common.retry" = "重試";
+"common.done" = "完成";

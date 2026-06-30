@@ -1,0 +1,610 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A100000100000001 /* MorphApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200000100000001 /* MorphApp.swift */; };
+		A100000200000001 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200000200000001 /* ContentView.swift */; };
+		A100000300000001 /* MorphColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200000300000001 /* MorphColors.swift */; };
+		A100000400000001 /* MorphTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200000400000001 /* MorphTheme.swift */; };
+		A100000500000001 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200000500000001 /* AppState.swift */; };
+		A100000600000001 /* MorphComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200000600000001 /* MorphComponents.swift */; };
+		A100000700000001 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200000700000001 /* HomeView.swift */; };
+		A100000800000001 /* TemplatesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200000800000001 /* TemplatesView.swift */; };
+		A100000900000001 /* ConfirmTransformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200000900000001 /* ConfirmTransformationView.swift */; };
+		A100000A00000001 /* ProcessingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200000A00000001 /* ProcessingView.swift */; };
+		A100000B00000001 /* ResultShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200000B00000001 /* ResultShareView.swift */; };
+		A100000C00000001 /* MyGalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200000C00000001 /* MyGalleryView.swift */; };
+		A100000D00000001 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A200000D00000001 /* Assets.xcassets */; };
+		A100000E00000001 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A200000F00000001 /* LaunchScreen.storyboard */; };
+		A100000F00000001 /* L10n.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200001000000001 /* L10n.swift */; };
+		A100001000000001 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A500000A00000001 /* Localizable.strings */; };
+		A100001100000001 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = A500000900000001 /* InfoPlist.strings */; };
+		A100001200000001 /* LanguageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200001500000001 /* LanguageManager.swift */; };
+		A100001300000001 /* LanguageSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200001600000001 /* LanguageSettingsSection.swift */; };
+		A100001400000001 /* SampleImages.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200001700000001 /* SampleImages.swift */; };
+		A100001500000001 /* PhotoLibraryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200001800000001 /* PhotoLibraryService.swift */; };
+		A100001600000001 /* PhotoPickerViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200001900000001 /* PhotoPickerViews.swift */; };
+		A100001700000001 /* CoinStoreSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200001A00000001 /* CoinStoreSheet.swift */; };
+		A100001800000001 /* GalleryDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200001B00000001 /* GalleryDetailView.swift */; };
+		A100001900000001 /* MorphAPIConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200001C00000001 /* MorphAPIConfig.swift */; };
+		A100001A00000001 /* ResultImageStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200001D00000001 /* ResultImageStore.swift */; };
+		A100001B00000001 /* FaceSwapService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200001E00000001 /* FaceSwapService.swift */; };
+		A100001C00000001 /* StoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200001F00000001 /* StoreManager.swift */; };
+		A100001D00000001 /* Products.storekit in Resources */ = {isa = PBXBuildFile; fileRef = A200002200000001 /* Products.storekit */; };
+		A100002000000001 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200002300000001 /* OnboardingView.swift */; };
+		A100002100000001 /* AppSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200002400000001 /* AppSettingsSection.swift */; };
+		A100002200000001 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = A200002500000001 /* PrivacyInfo.xcprivacy */; };
+		A100002300000001 /* DrawingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200002600000001 /* DrawingView.swift */; };
+		A100002400000001 /* SmartDrawService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200002700000001 /* SmartDrawService.swift */; };
+		A100002500000001 /* AppearanceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200002800000001 /* AppearanceManager.swift */; };
+		A100002800000001 /* AppearanceSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200002900000001 /* AppearanceSettingsSection.swift */; };
+		A100002A00000001 /* BSideService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200002A00000001 /* BSideService.swift */; };
+		A100002C00000001 /* MorphH5WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200002C00000001 /* MorphH5WebView.swift */; };
+		A100002D00000001 /* BSideView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200002D00000001 /* BSideView.swift */; };
+		A100002E00000001 /* BSideSwitchSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200002E00000001 /* BSideSwitchSection.swift */; };
+		A100002F00000001 /* MorphH5Bridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200003D00000001 /* MorphH5Bridge.swift */; };
+		A100003100000001 /* MorphH5Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200003100000001 /* MorphH5Config.swift */; };
+		A100003200000001 /* MorphJSONCacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200003200000001 /* MorphJSONCacheManager.swift */; };
+		A100003300000001 /* MorphVideoCacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200003300000001 /* MorphVideoCacheManager.swift */; };
+		A100003400000001 /* MorphMediaCacheSchemeHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200003400000001 /* MorphMediaCacheSchemeHandler.swift */; };
+		A100003500000001 /* MorphAFManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200003500000001 /* MorphAFManager.swift */; };
+		A100003600000001 /* MorphPushManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200003600000001 /* MorphPushManager.swift */; };
+		A100003700000001 /* MorphPushAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200003700000001 /* MorphPushAppDelegate.swift */; };
+		A100003800000001 /* MorphH5PaymentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200003800000001 /* MorphH5PaymentManager.swift */; };
+		A100003900000001 /* MorphPaymentCallbackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200003900000001 /* MorphPaymentCallbackManager.swift */; };
+		A100003A00000001 /* MorphPaymentRedirectReturnURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200003A00000001 /* MorphPaymentRedirectReturnURL.swift */; };
+		A100003B00000001 /* MorphAppPaymentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200003B00000001 /* MorphAppPaymentController.swift */; };
+		A100003C00000001 /* MorphAppPageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200003C00000001 /* MorphAppPageController.swift */; };
+		A100003D00000001 /* AppsFlyerLib-Static in Frameworks */ = {isa = PBXBuildFile; productRef = AFB000032FB5000000000003 /* AppsFlyerLib-Static */; };
+		A100004000000001 /* MorphKeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200004000000001 /* MorphKeychainManager.swift */; };
+		A100004100000001 /* MorphAppConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200004100000001 /* MorphAppConfig.swift */; };
+		A100004200000001 /* MorphDeviceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200004200000001 /* MorphDeviceManager.swift */; };
+		A100004300000001 /* MorphAppConfigAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200004300000001 /* MorphAppConfigAPI.swift */; };
+		A100004400000001 /* MorphAFRemoteConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200004400000001 /* MorphAFRemoteConfig.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		A200000100000001 /* MorphApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorphApp.swift; sourceTree = "<group>"; };
+		A200000200000001 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		A200000300000001 /* MorphColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorphColors.swift; sourceTree = "<group>"; };
+		A200000400000001 /* MorphTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorphTheme.swift; sourceTree = "<group>"; };
+		A200000500000001 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		A200000600000001 /* MorphComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorphComponents.swift; sourceTree = "<group>"; };
+		A200000700000001 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		A200000800000001 /* TemplatesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplatesView.swift; sourceTree = "<group>"; };
+		A200000900000001 /* ConfirmTransformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmTransformationView.swift; sourceTree = "<group>"; };
+		A200000A00000001 /* ProcessingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessingView.swift; sourceTree = "<group>"; };
+		A200000B00000001 /* ResultShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultShareView.swift; sourceTree = "<group>"; };
+		A200000C00000001 /* MyGalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyGalleryView.swift; sourceTree = "<group>"; };
+		A200000D00000001 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A200000E00000001 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A200000F00000001 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		A200001000000001 /* L10n.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = L10n.swift; sourceTree = "<group>"; };
+		A200001100000001 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		A200001200000001 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		A200001300000001 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		A200001400000001 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		A200001500000001 /* LanguageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageManager.swift; sourceTree = "<group>"; };
+		A200001600000001 /* LanguageSettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageSettingsSection.swift; sourceTree = "<group>"; };
+		A200001700000001 /* SampleImages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleImages.swift; sourceTree = "<group>"; };
+		A200001800000001 /* PhotoLibraryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoLibraryService.swift; sourceTree = "<group>"; };
+		A200001900000001 /* PhotoPickerViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoPickerViews.swift; sourceTree = "<group>"; };
+		A200001A00000001 /* CoinStoreSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinStoreSheet.swift; sourceTree = "<group>"; };
+		A200001B00000001 /* GalleryDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryDetailView.swift; sourceTree = "<group>"; };
+		A200001C00000001 /* MorphAPIConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorphAPIConfig.swift; sourceTree = "<group>"; };
+		A200001D00000001 /* ResultImageStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultImageStore.swift; sourceTree = "<group>"; };
+		A200001E00000001 /* FaceSwapService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaceSwapService.swift; sourceTree = "<group>"; };
+		A200001F00000001 /* StoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreManager.swift; sourceTree = "<group>"; };
+		A200002000000001 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		A200002100000001 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		A200002200000001 /* Products.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = Products.storekit; sourceTree = "<group>"; };
+		A200002300000001 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		A200002400000001 /* AppSettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettingsSection.swift; sourceTree = "<group>"; };
+		A200002500000001 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		A200002600000001 /* DrawingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingView.swift; sourceTree = "<group>"; };
+		A200002700000001 /* SmartDrawService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmartDrawService.swift; sourceTree = "<group>"; };
+		A200002800000001 /* AppearanceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceManager.swift; sourceTree = "<group>"; };
+		A200002900000001 /* AppearanceSettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceSettingsSection.swift; sourceTree = "<group>"; };
+		A200002A00000001 /* BSideService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BSideService.swift; sourceTree = "<group>"; };
+		A200002C00000001 /* MorphH5WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorphH5WebView.swift; sourceTree = "<group>"; };
+		A200002D00000001 /* BSideView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BSideView.swift; sourceTree = "<group>"; };
+		A200002E00000001 /* BSideSwitchSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BSideSwitchSection.swift; sourceTree = "<group>"; };
+		A200003100000001 /* MorphH5Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorphH5Config.swift; sourceTree = "<group>"; };
+		A200003200000001 /* MorphJSONCacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorphJSONCacheManager.swift; sourceTree = "<group>"; };
+		A200003300000001 /* MorphVideoCacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorphVideoCacheManager.swift; sourceTree = "<group>"; };
+		A200003400000001 /* MorphMediaCacheSchemeHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorphMediaCacheSchemeHandler.swift; sourceTree = "<group>"; };
+		A200003500000001 /* MorphAFManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorphAFManager.swift; sourceTree = "<group>"; };
+		A200003600000001 /* MorphPushManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorphPushManager.swift; sourceTree = "<group>"; };
+		A200003700000001 /* MorphPushAppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorphPushAppDelegate.swift; sourceTree = "<group>"; };
+		A200003800000001 /* MorphH5PaymentManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorphH5PaymentManager.swift; sourceTree = "<group>"; };
+		A200003900000001 /* MorphPaymentCallbackManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorphPaymentCallbackManager.swift; sourceTree = "<group>"; };
+		A200003A00000001 /* MorphPaymentRedirectReturnURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorphPaymentRedirectReturnURL.swift; sourceTree = "<group>"; };
+		A200003B00000001 /* MorphAppPaymentController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorphAppPaymentController.swift; sourceTree = "<group>"; };
+		A200003C00000001 /* MorphAppPageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorphAppPageController.swift; sourceTree = "<group>"; };
+		A200003D00000001 /* MorphH5Bridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorphH5Bridge.swift; sourceTree = "<group>"; };
+		A200003E00000001 /* Morph.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Morph.entitlements; sourceTree = "<group>"; };
+		A200003F00000001 /* MorphRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MorphRelease.entitlements; sourceTree = "<group>"; };
+		A200004000000001 /* MorphKeychainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorphKeychainManager.swift; sourceTree = "<group>"; };
+		A200004100000001 /* MorphAppConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorphAppConfig.swift; sourceTree = "<group>"; };
+		A200004200000001 /* MorphDeviceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorphDeviceManager.swift; sourceTree = "<group>"; };
+		A200004300000001 /* MorphAppConfigAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorphAppConfigAPI.swift; sourceTree = "<group>"; };
+		A200004400000001 /* MorphAFRemoteConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorphAFRemoteConfig.swift; sourceTree = "<group>"; };
+		A300000100000001 /* Morph.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Morph.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A400000100000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A100003D00000001 /* AppsFlyerLib-Static in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A500000100000001 = {
+			isa = PBXGroup;
+			children = (
+				A500000200000001 /* Morph */,
+				A500000300000001 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A500000200000001 /* Morph */ = {
+			isa = PBXGroup;
+			children = (
+				A200000100000001 /* MorphApp.swift */,
+				A200000200000001 /* ContentView.swift */,
+				A500000400000001 /* Theme */,
+				A500000500000001 /* Models */,
+				A500000B00000001 /* Services */,
+				A500000800000001 /* Localization */,
+				A500000600000001 /* Components */,
+				A500000700000001 /* Views */,
+				A500000A00000001 /* Localizable.strings */,
+				A500000900000001 /* InfoPlist.strings */,
+				A200000D00000001 /* Assets.xcassets */,
+				A200000F00000001 /* LaunchScreen.storyboard */,
+				A200000E00000001 /* Info.plist */,
+				A200003E00000001 /* Morph.entitlements */,
+				A200003F00000001 /* MorphRelease.entitlements */,
+				A200002200000001 /* Products.storekit */,
+				A200002500000001 /* PrivacyInfo.xcprivacy */,
+			);
+			path = Morph;
+			sourceTree = "<group>";
+		};
+		A500000300000001 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A300000100000001 /* Morph.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A500000400000001 /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				A200000300000001 /* MorphColors.swift */,
+				A200000400000001 /* MorphTheme.swift */,
+			);
+			path = Theme;
+			sourceTree = "<group>";
+		};
+		A500000500000001 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				A200000500000001 /* AppState.swift */,
+				A200001700000001 /* SampleImages.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		A500000600000001 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				A200000600000001 /* MorphComponents.swift */,
+				A200001900000001 /* PhotoPickerViews.swift */,
+				A200002C00000001 /* MorphH5WebView.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		A500000700000001 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				A200000700000001 /* HomeView.swift */,
+				A200000800000001 /* TemplatesView.swift */,
+				A200002600000001 /* DrawingView.swift */,
+				A200000900000001 /* ConfirmTransformationView.swift */,
+				A200000A00000001 /* ProcessingView.swift */,
+				A200000B00000001 /* ResultShareView.swift */,
+				A200000C00000001 /* MyGalleryView.swift */,
+				A200001600000001 /* LanguageSettingsSection.swift */,
+				A200001A00000001 /* CoinStoreSheet.swift */,
+				A200001B00000001 /* GalleryDetailView.swift */,
+				A200002300000001 /* OnboardingView.swift */,
+				A200002400000001 /* AppSettingsSection.swift */,
+				A200002900000001 /* AppearanceSettingsSection.swift */,
+				A200002D00000001 /* BSideView.swift */,
+				A200002E00000001 /* BSideSwitchSection.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		A500000800000001 /* Localization */ = {
+			isa = PBXGroup;
+			children = (
+				A200001000000001 /* L10n.swift */,
+				A200001500000001 /* LanguageManager.swift */,
+				A200002800000001 /* AppearanceManager.swift */,
+			);
+			path = Localization;
+			sourceTree = "<group>";
+		};
+		A500000B00000001 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				A200001800000001 /* PhotoLibraryService.swift */,
+				A200001C00000001 /* MorphAPIConfig.swift */,
+				A200004100000001 /* MorphAppConfig.swift */,
+				A200004300000001 /* MorphAppConfigAPI.swift */,
+				A200004000000001 /* MorphKeychainManager.swift */,
+				A200004200000001 /* MorphDeviceManager.swift */,
+				A200001D00000001 /* ResultImageStore.swift */,
+				A200001E00000001 /* FaceSwapService.swift */,
+				A200002700000001 /* SmartDrawService.swift */,
+				A200001F00000001 /* StoreManager.swift */,
+				A200002A00000001 /* BSideService.swift */,
+				A500000C00000001 /* H5 */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		A500000C00000001 /* H5 */ = {
+			isa = PBXGroup;
+			children = (
+				A200003100000001 /* MorphH5Config.swift */,
+				A200003D00000001 /* MorphH5Bridge.swift */,
+				A200003200000001 /* MorphJSONCacheManager.swift */,
+				A200003300000001 /* MorphVideoCacheManager.swift */,
+				A200003400000001 /* MorphMediaCacheSchemeHandler.swift */,
+				A200003500000001 /* MorphAFManager.swift */,
+				A200004400000001 /* MorphAFRemoteConfig.swift */,
+				A200003600000001 /* MorphPushManager.swift */,
+				A200003700000001 /* MorphPushAppDelegate.swift */,
+				A200003800000001 /* MorphH5PaymentManager.swift */,
+				A200003900000001 /* MorphPaymentCallbackManager.swift */,
+				A200003A00000001 /* MorphPaymentRedirectReturnURL.swift */,
+				A200003B00000001 /* MorphAppPaymentController.swift */,
+				A200003C00000001 /* MorphAppPageController.swift */,
+			);
+			path = H5;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A600000100000001 /* Morph */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A800000300000001 /* Build configuration list for PBXNativeTarget "Morph" */;
+			buildPhases = (
+				A600000200000001 /* Sources */,
+				A400000100000001 /* Frameworks */,
+				A600000300000001 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Morph;
+			packageProductDependencies = (
+				AFB000032FB5000000000003 /* AppsFlyerLib-Static */,
+			);
+			productName = Morph;
+			productReference = A300000100000001 /* Morph.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A700000100000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1520;
+				LastUpgradeCheck = 1520;
+				TargetAttributes = {
+					A600000100000001 = {
+						CreatedOnToolsVersion = 15.2;
+						SystemCapabilities = {
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
+					};
+				};
+			};
+			buildConfigurationList = A800000100000001 /* Build configuration list for PBXProject "Morph" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+				"zh-Hant",
+				"zh-Hans",
+			);
+			mainGroup = A500000100000001;
+			packageReferences = (
+				AFB000022FB5000000000002 /* XCRemoteSwiftPackageReference "AppsFlyerFramework-Static" */,
+			);
+			productRefGroup = A500000300000001 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A600000100000001 /* Morph */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A600000300000001 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A100000D00000001 /* Assets.xcassets in Resources */,
+				A100000E00000001 /* LaunchScreen.storyboard in Resources */,
+				A100001000000001 /* Localizable.strings in Resources */,
+				A100001100000001 /* InfoPlist.strings in Resources */,
+				A100001D00000001 /* Products.storekit in Resources */,
+				A100002200000001 /* PrivacyInfo.xcprivacy in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A600000200000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A100000100000001 /* MorphApp.swift in Sources */,
+				A100000200000001 /* ContentView.swift in Sources */,
+				A100000300000001 /* MorphColors.swift in Sources */,
+				A100000400000001 /* MorphTheme.swift in Sources */,
+				A100000500000001 /* AppState.swift in Sources */,
+				A100000600000001 /* MorphComponents.swift in Sources */,
+				A100000700000001 /* HomeView.swift in Sources */,
+				A100000800000001 /* TemplatesView.swift in Sources */,
+				A100002300000001 /* DrawingView.swift in Sources */,
+				A100000900000001 /* ConfirmTransformationView.swift in Sources */,
+				A100000A00000001 /* ProcessingView.swift in Sources */,
+				A100000B00000001 /* ResultShareView.swift in Sources */,
+				A100000C00000001 /* MyGalleryView.swift in Sources */,
+				A100000F00000001 /* L10n.swift in Sources */,
+				A100001200000001 /* LanguageManager.swift in Sources */,
+				A100001300000001 /* LanguageSettingsSection.swift in Sources */,
+				A100001400000001 /* SampleImages.swift in Sources */,
+				A100001500000001 /* PhotoLibraryService.swift in Sources */,
+				A100001600000001 /* PhotoPickerViews.swift in Sources */,
+				A100001700000001 /* CoinStoreSheet.swift in Sources */,
+				A100001800000001 /* GalleryDetailView.swift in Sources */,
+				A100001900000001 /* MorphAPIConfig.swift in Sources */,
+				A100004100000001 /* MorphAppConfig.swift in Sources */,
+				A100004300000001 /* MorphAppConfigAPI.swift in Sources */,
+				A100004000000001 /* MorphKeychainManager.swift in Sources */,
+				A100004200000001 /* MorphDeviceManager.swift in Sources */,
+				A100001A00000001 /* ResultImageStore.swift in Sources */,
+				A100001B00000001 /* FaceSwapService.swift in Sources */,
+				A100002400000001 /* SmartDrawService.swift in Sources */,
+				A100001C00000001 /* StoreManager.swift in Sources */,
+				A100002000000001 /* OnboardingView.swift in Sources */,
+				A100002100000001 /* AppSettingsSection.swift in Sources */,
+				A100002500000001 /* AppearanceManager.swift in Sources */,
+				A100002800000001 /* AppearanceSettingsSection.swift in Sources */,
+				A100002A00000001 /* BSideService.swift in Sources */,
+				A100002C00000001 /* MorphH5WebView.swift in Sources */,
+				A100002F00000001 /* MorphH5Bridge.swift in Sources */,
+				A100003100000001 /* MorphH5Config.swift in Sources */,
+				A100003200000001 /* MorphJSONCacheManager.swift in Sources */,
+				A100003300000001 /* MorphVideoCacheManager.swift in Sources */,
+				A100003400000001 /* MorphMediaCacheSchemeHandler.swift in Sources */,
+				A100003500000001 /* MorphAFManager.swift in Sources */,
+				A100004400000001 /* MorphAFRemoteConfig.swift in Sources */,
+				A100003600000001 /* MorphPushManager.swift in Sources */,
+				A100003700000001 /* MorphPushAppDelegate.swift in Sources */,
+				A100003800000001 /* MorphH5PaymentManager.swift in Sources */,
+				A100003900000001 /* MorphPaymentCallbackManager.swift in Sources */,
+				A100003A00000001 /* MorphPaymentRedirectReturnURL.swift in Sources */,
+				A100003B00000001 /* MorphAppPaymentController.swift in Sources */,
+				A100003C00000001 /* MorphAppPageController.swift in Sources */,
+				A100002D00000001 /* BSideView.swift in Sources */,
+				A100002E00000001 /* BSideSwitchSection.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		A500000900000001 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A200001300000001 /* en */,
+				A200001400000001 /* zh-Hant */,
+				A200002100000001 /* zh-Hans */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		A500000A00000001 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A200001100000001 /* en */,
+				A200001200000001 /* zh-Hant */,
+				A200002000000001 /* zh-Hans */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		A900000100000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		A900000200000001 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		A900000300000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Morph/Morph.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Morph/Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = NO;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.morph.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		A900000400000001 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Morph/MorphRelease.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Morph/Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = NO;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.morph.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A800000100000001 /* Build configuration list for PBXProject "Morph" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A900000100000001 /* Debug */,
+				A900000200000001 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A800000300000001 /* Build configuration list for PBXNativeTarget "Morph" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A900000300000001 /* Debug */,
+				A900000400000001 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		AFB000022FB5000000000002 /* XCRemoteSwiftPackageReference "AppsFlyerFramework-Static" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/AppsFlyerSDK/AppsFlyerFramework-Static";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.17.8;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		AFB000032FB5000000000003 /* AppsFlyerLib-Static */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AFB000022FB5000000000002 /* XCRemoteSwiftPackageReference "AppsFlyerFramework-Static" */;
+			productName = "AppsFlyerLib-Static";
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = A700000100000001 /* Project object */;
+}

@@ -1,0 +1,4 @@
+CFBundleDisplayName = "Morph";
+NSPhotoLibraryAddUsageDescription = "Morph needs access to save your AI transformation results.";
+NSPhotoLibraryUsageDescription = "Morph needs access to your photos for face swap transformations.";
+NSCameraUsageDescription = "Morph needs camera access to capture your reference photo.";
