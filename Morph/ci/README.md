@@ -10,7 +10,7 @@
 |--------|------|------|
 | iOS Build | `.github/workflows/ios-build.yml` | 模拟器编译（PR 检查） |
 | **iOS Release** | `.github/workflows/ios-release.yml` | **打包并上传 App Store** |
-| Export Options | `ci/ExportOptions.plist` | Archive 导出 App Store IPA |
+| Export Options | `ci/generate_export_options.py` | 运行时生成含 `teamID` 的 ExportOptions |
 
 无需 `.p12` 证书：使用 **Automatic Signing** + **App Store Connect API Key**。
 
@@ -73,7 +73,8 @@ Workflow 只负责上传构建。还需在 App Store Connect：
 - 工程须为 **Automatically manage signing**
 - CI 运行 `ci/prepare_ci_signing.py` 自动写入 `DEVELOPMENT_TEAM` 并移除 Manual 配置
 - CI 运行 `ci/ensure_ci_device.py`：团队 0 台设备时自动注册占位设备
-- Archive 使用 Development 签名；`exportArchive` 重签为 App Store 分发证书
+- CI 运行 `ci/generate_export_options.py` 写入 `teamID`，避免 `exportArchive No Team Found in Archive`
+- Archive 使用 Automatic Signing + API Key；`exportArchive` 重签为 App Store 分发证书
 
 ---
 
@@ -102,10 +103,20 @@ xcodebuild archive \
   -archivePath /tmp/Morph.xcarchive \
   DEVELOPMENT_TEAM="你的 Team ID" \
   CODE_SIGN_STYLE=Automatic \
-  CODE_SIGN_IDENTITY=- \
-  AD_HOC_CODE_SIGNING_ALLOWED=YES \
   -allowProvisioningUpdates \
   -allowProvisioningDeviceRegistration \
+  -authenticationKeyPath ~/private_keys/AuthKey_XXX.p8 \
+  -authenticationKeyID "Key ID" \
+  -authenticationKeyIssuerID "Issuer ID"
+
+APPLE_TEAM_ID="你的 Team ID" python3 ci/generate_export_options.py
+
+xcodebuild -exportArchive \
+  -archivePath /tmp/Morph.xcarchive \
+  -exportOptionsPlist ci/ExportOptions.generated.plist \
+  -exportPath /tmp/export \
+  DEVELOPMENT_TEAM="你的 Team ID" \
+  -allowProvisioningUpdates \
   -authenticationKeyPath ~/private_keys/AuthKey_XXX.p8 \
   -authenticationKeyID "Key ID" \
   -authenticationKeyIssuerID "Issuer ID"

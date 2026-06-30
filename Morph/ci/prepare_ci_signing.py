@@ -27,6 +27,9 @@ for pattern in patterns:
     text = re.sub(pattern, "", text, flags=re.MULTILINE)
 
 team_id = os.environ.get("APPLE_TEAM_ID", "").strip()
+if os.environ.get("GITHUB_ACTIONS", "").lower() == "true" and not team_id:
+    print("::error::CI 环境缺少 APPLE_TEAM_ID Secret")
+    sys.exit(1)
 if team_id:
     text = re.sub(
         r"DEVELOPMENT_TEAM = \"?\"?;",

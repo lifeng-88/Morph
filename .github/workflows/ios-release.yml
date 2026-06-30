@@ -108,6 +108,11 @@ jobs:
           APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
           APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
         run: |
+          if [[ -z "$APPLE_TEAM_ID" ]]; then
+            echo "::error::APPLE_TEAM_ID Secret 未配置"
+            exit 1
+          fi
+
           ARCHIVE_PATH="$RUNNER_TEMP/Morph.xcarchive"
           echo "ARCHIVE_PATH=$ARCHIVE_PATH" >> "$GITHUB_ENV"
 
@@ -121,17 +126,29 @@ jobs:
             CURRENT_PROJECT_VERSION="$CURRENT_PROJECT_VERSION" \
             DEVELOPMENT_TEAM="$APPLE_TEAM_ID" \
             CODE_SIGN_STYLE=Automatic \
-            CODE_SIGN_IDENTITY=- \
-            AD_HOC_CODE_SIGNING_ALLOWED=YES \
             -allowProvisioningUpdates \
             -allowProvisioningDeviceRegistration \
             -authenticationKeyPath "$ASC_KEY_PATH" \
             -authenticationKeyID "$APP_STORE_CONNECT_KEY_ID" \
             -authenticationKeyIssuerID "$APP_STORE_CONNECT_ISSUER_ID"
 
+          TEAM_IN_ARCHIVE=$(/usr/libexec/PlistBuddy -c "Print :ApplicationProperties:Team" "$ARCHIVE_PATH/Info.plist" 2>/dev/null || true)
+          echo "Archive Team: ${TEAM_IN_ARCHIVE:-<none>}"
+          if [[ -z "$TEAM_IN_ARCHIVE" ]]; then
+            echo "::warning::Archive 未写入 Team，export 将依赖 ExportOptions.teamID 重签"
+          fi
+
+      - name: Generate Export Options
+        if: github.event_name == 'push' || inputs.upload_to_app_store
+        env:
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          BUNDLE_ID: ${{ env.BUNDLE_ID }}
+        run: python3 ci/generate_export_options.py
+
       - name: Export IPA
         if: github.event_name == 'push' || inputs.upload_to_app_store
         env:
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
           APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
         run: |
@@ -140,8 +157,9 @@ jobs:
 
           xcodebuild -exportArchive \
             -archivePath "$ARCHIVE_PATH" \
-            -exportOptionsPlist ci/ExportOptions.plist \
+            -exportOptionsPlist ci/ExportOptions.generated.plist \
             -exportPath "$EXPORT_DIR" \
+            DEVELOPMENT_TEAM="$APPLE_TEAM_ID" \
             -allowProvisioningUpdates \
             -authenticationKeyPath "$ASC_KEY_PATH" \
             -authenticationKeyID "$APP_STORE_CONNECT_KEY_ID" \
