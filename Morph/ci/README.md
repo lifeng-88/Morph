@@ -89,6 +89,7 @@ Workflow 只负责上传构建。还需在 App Store Connect：
 | Build Number 重复 | 重新 Run（CI 自动 Connect 最新 +1）或手动填更大 build_number |
 | Bundle ID 不匹配 | 工程须为 `com.morph.net` |
 | SDK version issue (iOS 18.x) | 确认 workflow 使用 `macos-26` + `Xcode_26.5.app` |
+| Artifact 上传 ENOTFOUND | 多为 GitHub 临时网络问题；已设 `continue-on-error`，不影响 ASC 上传 |
 
 ---
 

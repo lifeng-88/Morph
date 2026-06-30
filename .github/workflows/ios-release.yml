@@ -197,9 +197,23 @@ jobs:
 
       - name: Upload IPA artifact
         if: success() && env.IPA_PATH != ''
+        continue-on-error: true
         uses: actions/upload-artifact@v4
         with:
           name: Morph-${{ steps.version.outputs.marketing_version }}-${{ steps.build.outputs.build_number }}
           path: ${{ env.IPA_PATH }}
           if-no-files-found: ignore
           retention-days: 14
+          compression-level: 6
+
+      - name: Release summary
+        if: always()
+        run: |
+          echo "### iOS Release" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Marketing Version: ${{ steps.version.outputs.marketing_version }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Build Number: ${{ steps.build.outputs.build_number }}" >> "$GITHUB_STEP_SUMMARY"
+          if [[ -n "${IPA_PATH:-}" ]]; then
+            echo "- IPA: \`$IPA_PATH\`" >> "$GITHUB_STEP_SUMMARY"
+          fi
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "Artifact 上传失败（ENOTFOUND）不影响 App Store Connect 上传，可在 ASC / TestFlight 查看构建。" >> "$GITHUB_STEP_SUMMARY"
