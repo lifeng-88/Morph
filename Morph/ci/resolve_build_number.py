@@ -150,7 +150,7 @@ def main() -> None:
         write_outputs(int(explicit))
         return
 
-    bundle_id = os.environ.get("BUNDLE_ID", "com.morph.app").strip()
+    bundle_id = os.environ.get("BUNDLE_ID", "com.morph.net").strip()
     project_build = project_build_number()
 
     key_id = require_env("APP_STORE_CONNECT_KEY_ID")

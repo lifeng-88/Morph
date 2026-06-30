@@ -1,0 +1,182 @@
+name: iOS Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      marketing_version:
+        description: Marketing Version (e.g. 1.0.1)
+        required: false
+        type: string
+      build_number:
+        description: Build Number (leave empty to auto-increment)
+        required: false
+        type: string
+      upload_to_app_store:
+        description: Upload to App Store Connect
+        required: true
+        type: boolean
+        default: true
+
+env:
+  BUNDLE_ID: com.morph.net
+  SCHEME: Morph
+  PROJECT: Morph.xcodeproj
+
+defaults:
+  run:
+    working-directory: Morph
+
+jobs:
+  release:
+    runs-on: macos-15
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode.app
+
+      - name: Show Xcode version
+        run: xcodebuild -version
+
+      - name: Resolve Marketing Version
+        id: version
+        working-directory: .
+        run: |
+          if [[ "${{ github.ref_type }}" == "tag" ]]; then
+            VERSION="${GITHUB_REF_NAME#v}"
+          elif [[ -n "${{ inputs.marketing_version }}" ]]; then
+            VERSION="${{ inputs.marketing_version }}"
+          else
+            VERSION=$(grep -m1 'MARKETING_VERSION = ' Morph/Morph.xcodeproj/project.pbxproj | sed 's/.*= \(.*\);/\1/')
+          fi
+          if [[ ! "$VERSION" =~ ^[0-9]+(\.[0-9]+)*$ ]]; then
+            echo "::error::Invalid Marketing Version: $VERSION"
+            exit 1
+          fi
+          echo "marketing_version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Marketing Version: $VERSION"
+
+      - name: Install App Store Connect API Key
+        env:
+          APP_STORE_CONNECT_API_PRIVATE_KEY: ${{ secrets.APP_STORE_CONNECT_API_PRIVATE_KEY }}
+        run: |
+          KEY_DIR="$RUNNER_TEMP/private_keys"
+          mkdir -p "$KEY_DIR"
+          KEY_PATH="$KEY_DIR/AuthKey_${{ secrets.APP_STORE_CONNECT_KEY_ID }}.p8"
+          printf '%s\n' "$APP_STORE_CONNECT_API_PRIVATE_KEY" > "$KEY_PATH"
+          chmod 600 "$KEY_PATH"
+          echo "ASC_KEY_PATH=$KEY_PATH" >> "$GITHUB_ENV"
+
+      - name: Prepare CI signing
+        env:
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: python3 ci/prepare_ci_signing.py
+
+      - name: Ensure CI device registered
+        env:
+          APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+          APP_STORE_CONNECT_KEY_PATH: ${{ env.ASC_KEY_PATH }}
+          BUNDLE_ID: ${{ env.BUNDLE_ID }}
+        run: python3 ci/ensure_ci_device.py
+
+      - name: Resolve Build Number
+        id: build
+        env:
+          APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+          APP_STORE_CONNECT_KEY_PATH: ${{ env.ASC_KEY_PATH }}
+          BUNDLE_ID: ${{ env.BUNDLE_ID }}
+          INPUT_BUILD: ${{ inputs.build_number }}
+        run: python3 ci/resolve_build_number.py
+
+      - name: Resolve Swift Package dependencies
+        run: |
+          xcodebuild -resolvePackageDependencies \
+            -project "$PROJECT" \
+            -scheme "$SCHEME"
+
+      - name: Archive
+        env:
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+        run: |
+          ARCHIVE_PATH="$RUNNER_TEMP/Morph.xcarchive"
+          echo "ARCHIVE_PATH=$ARCHIVE_PATH" >> "$GITHUB_ENV"
+
+          xcodebuild archive \
+            -project "$PROJECT" \
+            -scheme "$SCHEME" \
+            -configuration Release \
+            -destination "generic/platform=iOS" \
+            -archivePath "$ARCHIVE_PATH" \
+            MARKETING_VERSION="${{ steps.version.outputs.marketing_version }}" \
+            CURRENT_PROJECT_VERSION="$CURRENT_PROJECT_VERSION" \
+            DEVELOPMENT_TEAM="$APPLE_TEAM_ID" \
+            CODE_SIGN_STYLE=Automatic \
+            CODE_SIGN_IDENTITY=- \
+            AD_HOC_CODE_SIGNING_ALLOWED=YES \
+            -allowProvisioningUpdates \
+            -allowProvisioningDeviceRegistration \
+            -authenticationKeyPath "$ASC_KEY_PATH" \
+            -authenticationKeyID "$APP_STORE_CONNECT_KEY_ID" \
+            -authenticationKeyIssuerID "$APP_STORE_CONNECT_ISSUER_ID"
+
+      - name: Export IPA
+        if: github.event_name == 'push' || inputs.upload_to_app_store
+        env:
+          APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+        run: |
+          EXPORT_DIR="$RUNNER_TEMP/export"
+          mkdir -p "$EXPORT_DIR"
+
+          xcodebuild -exportArchive \
+            -archivePath "$ARCHIVE_PATH" \
+            -exportOptionsPlist ci/ExportOptions.plist \
+            -exportPath "$EXPORT_DIR" \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "$ASC_KEY_PATH" \
+            -authenticationKeyID "$APP_STORE_CONNECT_KEY_ID" \
+            -authenticationKeyIssuerID "$APP_STORE_CONNECT_ISSUER_ID"
+
+          IPA_PATH=$(find "$EXPORT_DIR" -maxdepth 1 -name '*.ipa' | head -1)
+          if [[ -z "$IPA_PATH" ]]; then
+            echo "::error::未找到导出的 IPA"
+            exit 1
+          fi
+          echo "IPA_PATH=$IPA_PATH" >> "$GITHUB_ENV"
+          echo "Exported: $IPA_PATH"
+
+      - name: Upload to App Store Connect
+        if: github.event_name == 'push' || inputs.upload_to_app_store
+        env:
+          APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+        run: |
+          mkdir -p ~/.private_keys
+          cp "$ASC_KEY_PATH" ~/.private_keys/AuthKey_${APP_STORE_CONNECT_KEY_ID}.p8
+          chmod 600 ~/.private_keys/AuthKey_${APP_STORE_CONNECT_KEY_ID}.p8
+
+          xcrun altool --upload-app \
+            --type ios \
+            --file "$IPA_PATH" \
+            --apiKey "$APP_STORE_CONNECT_KEY_ID" \
+            --apiIssuer "$APP_STORE_CONNECT_ISSUER_ID" \
+            --wait
+
+      - name: Upload IPA artifact
+        if: success() && env.IPA_PATH != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: Morph-${{ steps.version.outputs.marketing_version }}-${{ steps.build.outputs.build_number }}
+          path: ${{ env.IPA_PATH }}
+          if-no-files-found: ignore
+          retention-days: 14

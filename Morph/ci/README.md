@@ -10,6 +10,7 @@
 |--------|------|------|
 | iOS Build | `.github/workflows/ios-build.yml` | 模拟器编译（PR 检查） |
 | **iOS Release** | `.github/workflows/ios-release.yml` | **打包并上传 App Store** |
+| Export Options | `ci/ExportOptions.plist` | Archive 导出 App Store IPA |
 
 无需 `.p12` 证书：使用 **Automatic Signing** + **App Store Connect API Key**。
 
@@ -17,9 +18,9 @@
 
 ## 一、Apple 后台准备
 
-1. [Developer](https://developer.apple.com/account/) 注册 App ID：`com.morph.app`
+1. [Developer](https://developer.apple.com/account/) 注册 App ID：`com.morph.net`
 2. 勾选所需 Capability（Push Notifications、In-App Purchase 等）
-3. [App Store Connect](https://appstoreconnect.apple.com/) 创建 App，Bundle ID 选 `com.morph.app`
+3. [App Store Connect](https://appstoreconnect.apple.com/) 创建 App，Bundle ID 选 `com.morph.net`
 4. 创建 **App Store Connect API Key**（角色 **Admin** 或 **App Manager**），下载 `.p8`（仅一次）
 
 ---
@@ -30,7 +31,7 @@
 
 | Secret | 说明 |
 |--------|------|
-| `APPLE_TEAM_ID` | 10 位 Team ID |
+| `APPLE_TEAM_ID` | 10 位 Team ID（工程当前为 `Y62CFM5H2H`） |
 | `APP_STORE_CONNECT_ISSUER_ID` | Issuer ID |
 | `APP_STORE_CONNECT_KEY_ID` | Key ID |
 | `APP_STORE_CONNECT_API_PRIVATE_KEY` | `.p8` 全文（含 `BEGIN/END`） |
@@ -81,9 +82,9 @@ Workflow 只负责上传构建。还需在 App Store Connect：
 | 现象 | 处理 |
 |------|------|
 | `no devices` | 确认 App ID 已注册；API Key 角色为 Admin/App Manager |
-| `No profiles for 'com.morph.app'` | 确认 `APPLE_TEAM_ID` 正确；重新 Run workflow |
+| `No profiles for 'com.morph.net'` | 确认 `APPLE_TEAM_ID` 正确；重新 Run workflow |
 | Build Number 重复 | 重新 Run（CI 自动 Connect 最新 +1）或手动填更大 build_number |
-| Bundle ID 不匹配 | 工程须为 `com.morph.app` |
+| Bundle ID 不匹配 | 工程须为 `com.morph.net` |
 
 ---
 
