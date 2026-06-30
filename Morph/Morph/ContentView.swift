@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject private var appState: AppState
+    @EnvironmentObject private var storeManager: StoreManager
 
     var body: some View {
         ZStack {
@@ -14,6 +15,14 @@ struct ContentView: View {
                     MorphBottomNav(selectedTab: $appState.selectedTab)
                 }
             }
+        }
+        .task {
+            await storeManager.processUnfinishedTransactions()
+        }
+        .onChange(of: storeManager.pendingCoinGrant) { _, coins in
+            guard let coins else { return }
+            appState.grantPurchasedCoins(coins)
+            storeManager.consumePendingCoinGrant()
         }
         .fullScreenCover(isPresented: $appState.isProcessing) {
             ProcessingView()
@@ -47,5 +56,6 @@ struct ContentView: View {
 #Preview {
     ContentView()
         .environmentObject(AppState())
+        .environmentObject(StoreManager.shared)
         .environmentObject(LanguageManager.shared)
 }

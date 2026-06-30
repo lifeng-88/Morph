@@ -21,6 +21,11 @@ struct ResultShareView: View {
                 ScrollView(showsIndicators: false) {
                     VStack(spacing: 24) {
                         resultPortrait
+                        TransformationInputComparisonView(
+                            sourceImage: appState.sourceImage,
+                            sourceAssetName: appState.sourcePhotoAsset,
+                            template: appState.selectedTemplate
+                        )
                         shareSection
                         downloadButton
                         tryAnotherButton
@@ -41,7 +46,7 @@ struct ResultShareView: View {
     private var resultPortrait: some View {
         ZStack(alignment: .bottomTrailing) {
             MorphPhotoView(
-                assetName: appState.resultPhotoAsset ?? SampleImages.result,
+                assetName: appState.resultPhotoAsset,
                 uiImage: appState.resultImage
             )
                 .aspectRatio(3/4, contentMode: .fit)

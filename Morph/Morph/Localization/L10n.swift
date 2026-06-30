@@ -31,6 +31,7 @@ enum L10n {
     static var templatesTitle: String { tr("templates.title") }
     static var templatesHeaderTitle: String { tr("templates.header.title") }
     static var templatesHeaderSubtitle: String { tr("templates.header.subtitle") }
+    static var categoryAll: String { tr("category.all") }
     static var categoryClassicPortraits: String { tr("category.classic_portraits") }
     static var categoryCyberpunk: String { tr("category.cyberpunk") }
     static var categoryGoddess: String { tr("category.goddess") }
@@ -56,6 +57,7 @@ enum L10n {
     static var changeSourcePhoto: String { tr("confirm.change_source") }
     static var takePhoto: String { tr("confirm.take_photo") }
     static var changeTemplate: String { tr("confirm.change_template") }
+    static var selectSourcePhoto: String { tr("confirm.select_photo") }
 
     // MARK: - Draw
     static var drawHint: String { tr("draw.hint") }
@@ -157,6 +159,8 @@ enum L10n {
     static var coinStoreSandboxHint: String { tr("coin_store.sandbox_hint") }
     static var coinStoreRecommended: String { tr("coin_store.recommended") }
     static var coinStoreProductUnavailable: String { tr("coin_store.product_unavailable") }
+    static var coinStorePurchaseFailed: String { tr("coin_store.purchase_failed") }
+    static var coinStorePurchasePending: String { tr("coin_store.purchase_pending") }
     static var cancel: String { tr("common.cancel") }
     static var done: String { tr("common.done") }
     static var retry: String { tr("common.retry") }

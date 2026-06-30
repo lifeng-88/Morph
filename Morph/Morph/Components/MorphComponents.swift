@@ -128,6 +128,7 @@ struct GradientButton: View {
     var icon: String? = nil
     var subtitle: String? = nil
     var isLoading: Bool = false
+    var isEnabled: Bool = true
     let action: () -> Void
 
     var body: some View {
@@ -153,9 +154,9 @@ struct GradientButton: View {
             .foregroundStyle(.white)
             .frame(maxWidth: .infinity)
             .frame(height: 56)
-            .background(MorphGradient.primary)
+            .background(isEnabled ? AnyShapeStyle(MorphGradient.primary) : AnyShapeStyle(MorphColors.surfaceVariant.opacity(0.5)))
             .clipShape(RoundedRectangle(cornerRadius: 16))
-            .shadow(color: MorphColors.primaryContainer.opacity(0.4), radius: 20)
+            .shadow(color: isEnabled ? MorphColors.primaryContainer.opacity(0.4) : .clear, radius: 20)
         }
         .buttonStyle(ScaleButtonStyle())
         .disabled(isLoading)
@@ -340,6 +341,95 @@ struct GalleryImageView: View {
             assetName: item.imageAsset,
             uiImage: item.loadUIImage(),
             aspectRatio: aspectRatio
+        )
+    }
+}
+
+struct TransformationInputComparisonView: View {
+    var sourceImage: UIImage?
+    var sourceAssetName: String?
+    var template: TemplateItem?
+
+    var body: some View {
+        if sourceImage != nil || template != nil {
+            HStack(alignment: .center, spacing: 8) {
+                if sourceImage != nil || sourceAssetName != nil {
+                    inputThumbCard(
+                        label: L10n.sourcePhoto,
+                        labelColor: MorphColors.primary,
+                        borderColor: MorphColors.primary
+                    ) {
+                        MorphPhotoView(assetName: sourceAssetName, uiImage: sourceImage)
+                    }
+                }
+
+                if (sourceImage != nil || sourceAssetName != nil) && template != nil {
+                    inputFlowIndicator
+                }
+
+                if let template {
+                    inputThumbCard(
+                        label: L10n.selectedTemplate,
+                        labelColor: MorphColors.secondary,
+                        borderColor: MorphColors.secondary
+                    ) {
+                        MorphImageView(assetName: template.imageAsset, alignment: .trailing)
+                    }
+                }
+            }
+        }
+    }
+
+    private var inputFlowIndicator: some View {
+        VStack(spacing: 4) {
+            Image(systemName: "arrow.right")
+                .font(.system(size: 14, weight: .semibold))
+                .foregroundStyle(MorphColors.primary.opacity(0.85))
+            Capsule()
+                .fill(MorphColors.primary.opacity(0.35))
+                .frame(width: 2, height: 16)
+        }
+        .frame(width: 28)
+    }
+
+    private func inputThumbCard<Content: View>(
+        label: String,
+        labelColor: Color,
+        borderColor: Color,
+        @ViewBuilder image: () -> Content
+    ) -> some View {
+        VStack(spacing: 0) {
+            Color.clear
+                .aspectRatio(3 / 4, contentMode: .fit)
+                .overlay {
+                    image()
+                }
+                .clipShape(Rectangle())
+                .overlay(alignment: .bottom) {
+                    LinearGradient(
+                        colors: [.clear, MorphColors.background.opacity(0.85)],
+                        startPoint: .center,
+                        endPoint: .bottom
+                    )
+                    .frame(height: 40)
+                    .allowsHitTesting(false)
+                }
+
+            Text(label)
+                .font(MorphFont.labelSM())
+                .foregroundStyle(labelColor)
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 8)
+                .padding(.vertical, 7)
+                .background(MorphColors.surfaceContainer.opacity(0.95))
+        }
+        .frame(maxWidth: .infinity)
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(borderColor.opacity(0.55), lineWidth: 1)
         )
     }
 }

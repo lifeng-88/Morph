@@ -28,6 +28,7 @@ struct GalleryItem: Identifiable, Codable, Hashable {
     let templateNameKey: String
     let imageAsset: String?
     let localImageFilename: String?
+    let sourceLocalImageFilename: String?
     let createdAt: Date
 
     init(
@@ -35,12 +36,14 @@ struct GalleryItem: Identifiable, Codable, Hashable {
         templateNameKey: String,
         imageAsset: String? = nil,
         localImageFilename: String? = nil,
+        sourceLocalImageFilename: String? = nil,
         createdAt: Date
     ) {
         self.id = id
         self.templateNameKey = templateNameKey
         self.imageAsset = imageAsset
         self.localImageFilename = localImageFilename
+        self.sourceLocalImageFilename = sourceLocalImageFilename
         self.createdAt = createdAt
     }
 
@@ -54,6 +57,19 @@ struct GalleryItem: Identifiable, Codable, Hashable {
             return image
         }
         return nil
+    }
+
+    func loadSourceUIImage() -> UIImage? {
+        guard let sourceLocalImageFilename else { return nil }
+        return ResultImageStore.load(sourceLocalImageFilename)
+    }
+
+    var linkedTemplate: TemplateItem? {
+        TemplateCatalog.templates.first { $0.nameKey == templateNameKey }
+    }
+
+    var showsTransformationInputs: Bool {
+        loadSourceUIImage() != nil || linkedTemplate != nil
     }
 }
 
@@ -107,6 +123,7 @@ final class AppState: ObservableObject {
     @Published var showOnboarding: Bool
 
     let categoryKeys: [String] = [
+        "category.all",
         "category.classic_portraits",
         "category.cyberpunk",
         "category.goddess",
@@ -157,7 +174,7 @@ final class AppState: ObservableObject {
             sourcePhotoAsset = nil
         } else {
             sourceImage = nil
-            sourcePhotoAsset = SampleImages.source
+            sourcePhotoAsset = nil
         }
         showPhotoGuide = false
     }
@@ -167,12 +184,13 @@ final class AppState: ObservableObject {
         if let sourcePhotoAsset {
             return PhotoLibraryService.loadUIImage(named: sourcePhotoAsset)
         }
-        return PhotoLibraryService.loadUIImage(named: SampleImages.source)
+        return nil
     }
 
     @discardableResult
     func startTransformation() -> Bool {
         guard let template = selectedTemplate else { return false }
+        guard hasSourcePhoto else { return false }
         guard coins >= template.coinCost else {
             showInsufficientCoins = true
             return false
@@ -201,6 +219,7 @@ final class AppState: ObservableObject {
             sourceImage: source,
             templateId: template.id,
             templateImage: templateImage,
+            templateCategoryKey: template.categoryKey,
             hdQuality: hdQuality,
             faceEnhancement: faceEnhancement
         )
@@ -226,11 +245,13 @@ final class AppState: ObservableObject {
 
         if let template = selectedTemplate {
             let filename = (try? ResultImageStore.save(image)) ?? nil
+            let sourceFilename = sourceUIImage().flatMap { try? ResultImageStore.save($0) }
             gallery.insert(
                 GalleryItem(
                     templateNameKey: template.nameKey,
                     imageAsset: filename == nil ? SampleImages.result : nil,
                     localImageFilename: filename,
+                    sourceLocalImageFilename: sourceFilename,
                     createdAt: Date()
                 ),
                 at: 0
@@ -267,6 +288,11 @@ final class AppState: ObservableObject {
         showInsufficientCoins = false
     }
 
+    func grantPurchasedCoins(_ amount: Int) {
+        guard amount > 0 else { return }
+        coins += amount
+    }
+
     func completeOnboarding() {
         UserDefaults.standard.set(true, forKey: StorageKey.onboardingCompleted)
         showOnboarding = false
@@ -283,6 +309,9 @@ final class AppState: ObservableObject {
     func deleteGalleryItem(_ item: GalleryItem) {
         if let filename = item.localImageFilename {
             ResultImageStore.delete(filename)
+        }
+        if let sourceFilename = item.sourceLocalImageFilename {
+            ResultImageStore.delete(sourceFilename)
         }
         gallery.removeAll { $0.id == item.id }
         if selectedGalleryItem?.id == item.id {
@@ -322,7 +351,7 @@ final class AppState: ObservableObject {
         if let asset = resultPhotoAsset {
             return PhotoLibraryService.loadUIImage(named: asset)
         }
-        return PhotoLibraryService.loadUIImage(named: SampleImages.result)
+        return nil
     }
 
     private func persistFavorites() {
@@ -337,7 +366,8 @@ final class AppState: ObservableObject {
 }
 
 enum MorphCoinCatalog {
-    static let releasePacks: [CoinPack] = [
+    /// 与 B 面 H5 充值套餐一致（packageId + App Store productID + 金币数量）
+    static let packs: [CoinPack] = [
         CoinPack(
             id: "coins_20",
             packageId: 1_780_024_391,
@@ -403,63 +433,21 @@ enum MorphCoinCatalog {
         )
     ]
 
-    #if DEBUG
-    static let debugPacks: [CoinPack] = [
-        CoinPack(
-            id: "starter",
-            packageId: 0,
-            gold: 100,
-            bonus: 0,
-            productID: "com.morph.app.coins.starter",
-            fallbackPrice: "$0.99",
-            isRecommended: false
-        ),
-        CoinPack(
-            id: "popular",
-            packageId: 0,
-            gold: 300,
-            bonus: 0,
-            productID: "com.morph.app.coins.popular",
-            fallbackPrice: "$2.99",
-            isRecommended: true
-        ),
-        CoinPack(
-            id: "pro",
-            packageId: 0,
-            gold: 800,
-            bonus: 0,
-            productID: "com.morph.app.coins.pro",
-            fallbackPrice: "$6.99",
-            isRecommended: false
-        )
-    ]
-    #endif
-
-    static var activePacks: [CoinPack] {
-        #if DEBUG
-        return debugPacks
-        #else
-        return releasePacks
-        #endif
-    }
+    static var activePacks: [CoinPack] { packs }
 
     static var productIDs: Set<String> {
-        Set(activePacks.map(\.productID))
+        Set(packs.map(\.productID))
     }
 
     static func totalCoins(for productID: String) -> Int? {
-        if let pack = releasePacks.first(where: { $0.productID == productID }) {
-            return pack.totalCoins
-        }
-        #if DEBUG
-        return debugPacks.first(where: { $0.productID == productID })?.totalCoins
-        #else
-        return nil
-        #endif
+        packs.first { $0.productID == productID }?.totalCoins
     }
 
     static func pack(for productID: String) -> CoinPack? {
-        activePacks.first { $0.productID == productID }
-            ?? releasePacks.first { $0.productID == productID }
+        packs.first { $0.productID == productID }
+    }
+
+    static func pack(forPackageId packageId: Int) -> CoinPack? {
+        packs.first { $0.packageId == packageId }
     }
 }

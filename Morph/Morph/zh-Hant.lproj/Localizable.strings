@@ -41,7 +41,7 @@
 
 /* Home */
 "home.hero.title" = "數位蛻變";
-"home.hero.subtitle" = "透過 AI 昇華你的形象。上傳參考照片，開始換臉之旅。";
+"home.hero.subtitle" = "昇華你的形象。上傳參考照片，開始換臉之旅。";
 "home.continue.title" = "繼續蛻變";
 "home.continue.subtitle" = "照片已就緒，前往選擇模板";
 "home.recent.title" = "最近作品";
@@ -69,6 +69,9 @@
 "templates.header.goddess.subtitle" = "空靈女神風造型，光澤肌膚與 celestial 氣場。";
 "templates.header.anime.title" = "動漫次元";
 "templates.header.anime.subtitle" = "風格化動漫人像，鮮豔色彩與生動表情。";
+"templates.header.all.title" = "全部模板";
+"templates.header.all.subtitle" = "瀏覽所有風格 — 經典人像、賽博龐克、女神風與動漫風。";
+"category.all" = "全部";
 "category.classic_portraits" = "經典人像";
 "category.cyberpunk" = "賽博龐克";
 "category.goddess" = "女神風";
@@ -114,11 +117,12 @@
 "confirm.change_source" = "更換來源照片";
 "confirm.take_photo" = "拍照";
 "confirm.change_template" = "重新選擇模板";
+"confirm.select_photo" = "選擇圖片";
 
 /* Processing */
-"processing.title" = "神經換臉進行中";
+"processing.title" = "換臉變換進行中";
 "processing.subtitle" = "正在啟動蛻變程序…";
-"processing.subtitle.remote" = "正在連線 AI 伺服器…";
+"processing.subtitle.remote" = "正在連線雲端伺服器…";
 "processing.error.title" = "變換失敗";
 "processing.error.no_photo" = "無法載入來源照片。";
 
@@ -130,19 +134,19 @@
 "result.saved" = "已儲存至相簿";
 "result.try_another" = "嘗試其他模板";
 "result.share" = "分享";
-"result.share.message" = "看看我用 Morph 創作的 AI 蛻變作品！";
+"result.share.message" = "看看我用 Morph 創作的蛻變作品！";
 
 /* Gallery */
 "gallery.title" = "我的畫廊";
 "gallery.empty.title" = "尚無變換作品";
-"gallery.empty.subtitle" = "你的 AI 蛻變結果將顯示於此。";
+"gallery.empty.subtitle" = "你的蛻變結果將顯示於此。";
 "gallery.browse" = "瀏覽模板";
 "gallery.delete" = "刪除";
 "gallery.delete.confirm" = "確定要從畫廊移除此作品嗎？";
 
 /* Onboarding */
 "onboarding.page1.title" = "歡迎使用 Morph";
-"onboarding.page1.subtitle" = "以 AI 換臉魔法，開啟你的形象蛻變。";
+"onboarding.page1.subtitle" = "用精美模板換臉，開啟你的形象蛻變。";
 "onboarding.page2.title" = "上傳你的照片";
 "onboarding.page2.subtitle" = "選擇清晰的正臉照片，獲得最佳效果。";
 "onboarding.page3.title" = "選模板、開始變換";
@@ -154,7 +158,7 @@
 /* Settings */
 "settings.general" = "一般";
 "settings.version" = "版本";
-"settings.api_status" = "AI 引擎";
+"settings.api_status" = "處理引擎";
 "settings.api.connected" = "雲端 API";
 "settings.api.local" = "本地演示";
 "settings.restore_purchases" = "恢復購買";
@@ -184,6 +188,8 @@
 "coin_store.packs" = "金幣套餐";
 "coin_store.recommended" = "熱門";
 "coin_store.product_unavailable" = "該商品暫不可用，請稍後重試。";
+"coin_store.purchase_failed" = "購買失敗";
+"coin_store.purchase_pending" = "購買正在等待批准。";
 "coin_pack.starter.price" = "模擬 · $0.99";
 "coin_pack.popular.price" = "模擬 · $2.99";
 "coin_pack.pro.price" = "模擬 · $6.99";

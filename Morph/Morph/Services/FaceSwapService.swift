@@ -1,9 +1,12 @@
+import CoreImage
 import UIKit
+import Vision
 
 struct FaceSwapRequest {
     let sourceImage: UIImage
     let templateId: String
     let templateImage: UIImage
+    let templateCategoryKey: String
     let hdQuality: Bool
     let faceEnhancement: Bool
 }
@@ -42,31 +45,189 @@ final class MockFaceSwapService: FaceSwapServiceProtocol {
             try await Task.sleep(nanoseconds: 300_000_000)
             progress(Double(step) / 10.0)
         }
-        return Self.compose(source: request.sourceImage, template: request.templateImage)
+        return LocalFaceSwapCompositor.compose(
+            source: request.sourceImage,
+            template: request.templateImage,
+            categoryKey: request.templateCategoryKey,
+            faceEnhancement: request.faceEnhancement
+        )
+    }
+}
+
+private enum LocalFaceSwapCompositor {
+    private static let ciContext = CIContext(options: [.useSoftwareRenderer: false])
+
+    static func compose(
+        source: UIImage,
+        template: UIImage,
+        categoryKey: String,
+        faceEnhancement: Bool
+    ) -> UIImage {
+        let sourceImage = normalized(source)
+        let templateImage = normalized(template)
+        let drawStyle = SmartDrawStyle.forTemplateCategory(categoryKey)
+
+        var result = SmartDrawImageProcessor.generateFromSource(
+            source: sourceImage,
+            style: drawStyle,
+            templateStyleReference: templateImage
+        )
+
+        if let sourceFace = detectPrimaryFaceRect(in: sourceImage),
+           let templateFace = detectPrimaryFaceRect(in: templateImage) {
+            let patchRect = expand(sourceFace, horizontal: 0.3, vertical: 0.36)
+                .intersection(CGRect(origin: .zero, size: sourceImage.size))
+            guard patchRect.width > 1, patchRect.height > 1 else { return result }
+
+            let facePatch = crop(result, rect: patchRect)
+            let templateFacePatch = aspectFill(
+                crop(templateImage, rect: expand(templateFace, horizontal: 0.32, vertical: 0.38)),
+                into: patchRect.size
+            )
+            result = TemplateStyleProcessor.applyRegionalStyle(
+                to: result,
+                patch: facePatch,
+                in: patchRect,
+                reference: templateFacePatch,
+                intensity: 0.62
+            )
+        }
+
+        if faceEnhancement, let faceRect = detectPrimaryFaceRect(in: sourceImage) {
+            result = enhanceFaceRegion(in: result, faceRect: faceRect)
+        }
+
+        return result
     }
 
-    private static func compose(source: UIImage, template: UIImage) -> UIImage {
-        let size = template.size
+    private static func enhanceFaceRegion(in image: UIImage, faceRect: CGRect) -> UIImage {
+        let patchRect = expand(faceRect, horizontal: 0.28, vertical: 0.34)
+            .intersection(CGRect(origin: .zero, size: image.size))
+        guard patchRect.width > 1, patchRect.height > 1 else { return image }
+
+        let facePatch = crop(image, rect: patchRect)
+        let enhanced = softenSkin(on: facePatch)
+        let size = image.size
         let renderer = UIGraphicsImageRenderer(size: size)
-        return renderer.image { context in
-            template.draw(in: CGRect(origin: .zero, size: size))
+        return renderer.image { _ in
+            image.draw(in: CGRect(origin: .zero, size: size))
+            enhanced.draw(in: patchRect)
+        }
+    }
 
-            let faceSize = CGSize(width: size.width * 0.42, height: size.height * 0.42)
-            let faceOrigin = CGPoint(
-                x: (size.width - faceSize.width) / 2,
-                y: size.height * 0.18
-            )
-            let faceRect = CGRect(origin: faceOrigin, size: faceSize)
+    private static func detectPrimaryFaceRect(in image: UIImage) -> CGRect? {
+        guard let cgImage = image.cgImage else { return nil }
 
-            context.cgContext.saveGState()
-            context.cgContext.addEllipse(in: faceRect.insetBy(dx: -4, dy: -4))
-            context.cgContext.clip()
-            source.draw(in: faceRect)
-            context.cgContext.restoreGState()
+        let orientation = cgOrientation(from: image.imageOrientation)
+        let request = VNDetectFaceRectanglesRequest()
+        let handler = VNImageRequestHandler(cgImage: cgImage, orientation: orientation, options: [:])
 
-            context.cgContext.setBlendMode(.softLight)
-            UIColor.white.withAlphaComponent(0.12).setFill()
-            context.cgContext.fill(faceRect)
+        do {
+            try handler.perform([request])
+        } catch {
+            return nil
+        }
+
+        guard let face = request.results?.max(by: {
+            $0.boundingBox.width * $0.boundingBox.height < $1.boundingBox.width * $1.boundingBox.height
+        }) else {
+            return nil
+        }
+
+        return uiRect(fromVisionRect: face.boundingBox, imageSize: image.size)
+    }
+
+    private static func uiRect(fromVisionRect box: CGRect, imageSize: CGSize) -> CGRect {
+        CGRect(
+            x: box.origin.x * imageSize.width,
+            y: (1 - box.origin.y - box.height) * imageSize.height,
+            width: box.width * imageSize.width,
+            height: box.height * imageSize.height
+        )
+    }
+
+    private static func expand(_ rect: CGRect, horizontal: CGFloat, vertical: CGFloat) -> CGRect {
+        rect.insetBy(dx: -rect.width * horizontal, dy: -rect.height * vertical)
+    }
+
+    private static func crop(_ image: UIImage, rect: CGRect) -> UIImage {
+        guard let cgImage = image.cgImage else { return image }
+
+        let bounds = CGRect(origin: .zero, size: image.size)
+        let cropRect = rect.intersection(bounds)
+        guard cropRect.width > 1, cropRect.height > 1 else { return image }
+
+        let scale = image.scale
+        let pixelRect = CGRect(
+            x: cropRect.origin.x * scale,
+            y: cropRect.origin.y * scale,
+            width: cropRect.size.width * scale,
+            height: cropRect.size.height * scale
+        ).integral
+
+        guard let cropped = cgImage.cropping(to: pixelRect) else { return image }
+        return UIImage(cgImage: cropped, scale: scale, orientation: .up)
+    }
+
+    private static func aspectFill(_ image: UIImage, into targetSize: CGSize) -> UIImage {
+        let widthScale = targetSize.width / image.size.width
+        let heightScale = targetSize.height / image.size.height
+        let scale = max(widthScale, heightScale)
+        let size = CGSize(width: image.size.width * scale, height: image.size.height * scale)
+        let origin = CGPoint(
+            x: (targetSize.width - size.width) / 2,
+            y: (targetSize.height - size.height) / 2
+        )
+        let renderer = UIGraphicsImageRenderer(size: targetSize)
+        return renderer.image { _ in
+            image.draw(in: CGRect(origin: origin, size: size))
+        }
+    }
+
+    private static func softenSkin(on image: UIImage) -> UIImage {
+        guard var ciImage = CIImage(image: image) else { return image }
+
+        if let blur = CIFilter(name: "CIGaussianBlur") {
+            blur.setValue(ciImage, forKey: kCIInputImageKey)
+            blur.setValue(0.8, forKey: kCIInputRadiusKey)
+            if let blurred = blur.outputImage?.cropped(to: ciImage.extent) {
+                ciImage = blurred
+            }
+        }
+
+        if let sharpen = CIFilter(name: "CISharpenLuminance") {
+            sharpen.setValue(ciImage, forKey: kCIInputImageKey)
+            sharpen.setValue(0.35, forKey: kCIInputSharpnessKey)
+            if let output = sharpen.outputImage {
+                ciImage = output
+            }
+        }
+
+        guard let cgImage = ciContext.createCGImage(ciImage, from: ciImage.extent) else {
+            return image
+        }
+        return UIImage(cgImage: cgImage, scale: image.scale, orientation: .up)
+    }
+
+    private static func normalized(_ image: UIImage) -> UIImage {
+        guard image.imageOrientation != .up else { return image }
+        let renderer = UIGraphicsImageRenderer(size: image.size)
+        return renderer.image { _ in
+            image.draw(in: CGRect(origin: .zero, size: image.size))
+        }
+    }
+
+    private static func cgOrientation(from orientation: UIImage.Orientation) -> CGImagePropertyOrientation {
+        switch orientation {
+        case .up: return .up
+        case .upMirrored: return .upMirrored
+        case .down: return .down
+        case .downMirrored: return .downMirrored
+        case .left: return .left
+        case .leftMirrored: return .leftMirrored
+        case .right: return .right
+        case .rightMirrored: return .rightMirrored
+        @unknown default: return .up
         }
     }
 }

@@ -157,6 +157,11 @@ enum TemplateCatalog {
 
     static func categoryInfo(for categoryKey: String) -> TemplateCategoryInfo {
         switch categoryKey {
+        case "category.all":
+            return TemplateCategoryInfo(
+                titleKey: "templates.header.all.title",
+                subtitleKey: "templates.header.all.subtitle"
+            )
         case "category.classic_portraits":
             return TemplateCategoryInfo(
                 titleKey: "templates.header.classic.title",
@@ -186,6 +191,9 @@ enum TemplateCatalog {
     }
 
     static func templates(for categoryKey: String) -> [TemplateItem] {
-        templates.filter { $0.categoryKey == categoryKey }
+        if categoryKey == "category.all" {
+            return templates
+        }
+        return templates.filter { $0.categoryKey == categoryKey }
     }
 }

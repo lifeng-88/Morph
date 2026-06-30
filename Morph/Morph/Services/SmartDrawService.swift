@@ -34,6 +34,32 @@ enum SmartDrawStyle: String, CaseIterable, Identifiable {
         case .chibi: return 50
         }
     }
+
+    /// Maps template category to the smart-draw style used during face generation.
+    static func forTemplateCategory(_ categoryKey: String) -> SmartDrawStyle {
+        switch categoryKey {
+        case "category.cyberpunk": return .neon
+        case "category.goddess": return .watercolor
+        case "category.anime": return .anime
+        default: return .sketch
+        }
+    }
+
+    /// How strongly smart-draw stylization is blended onto the source face (0 = raw photo).
+    var portraitBlendWeight: CGFloat {
+        switch self {
+        case .sketch, .ink: return 0.46
+        case .watercolor: return 0.58
+        case .neon: return 0.72
+        case .anime: return 0.68
+        case .chibi: return 0.75
+        }
+    }
+
+    /// Full-image generation keeps more of the original photo while adopting template style.
+    var fullImageBlendWeight: CGFloat {
+        min(portraitBlendWeight * 0.92, 0.68)
+    }
 }
 
 struct SmartDrawRequest {
@@ -61,32 +87,94 @@ enum SmartDrawServiceFactory {
     }
 }
 
-final class LocalSmartDrawService: SmartDrawServiceProtocol {
-    private let context = CIContext(options: [
+enum SmartDrawImageProcessor {
+    private static let context = CIContext(options: [
         .useSoftwareRenderer: false,
         .highQualityDownsample: true
     ])
 
-    func generate(_ request: SmartDrawRequest, progress: @escaping (Double) -> Void) async throws -> UIImage {
-        let prepared = request.sourceImage.preparedForProcessing(maxDimension: 1400)
-        progress(0.15)
-
-        for step in 1...5 {
-            try await Task.sleep(nanoseconds: 180_000_000)
-            progress(0.15 + Double(step) / 5.0 * 0.75)
-        }
-
+    static func process(_ image: UIImage, style: SmartDrawStyle) -> UIImage? {
+        let prepared = image.preparedForProcessing(maxDimension: 1400)
         guard let ciImage = CIImage(image: prepared),
-              let output = styledImage(from: normalizedInput(ciImage), style: request.style),
+              let output = styledImage(from: normalizedInput(ciImage), style: style),
               let cgImage = context.createCGImage(output, from: output.extent.integral) else {
-            throw SmartDrawError.processingFailed
+            return nil
         }
-
-        progress(1.0)
         return UIImage(cgImage: cgImage, scale: prepared.scale, orientation: .up)
     }
 
-    private func styledImage(from image: CIImage, style: SmartDrawStyle) -> CIImage? {
+    static func blend(original: UIImage, stylized: UIImage, weight: CGFloat) -> UIImage {
+        let amount = min(max(weight, 0), 1)
+        guard amount > 0.01 else { return original }
+
+        let size = original.size
+        let renderer = UIGraphicsImageRenderer(size: size)
+        return renderer.image { _ in
+            original.draw(in: CGRect(origin: .zero, size: size))
+            stylized.draw(in: CGRect(origin: .zero, size: size), blendMode: .normal, alpha: amount)
+        }
+    }
+
+    /// Smart-draw stylization followed by template tone alignment (face-region use).
+    static func stylizeForTemplate(
+        source: UIImage,
+        style: SmartDrawStyle,
+        templateReference: UIImage
+    ) -> UIImage {
+        var result = source
+        if let stylized = process(source, style: style) {
+            result = blend(
+                original: source,
+                stylized: aspectFill(stylized, into: source.size),
+                weight: style.portraitBlendWeight
+            )
+        }
+        return TemplateStyleProcessor.alignToReference(result, reference: templateReference)
+    }
+
+    /// Full source photo as output; template supplies color/lighting reference only (no template pixels).
+    static func generateFromSource(
+        source: UIImage,
+        style: SmartDrawStyle,
+        templateStyleReference: UIImage
+    ) -> UIImage {
+        var result = source
+        if let stylized = process(source, style: style) {
+            result = blend(
+                original: source,
+                stylized: aspectFill(stylized, into: source.size),
+                weight: style.fullImageBlendWeight
+            )
+        }
+
+        return TemplateStyleProcessor.applyStyleFromTemplate(
+            to: result,
+            template: templateStyleReference,
+            strength: 0.72
+        )
+    }
+
+    private static func aspectFill(_ image: UIImage, into targetSize: CGSize) -> UIImage {
+        let renderer = UIGraphicsImageRenderer(size: targetSize)
+        return renderer.image { _ in
+            image.draw(in: aspectFillRect(image.size, into: targetSize))
+        }
+    }
+
+    private static func aspectFillRect(_ sourceSize: CGSize, into targetSize: CGSize) -> CGRect {
+        let widthScale = targetSize.width / sourceSize.width
+        let heightScale = targetSize.height / sourceSize.height
+        let scale = max(widthScale, heightScale)
+        let size = CGSize(width: sourceSize.width * scale, height: sourceSize.height * scale)
+        return CGRect(
+            x: (targetSize.width - size.width) / 2,
+            y: (targetSize.height - size.height) / 2,
+            width: size.width,
+            height: size.height
+        )
+    }
+
+    private static func styledImage(from image: CIImage, style: SmartDrawStyle) -> CIImage? {
         switch style {
         case .sketch: return sketchStyle(image)
         case .ink: return inkStyle(image)
@@ -99,7 +187,7 @@ final class LocalSmartDrawService: SmartDrawServiceProtocol {
 
     // MARK: - Preprocessing
 
-    private func normalizedInput(_ image: CIImage) -> CIImage {
+    private static func normalizedInput(_ image: CIImage) -> CIImage {
         image
             .applyingFilter("CIHighlightShadowAdjust", parameters: [
                 "inputHighlightAmount": 0.85,
@@ -113,7 +201,7 @@ final class LocalSmartDrawService: SmartDrawServiceProtocol {
 
     // MARK: - Styles
 
-    private func sketchStyle(_ image: CIImage) -> CIImage? {
+    private static func sketchStyle(_ image: CIImage) -> CIImage? {
         let extent = image.extent
         let tonal = image
             .applyingFilter("CIPhotoEffectMono")
@@ -135,7 +223,7 @@ final class LocalSmartDrawService: SmartDrawServiceProtocol {
         return sharpen(sketched, radius: 1.2, intensity: 0.35).cropped(to: extent)
     }
 
-    private func inkStyle(_ image: CIImage) -> CIImage? {
+    private static func inkStyle(_ image: CIImage) -> CIImage? {
         let extent = image.extent
         let lines = lineOverlay(from: image, edgeIntensity: 1.1, threshold: 0.1, contrast: 48)
             .applyingFilter("CIColorControls", parameters: [
@@ -152,7 +240,7 @@ final class LocalSmartDrawService: SmartDrawServiceProtocol {
             .cropped(to: extent)
     }
 
-    private func neonStyle(_ image: CIImage) -> CIImage? {
+    private static func neonStyle(_ image: CIImage) -> CIImage? {
         let extent = image.extent
         let edges = image.applyingFilter("CIEdges", parameters: [
             kCIInputIntensityKey: 4.5
@@ -188,7 +276,7 @@ final class LocalSmartDrawService: SmartDrawServiceProtocol {
             .cropped(to: extent)
     }
 
-    private func watercolorStyle(_ image: CIImage) -> CIImage? {
+    private static func watercolorStyle(_ image: CIImage) -> CIImage? {
         let extent = image.extent
         let bleed = image
             .applyingFilter("CIMedianFilter")
@@ -224,7 +312,7 @@ final class LocalSmartDrawService: SmartDrawServiceProtocol {
             .cropped(to: extent)
     }
 
-    private func animeStyle(_ image: CIImage) -> CIImage? {
+    private static func animeStyle(_ image: CIImage) -> CIImage? {
         let extent = image.extent
         let colorBase = celColorLayer(from: image, blur: 2.0, levels: 9, saturation: 1.38)
         let lines = lineOverlay(from: image, edgeIntensity: 0.9, threshold: 0.13, contrast: 40)
@@ -262,7 +350,7 @@ final class LocalSmartDrawService: SmartDrawServiceProtocol {
         ).cropped(to: extent)
     }
 
-    private func chibiStyle(_ image: CIImage) -> CIImage? {
+    private static func chibiStyle(_ image: CIImage) -> CIImage? {
         let extent = image.extent
         let headCenter = CGPoint(x: extent.midX, y: extent.midY + extent.height * 0.14)
         let bodyCenter = CGPoint(x: extent.midX, y: extent.midY - extent.height * 0.22)
@@ -322,7 +410,7 @@ final class LocalSmartDrawService: SmartDrawServiceProtocol {
 
     // MARK: - Filter helpers
 
-    private func lineOverlay(
+    private static func lineOverlay(
         from image: CIImage,
         edgeIntensity: Double,
         threshold: Double,
@@ -337,7 +425,7 @@ final class LocalSmartDrawService: SmartDrawServiceProtocol {
         ])
     }
 
-    private func celColorLayer(
+    private static func celColorLayer(
         from image: CIImage,
         blur: Double,
         levels: Double,
@@ -355,14 +443,14 @@ final class LocalSmartDrawService: SmartDrawServiceProtocol {
             ])
     }
 
-    private func sharpen(_ image: CIImage, radius: Double, intensity: Double) -> CIImage {
+    private static func sharpen(_ image: CIImage, radius: Double, intensity: Double) -> CIImage {
         image.applyingFilter("CIUnsharpMask", parameters: [
             kCIInputRadiusKey: radius,
             kCIInputIntensityKey: intensity
         ])
     }
 
-    private func radialBackground(extent: CGRect) -> CIImage {
+    private static func radialBackground(extent: CGRect) -> CIImage {
         let fallback = CIImage(color: CIColor(red: 0.04, green: 0.03, blue: 0.1)).cropped(to: extent)
         guard let filter = CIFilter(name: "CIRadialGradient") else { return fallback }
 
@@ -375,8 +463,236 @@ final class LocalSmartDrawService: SmartDrawServiceProtocol {
         return filter.outputImage?.cropped(to: extent) ?? fallback
     }
 
-    private func paperColor(red: CGFloat, green: CGFloat, blue: CGFloat) -> CIImage {
+    private static func paperColor(red: CGFloat, green: CGFloat, blue: CGFloat) -> CIImage {
         CIImage(color: CIColor(red: red, green: green, blue: blue))
+    }
+}
+
+// MARK: - Template style alignment (shared by face swap & smart draw)
+
+enum TemplateStyleProcessor {
+    private static let ciContext = CIContext(options: [.useSoftwareRenderer: false])
+
+    static func alignToReference(_ source: UIImage, reference: UIImage) -> UIImage {
+        let matched = matchColorStatistics(source: source, reference: reference, intensity: 1)
+        return applyTemplateTone(to: matched, reference: reference)
+    }
+
+    /// Transfers template color/lighting onto the source image without drawing template pixels.
+    static func applyStyleFromTemplate(to source: UIImage, template: UIImage, strength: CGFloat) -> UIImage {
+        let amount = min(max(strength, 0), 1)
+        guard amount > 0.01 else { return source }
+
+        var result = matchColorStatistics(source: source, reference: template, intensity: 0.58 * amount)
+        result = applyAmbientTint(to: result, reference: template, strength: 0.42 * amount)
+        return result
+    }
+
+    /// Applies template palette as a global tint — never composites the template bitmap.
+    static func applyAmbientTint(to source: UIImage, reference: UIImage, strength: CGFloat) -> UIImage {
+        let amount = min(max(strength, 0), 1)
+        guard amount > 0.01, let rgba = averageRGBA(of: reference) else { return source }
+
+        let size = source.size
+        let rect = CGRect(origin: .zero, size: size)
+        let tint = UIColor(red: rgba.r, green: rgba.g, blue: rgba.b, alpha: 1)
+        let renderer = UIGraphicsImageRenderer(size: size)
+        return renderer.image { ctx in
+            source.draw(in: rect)
+
+            ctx.cgContext.setBlendMode(.softLight)
+            ctx.cgContext.setAlpha(0.2 * amount)
+            tint.setFill()
+            ctx.cgContext.fill(rect)
+
+            ctx.cgContext.setBlendMode(.color)
+            ctx.cgContext.setAlpha(0.14 * amount)
+            tint.setFill()
+            ctx.cgContext.fill(rect)
+        }
+    }
+
+    static func applyRegionalStyle(
+        to image: UIImage,
+        patch: UIImage,
+        in rect: CGRect,
+        reference: UIImage,
+        intensity: CGFloat
+    ) -> UIImage {
+        let styled = matchColorStatistics(source: patch, reference: reference, intensity: intensity)
+        let size = image.size
+        let renderer = UIGraphicsImageRenderer(size: size)
+        return renderer.image { _ in
+            image.draw(in: CGRect(origin: .zero, size: size))
+            styled.draw(in: rect)
+        }
+    }
+
+    static func harmonizeWithTemplate(_ image: UIImage, template: UIImage, strength: CGFloat) -> UIImage {
+        let amount = min(max(strength, 0), 1)
+        guard amount > 0.01 else { return image }
+
+        let size = image.size
+        let rect = CGRect(origin: .zero, size: size)
+        let renderer = UIGraphicsImageRenderer(size: size)
+        return renderer.image { ctx in
+            image.draw(in: rect)
+
+            ctx.cgContext.setBlendMode(.color)
+            ctx.cgContext.setAlpha(0.22 * amount)
+            template.draw(in: rect)
+
+            ctx.cgContext.setBlendMode(.softLight)
+            ctx.cgContext.setAlpha(0.16 * amount)
+            template.draw(in: rect)
+
+            ctx.cgContext.setBlendMode(.saturation)
+            ctx.cgContext.setAlpha(0.12 * amount)
+            template.draw(in: rect)
+        }
+    }
+
+    static func applyTemplateTone(to source: UIImage, reference: UIImage) -> UIImage {
+        let size = source.size
+        let rect = CGRect(origin: .zero, size: size)
+        let renderer = UIGraphicsImageRenderer(size: size)
+        return renderer.image { ctx in
+            source.draw(in: rect)
+
+            ctx.cgContext.setBlendMode(.color)
+            ctx.cgContext.setAlpha(0.74)
+            reference.draw(in: rect)
+
+            ctx.cgContext.setBlendMode(.saturation)
+            ctx.cgContext.setAlpha(0.54)
+            reference.draw(in: rect)
+
+            ctx.cgContext.setBlendMode(.softLight)
+            ctx.cgContext.setAlpha(0.58)
+            reference.draw(in: rect)
+
+            ctx.cgContext.setBlendMode(.overlay)
+            ctx.cgContext.setAlpha(0.32)
+            reference.draw(in: rect)
+
+            ctx.cgContext.setBlendMode(.luminosity)
+            ctx.cgContext.setAlpha(0.26)
+            reference.draw(in: rect)
+        }
+    }
+
+    static func matchColorStatistics(
+        source: UIImage,
+        reference: UIImage,
+        intensity: CGFloat = 1
+    ) -> UIImage {
+        guard let sourceStats = colorStats(for: source),
+              let referenceStats = colorStats(for: reference),
+              var ciImage = CIImage(image: source) else {
+            return source
+        }
+
+        let mix = min(max(intensity, 0), 1)
+        let brightnessShift = (referenceStats.luminance - sourceStats.luminance) * 0.72 * mix
+        let saturationScale = 1 + (clamp(
+            referenceStats.saturation / max(sourceStats.saturation, 0.08),
+            min: 0.75,
+            max: 1.45
+        ) - 1) * mix
+        let contrastScale = 1 + (clamp(
+            referenceStats.contrast / max(sourceStats.contrast, 0.08),
+            min: 0.85,
+            max: 1.28
+        ) - 1) * mix
+
+        if let controls = CIFilter(name: "CIColorControls") {
+            controls.setValue(ciImage, forKey: kCIInputImageKey)
+            controls.setValue(brightnessShift, forKey: kCIInputBrightnessKey)
+            controls.setValue(contrastScale, forKey: kCIInputContrastKey)
+            controls.setValue(saturationScale, forKey: kCIInputSaturationKey)
+            ciImage = controls.outputImage ?? ciImage
+        }
+
+        if let vibrance = CIFilter(name: "CIVibrance") {
+            vibrance.setValue(ciImage, forKey: kCIInputImageKey)
+            vibrance.setValue((referenceStats.saturation - sourceStats.saturation) * 0.75 * mix, forKey: "inputAmount")
+            ciImage = vibrance.outputImage ?? ciImage
+        }
+
+        return render(ciImage, scale: source.scale) ?? source
+    }
+
+    private struct ColorStats {
+        let luminance: CGFloat
+        let saturation: CGFloat
+        let contrast: CGFloat
+    }
+
+    private static func colorStats(for image: UIImage) -> ColorStats? {
+        guard let rgba = averageRGBA(of: image) else { return nil }
+
+        let luminance = 0.2126 * rgba.r + 0.7152 * rgba.g + 0.0722 * rgba.b
+        let maxChannel = max(rgba.r, rgba.g, rgba.b)
+        let minChannel = min(rgba.r, rgba.g, rgba.b)
+        let saturation = maxChannel - minChannel
+        let contrast = max(maxChannel - luminance, luminance - minChannel)
+
+        return ColorStats(luminance: luminance, saturation: saturation, contrast: contrast)
+    }
+
+    private static func averageRGBA(of image: UIImage) -> (r: CGFloat, g: CGFloat, b: CGFloat, a: CGFloat)? {
+        guard let ciImage = CIImage(image: image),
+              let filter = CIFilter(name: "CIAreaAverage") else {
+            return nil
+        }
+
+        filter.setValue(ciImage, forKey: kCIInputImageKey)
+        filter.setValue(CIVector(cgRect: ciImage.extent), forKey: kCIInputExtentKey)
+        guard let output = filter.outputImage else { return nil }
+
+        var pixel = [UInt8](repeating: 0, count: 4)
+        ciContext.render(
+            output,
+            toBitmap: &pixel,
+            rowBytes: 4,
+            bounds: CGRect(x: 0, y: 0, width: 1, height: 1),
+            format: .RGBA8,
+            colorSpace: CGColorSpaceCreateDeviceRGB()
+        )
+
+        return (
+            CGFloat(pixel[0]) / 255,
+            CGFloat(pixel[1]) / 255,
+            CGFloat(pixel[2]) / 255,
+            CGFloat(pixel[3]) / 255
+        )
+    }
+
+    private static func render(_ image: CIImage, scale: CGFloat) -> UIImage? {
+        guard let cgImage = ciContext.createCGImage(image, from: image.extent) else { return nil }
+        return UIImage(cgImage: cgImage, scale: scale, orientation: .up)
+    }
+
+    private static func clamp(_ value: CGFloat, min lower: CGFloat, max upper: CGFloat) -> CGFloat {
+        Swift.min(Swift.max(value, lower), upper)
+    }
+}
+
+final class LocalSmartDrawService: SmartDrawServiceProtocol {
+    func generate(_ request: SmartDrawRequest, progress: @escaping (Double) -> Void) async throws -> UIImage {
+        progress(0.15)
+
+        for step in 1...5 {
+            try await Task.sleep(nanoseconds: 180_000_000)
+            progress(0.15 + Double(step) / 5.0 * 0.75)
+        }
+
+        guard let image = SmartDrawImageProcessor.process(request.sourceImage, style: request.style) else {
+            throw SmartDrawError.processingFailed
+        }
+
+        progress(1.0)
+        return image
     }
 }
 

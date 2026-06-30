@@ -17,6 +17,7 @@ struct TemplatesView: View {
     @State private var isLoadingMore = false
 
     private let categoryColors: [Color] = [
+        MorphColors.onSurface,
         MorphColors.tertiary,
         MorphColors.primary,
         MorphColors.secondary,
@@ -190,7 +191,7 @@ struct TemplatesView: View {
                     CategoryChip(
                         title: title,
                         isActive: selectedCategory == index,
-                        color: categoryColors[index]
+                        color: categoryColors[index % categoryColors.count]
                     )
                     .onTapGesture {
                         withAnimation(.easeInOut(duration: 0.2)) {

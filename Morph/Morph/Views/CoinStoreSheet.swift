@@ -5,6 +5,7 @@ struct CoinStoreSheet: View {
     @EnvironmentObject private var storeManager: StoreManager
     @Environment(\.dismiss) private var dismiss
     @State private var purchasingPackID: String?
+    @State private var showPurchaseError = false
 
     var body: some View {
         NavigationStack {
@@ -14,6 +15,9 @@ struct CoinStoreSheet: View {
                 ScrollView(showsIndicators: false) {
                     VStack(spacing: 24) {
                         balanceCard
+                        if let error = storeManager.lastError {
+                            errorBanner(error)
+                        }
                         packsSection
                     }
                     .padding(.horizontal, 20)
@@ -32,6 +36,13 @@ struct CoinStoreSheet: View {
         .presentationDetents([.medium, .large])
         .presentationDragIndicator(.visible)
         .task { await storeManager.loadProducts() }
+        .alert(L10n.coinStorePurchaseFailed, isPresented: $showPurchaseError) {
+            Button(L10n.done, role: .cancel) {
+                storeManager.clearError()
+            }
+        } message: {
+            Text(storeManager.lastError ?? "")
+        }
     }
 
     private var balanceCard: some View {
@@ -51,6 +62,28 @@ struct CoinStoreSheet: View {
         .padding(.vertical, 28)
         .glassPanel(cornerRadius: 20)
         .neonBorder(MorphColors.primary.opacity(0.3), cornerRadius: 20)
+    }
+
+    private func errorBanner(_ message: String) -> some View {
+        HStack(alignment: .top, spacing: 10) {
+            Image(systemName: "exclamationmark.triangle.fill")
+                .foregroundStyle(MorphColors.primaryContainer)
+            Text(message)
+                .font(MorphFont.labelSM())
+                .foregroundStyle(MorphColors.onSurface)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            Button {
+                storeManager.clearError()
+            } label: {
+                Image(systemName: "xmark")
+                    .font(.system(size: 12, weight: .bold))
+                    .foregroundStyle(MorphColors.onSurfaceVariant)
+            }
+            .buttonStyle(.plain)
+        }
+        .padding(14)
+        .background(MorphColors.primary.opacity(0.12))
+        .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 
     private var packsSection: some View {
@@ -135,6 +168,8 @@ struct CoinStoreSheet: View {
             if let coins = await storeManager.purchase(productID: pack.productID) {
                 appState.purchaseCoins(coins)
                 dismiss()
+            } else if storeManager.lastError != nil {
+                showPurchaseError = true
             }
             purchasingPackID = nil
         }

@@ -86,7 +86,7 @@ struct HomeView: View {
         } label: {
             HStack(spacing: 14) {
                 MorphPhotoView(
-                    assetName: appState.sourcePhotoAsset ?? SampleImages.source,
+                    assetName: appState.sourcePhotoAsset,
                     uiImage: appState.sourceImage
                 )
                 .frame(width: 56, height: 56)

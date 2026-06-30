@@ -41,7 +41,7 @@
 
 /* Home */
 "home.hero.title" = "Digital Metamorphosis";
-"home.hero.subtitle" = "Elevate your identity through AI. Upload your reference photo to begin the swap.";
+"home.hero.subtitle" = "Elevate your identity with a new look. Upload your reference photo to begin the swap.";
 "home.continue.title" = "Continue Metamorphosis";
 "home.continue.subtitle" = "Your photo is ready — pick a template";
 "home.recent.title" = "Recent Creations";
@@ -69,6 +69,9 @@
 "templates.header.goddess.subtitle" = "Ethereal goddess-inspired looks with luminous skin and celestial aura.";
 "templates.header.anime.title" = "Anime Dimension";
 "templates.header.anime.subtitle" = "Stylized anime portraits with vibrant colors and expressive features.";
+"templates.header.all.title" = "All Templates";
+"templates.header.all.subtitle" = "Browse every style in one place — classic, cyberpunk, goddess, and anime.";
+"category.all" = "All";
 "category.classic_portraits" = "Classic Portraits";
 "category.cyberpunk" = "Cyberpunk";
 "category.goddess" = "Goddess";
@@ -114,11 +117,12 @@
 "confirm.change_source" = "Change Source Photo";
 "confirm.take_photo" = "Take Photo";
 "confirm.change_template" = "Choose Another Template";
+"confirm.select_photo" = "Select Photo";
 
 /* Processing */
-"processing.title" = "Neural Swap in Progress";
+"processing.title" = "Transformation in Progress";
 "processing.subtitle" = "Initiating metamorphosis...";
-"processing.subtitle.remote" = "Connecting to AI server...";
+"processing.subtitle.remote" = "Connecting to cloud server...";
 "processing.error.title" = "Transformation Failed";
 "processing.error.no_photo" = "Could not load your source photo.";
 
@@ -130,19 +134,19 @@
 "result.saved" = "Saved to Gallery";
 "result.try_another" = "Try Another Template";
 "result.share" = "Share";
-"result.share.message" = "Check out my AI metamorphosis created with Morph!";
+"result.share.message" = "Check out my metamorphosis created with Morph!";
 
 /* Gallery */
 "gallery.title" = "My Gallery";
 "gallery.empty.title" = "No Transformations Yet";
-"gallery.empty.subtitle" = "Your AI metamorphosis results will appear here.";
+"gallery.empty.subtitle" = "Your metamorphosis results will appear here.";
 "gallery.browse" = "Browse Templates";
 "gallery.delete" = "Delete";
 "gallery.delete.confirm" = "Remove this creation from your gallery?";
 
 /* Onboarding */
 "onboarding.page1.title" = "Welcome to Morph";
-"onboarding.page1.subtitle" = "Transform your look with AI-powered face swap magic.";
+"onboarding.page1.subtitle" = "Transform your look with stunning portrait templates.";
 "onboarding.page2.title" = "Upload Your Photo";
 "onboarding.page2.subtitle" = "Choose a clear front-facing photo for the best results.";
 "onboarding.page3.title" = "Pick & Transform";
@@ -154,7 +158,7 @@
 /* Settings */
 "settings.general" = "General";
 "settings.version" = "Version";
-"settings.api_status" = "AI Engine";
+"settings.api_status" = "Processing Engine";
 "settings.api.connected" = "Cloud API";
 "settings.api.local" = "Local Demo";
 "settings.restore_purchases" = "Restore Purchases";
@@ -184,6 +188,8 @@
 "coin_store.packs" = "Coin Packs";
 "coin_store.recommended" = "Popular";
 "coin_store.product_unavailable" = "This product is currently unavailable.";
+"coin_store.purchase_failed" = "Purchase Failed";
+"coin_store.purchase_pending" = "Purchase is pending approval.";
 "coin_pack.starter.price" = "Mock · $0.99";
 "coin_pack.popular.price" = "Mock · $2.99";
 "coin_pack.pro.price" = "Mock · $6.99";

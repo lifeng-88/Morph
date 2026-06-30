@@ -47,7 +47,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Morph needs camera access to capture your reference photo.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Morph needs access to save your AI transformation results.</string>
+	<string>Morph needs access to save your transformation results.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Morph needs access to your photos for face swap transformations.</string>
 	<key>ResBaseURL</key>

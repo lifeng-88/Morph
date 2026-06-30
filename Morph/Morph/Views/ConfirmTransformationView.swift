@@ -103,12 +103,17 @@ struct ConfirmTransformationView: View {
                 label: L10n.sourcePhoto,
                 labelColor: MorphColors.primary,
                 borderColor: MorphColors.primary,
-                action: { showSourceOptions = true }
+                action: { showSourceOptions = true },
+                showsChangeBadge: appState.hasSourcePhoto
             ) {
-                MorphPhotoView(
-                    assetName: appState.sourcePhotoAsset ?? SampleImages.source,
-                    uiImage: appState.sourceImage
-                )
+                if appState.hasSourcePhoto {
+                    MorphPhotoView(
+                        assetName: appState.sourcePhotoAsset,
+                        uiImage: appState.sourceImage
+                    )
+                } else {
+                    sourcePhotoPlaceholder
+                }
             }
 
             swapIndicator
@@ -117,10 +122,26 @@ struct ConfirmTransformationView: View {
                 label: L10n.selectedTemplate,
                 labelColor: MorphColors.secondary,
                 borderColor: MorphColors.secondary,
-                action: { showTemplatePicker = true }
+                action: { showTemplatePicker = true },
+                showsChangeBadge: true
             ) {
                 MorphImageView(assetName: activeTemplate.imageAsset, alignment: .trailing)
             }
+        }
+    }
+
+    private var sourcePhotoPlaceholder: some View {
+        ZStack {
+            MorphColors.surfaceContainer
+            VStack(spacing: 10) {
+                Image(systemName: "photo.on.rectangle.angled")
+                    .font(.system(size: 28))
+                    .foregroundStyle(MorphColors.primary)
+                Text(L10n.selectSourcePhoto)
+                    .font(MorphFont.labelMD())
+                    .foregroundStyle(MorphColors.onSurfaceVariant)
+            }
+            .padding(.horizontal, 8)
         }
     }
 
@@ -149,6 +170,7 @@ struct ConfirmTransformationView: View {
         labelColor: Color,
         borderColor: Color,
         action: @escaping () -> Void,
+        showsChangeBadge: Bool = true,
         @ViewBuilder image: () -> Content
     ) -> some View {
         VStack(spacing: 0) {
@@ -169,8 +191,10 @@ struct ConfirmTransformationView: View {
                     .allowsHitTesting(false)
                 }
                 .overlay(alignment: .topTrailing) {
-                    changeBadge
-                        .allowsHitTesting(false)
+                    if showsChangeBadge {
+                        changeBadge
+                            .allowsHitTesting(false)
+                    }
                 }
 
             Text(label)
@@ -325,8 +349,13 @@ struct ConfirmTransformationView: View {
             GradientButton(
                 title: L10n.startTransformation,
                 icon: "wand.and.stars",
-                subtitle: L10n.coins(activeTemplate.coinCost)
+                subtitle: L10n.coins(activeTemplate.coinCost),
+                isEnabled: appState.hasSourcePhoto
             ) {
+                guard appState.hasSourcePhoto else {
+                    showSourceOptions = true
+                    return
+                }
                 appState.startTransformation()
             }
             .padding(.horizontal, 20)

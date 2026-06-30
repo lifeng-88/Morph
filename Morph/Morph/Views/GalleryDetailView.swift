@@ -23,6 +23,13 @@ struct GalleryDetailView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 24))
                             .neonBorder(MorphColors.primary.opacity(0.25), cornerRadius: 24)
 
+                        if item.showsTransformationInputs {
+                            TransformationInputComparisonView(
+                                sourceImage: item.loadSourceUIImage(),
+                                template: item.linkedTemplate
+                            )
+                        }
+
                         Text(item.createdAt, style: .date)
                             .font(MorphFont.labelMD())
                             .foregroundStyle(MorphColors.onSurfaceVariant)
