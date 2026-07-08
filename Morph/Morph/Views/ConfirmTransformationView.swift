@@ -356,7 +356,9 @@ struct ConfirmTransformationView: View {
                     showSourceOptions = true
                     return
                 }
-                appState.startTransformation()
+                appState.requestAIDataConsentThenPerform {
+                    appState.startTransformation()
+                }
             }
             .padding(.horizontal, 20)
             .padding(.top, 14)

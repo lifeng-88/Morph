@@ -5,6 +5,8 @@ struct BSideView: View {
 
     @EnvironmentObject private var bSideManager: BSideManager
     @StateObject private var webViewModel: MorphH5WebViewModel
+    @State private var consentGranted = AIDataConsentManager.hasGranted
+    @State private var showConsentSheet = false
 
     init(url: URL) {
         self.url = url
@@ -15,6 +17,41 @@ struct BSideView: View {
         ZStack {
             MorphColors.backgroundDeep.ignoresSafeArea()
 
+            if consentGranted {
+                webContent
+            } else {
+                consentPlaceholder
+            }
+        }
+        .sheet(isPresented: $showConsentSheet) {
+            AIDataConsentSheet(
+                showsDecline: true,
+                onGrant: {
+                    consentGranted = true
+                    showConsentSheet = false
+                },
+                onDecline: {
+                    showConsentSheet = false
+                    bSideManager.switchToNative()
+                }
+            )
+            .interactiveDismissDisabled()
+        }
+        .onAppear {
+            if !consentGranted {
+                showConsentSheet = true
+            }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .morphAIDataConsentRequired)) { _ in
+            if !consentGranted {
+                showConsentSheet = true
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var webContent: some View {
+        ZStack {
             MorphH5WebView(viewModel: webViewModel)
                 .opacity(webViewModel.isReady ? 1 : 0)
                 .ignoresSafeArea(edges: .bottom)
@@ -45,6 +82,20 @@ struct BSideView: View {
             .padding(.top, 8)
             .accessibilityLabel(L10n.bsideClose)
         }
+    }
+
+    private var consentPlaceholder: some View {
+        VStack(spacing: 16) {
+            Image(systemName: "shield.lefthalf.filled")
+                .font(.system(size: 42))
+                .foregroundStyle(MorphColors.primary)
+            Text(L10n.aiConsentBSideBlocked)
+                .font(MorphFont.bodyMD())
+                .foregroundStyle(MorphColors.onSurfaceVariant)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 32)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     private func errorOverlay(message: String) -> some View {

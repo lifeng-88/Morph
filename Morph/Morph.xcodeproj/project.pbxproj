@@ -47,6 +47,10 @@
 		A100002C00000001 /* MorphH5WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200002C00000001 /* MorphH5WebView.swift */; };
 		A100002D00000001 /* BSideView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200002D00000001 /* BSideView.swift */; };
 		A100002E00000001 /* BSideSwitchSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200002E00000001 /* BSideSwitchSection.swift */; };
+		A100005000000001 /* AIDataConsentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200005000000001 /* AIDataConsentManager.swift */; };
+		A100005100000001 /* AIDataConsentSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200005100000001 /* AIDataConsentSheet.swift */; };
+		A100005200000001 /* PrivacyPolicyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200005200000001 /* PrivacyPolicyView.swift */; };
+		A100005300000001 /* PrivacySettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200005300000001 /* PrivacySettingsSection.swift */; };
 		A100002F00000001 /* MorphH5Bridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200003D00000001 /* MorphH5Bridge.swift */; };
 		A100003100000001 /* MorphH5Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200003100000001 /* MorphH5Config.swift */; };
 		A100003200000001 /* MorphJSONCacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200003200000001 /* MorphJSONCacheManager.swift */; };
@@ -114,6 +118,10 @@
 		A200002C00000001 /* MorphH5WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorphH5WebView.swift; sourceTree = "<group>"; };
 		A200002D00000001 /* BSideView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BSideView.swift; sourceTree = "<group>"; };
 		A200002E00000001 /* BSideSwitchSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BSideSwitchSection.swift; sourceTree = "<group>"; };
+		A200005000000001 /* AIDataConsentManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIDataConsentManager.swift; sourceTree = "<group>"; };
+		A200005100000001 /* AIDataConsentSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIDataConsentSheet.swift; sourceTree = "<group>"; };
+		A200005200000001 /* PrivacyPolicyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyPolicyView.swift; sourceTree = "<group>"; };
+		A200005300000001 /* PrivacySettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacySettingsSection.swift; sourceTree = "<group>"; };
 		A200003100000001 /* MorphH5Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorphH5Config.swift; sourceTree = "<group>"; };
 		A200003200000001 /* MorphJSONCacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorphJSONCacheManager.swift; sourceTree = "<group>"; };
 		A200003300000001 /* MorphVideoCacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorphVideoCacheManager.swift; sourceTree = "<group>"; };
@@ -235,6 +243,9 @@
 				A200002900000001 /* AppearanceSettingsSection.swift */,
 				A200002D00000001 /* BSideView.swift */,
 				A200002E00000001 /* BSideSwitchSection.swift */,
+				A200005100000001 /* AIDataConsentSheet.swift */,
+				A200005200000001 /* PrivacyPolicyView.swift */,
+				A200005300000001 /* PrivacySettingsSection.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -263,6 +274,7 @@
 				A200002700000001 /* SmartDrawService.swift */,
 				A200001F00000001 /* StoreManager.swift */,
 				A200002A00000001 /* BSideService.swift */,
+				A200005000000001 /* AIDataConsentManager.swift */,
 				A500000C00000001 /* H5 */,
 			);
 			path = Services;
@@ -428,6 +440,10 @@
 				A100003C00000001 /* MorphAppPageController.swift in Sources */,
 				A100002D00000001 /* BSideView.swift in Sources */,
 				A100002E00000001 /* BSideSwitchSection.swift in Sources */,
+				A100005000000001 /* AIDataConsentManager.swift in Sources */,
+				A100005100000001 /* AIDataConsentSheet.swift in Sources */,
+				A100005200000001 /* PrivacyPolicyView.swift in Sources */,
+				A100005300000001 /* PrivacySettingsSection.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -19,6 +19,7 @@ struct MyGalleryView: View {
                     ScrollView(showsIndicators: false) {
                         VStack(alignment: .leading, spacing: 24) {
                             AppSettingsSection()
+                            PrivacySettingsSection()
                             BSideSwitchSection()
                             AppearanceSettingsSection()
                             LanguageSettingsSection()

@@ -3,12 +3,14 @@ import SwiftUI
 struct OnboardingView: View {
     @EnvironmentObject private var appState: AppState
     @State private var page = 0
+    @State private var showConsentSheet = false
 
     private var pages: [(icon: String, color: Color, title: String, subtitle: String)] {
         [
             ("sparkles", MorphColors.primary, L10n.onboardingPage1Title, L10n.onboardingPage1Subtitle),
             ("photo.on.rectangle.angled", MorphColors.secondary, L10n.onboardingPage2Title, L10n.onboardingPage2Subtitle),
-            ("wand.and.stars", MorphColors.tertiary, L10n.onboardingPage3Title, L10n.onboardingPage3Subtitle)
+            ("wand.and.stars", MorphColors.tertiary, L10n.onboardingPage3Title, L10n.onboardingPage3Subtitle),
+            ("shield.lefthalf.filled", MorphColors.primary, L10n.onboardingPage4Title, L10n.onboardingPage4Subtitle)
         ]
     }
 
@@ -59,7 +61,7 @@ struct OnboardingView: View {
                     if page < pages.count - 1 {
                         withAnimation { page += 1 }
                     } else {
-                        appState.completeOnboarding()
+                        showConsentSheet = true
                     }
                 } label: {
                     Text(page < pages.count - 1 ? L10n.onboardingNext : L10n.onboardingStart)
@@ -81,6 +83,13 @@ struct OnboardingView: View {
                 }
             }
             .padding(.bottom, 40)
+        }
+        .sheet(isPresented: $showConsentSheet) {
+            AIDataConsentSheet(
+                onGrant: { appState.completeOnboarding() },
+                onDecline: { showConsentSheet = false }
+            )
+            .interactiveDismissDisabled()
         }
     }
 }

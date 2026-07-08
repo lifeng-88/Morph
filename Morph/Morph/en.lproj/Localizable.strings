@@ -151,6 +151,8 @@
 "onboarding.page2.subtitle" = "Choose a clear front-facing photo for the best results.";
 "onboarding.page3.title" = "Pick & Transform";
 "onboarding.page3.subtitle" = "Browse stunning templates and watch your metamorphosis unfold.";
+"onboarding.page4.title" = "Your Privacy Matters";
+"onboarding.page4.subtitle" = "Before using AI features, we will ask your permission before any photo is sent to our cloud AI partner for processing.";
 "onboarding.next" = "Next";
 "onboarding.skip" = "Skip";
 "onboarding.start" = "Get Started";
@@ -179,6 +181,34 @@
 "settings.bside.hint" = "Open the web experience in the app.";
 "settings.bside.open" = "Open Web Version";
 "bside.close" = "Back to App";
+
+/* Privacy & AI Consent */
+"privacy.section.title" = "Privacy";
+"privacy.policy.title" = "Privacy Policy";
+"ai.consent.title" = "AI Data Sharing";
+"ai.consent.subtitle" = "Morph uses third-party AI services to generate your requested photo transformations. Please review the details below before continuing.";
+"ai.consent.data.title" = "What data is sent";
+"ai.consent.data.body" = "Photos you select or capture (which may include your face), plus technical metadata needed to process your request (template ID, quality settings).";
+"ai.consent.recipient.title" = "Who receives the data";
+"ai.consent.recipient.body" = "Glamvid AI — our cloud AI service provider operating at api.glamvid.xin, res.glamvid.xin, and glamvid.xin (in-app web features).";
+"ai.consent.purpose.title" = "How the data is used";
+"ai.consent.purpose.body" = "Solely to generate the AI photo transformation you request. We do not use your photos for advertising profiling or sell your personal information.";
+"ai.consent.retention.title" = "How long data is kept";
+"ai.consent.retention.body" = "On-device gallery items remain until you delete them. Server-side photos are retained only as long as needed to complete processing, unless a longer period is required by law.";
+"ai.consent.privacy_link" = "Read full Privacy Policy";
+"ai.consent.agree" = "I Agree and Allow";
+"ai.consent.decline" = "Not Now";
+"ai.consent.footnote" = "You can withdraw consent anytime in Settings → Privacy.";
+"ai.consent.required_error" = "AI data sharing consent is required to continue.";
+"ai.consent.bside_blocked" = "Please review and accept AI data sharing to use web features.";
+"ai.consent.status.title" = "AI Data Sharing";
+"ai.consent.status.granted" = "Allowed";
+"ai.consent.status.not_granted" = "Not allowed";
+"ai.consent.revoke" = "Withdraw Consent";
+"ai.consent.revoke.title" = "Withdraw AI Consent?";
+"ai.consent.revoke.confirm" = "Withdraw";
+"ai.consent.revoke.message" = "You will be asked again before any photo is sent to our AI service provider.";
+
 "my.section.gallery" = "My Gallery";
 "my.section.favorites" = "Favorite Templates";
 

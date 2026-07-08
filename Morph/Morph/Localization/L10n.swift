@@ -118,6 +118,8 @@ enum L10n {
     static var onboardingPage2Subtitle: String { tr("onboarding.page2.subtitle") }
     static var onboardingPage3Title: String { tr("onboarding.page3.title") }
     static var onboardingPage3Subtitle: String { tr("onboarding.page3.subtitle") }
+    static var onboardingPage4Title: String { tr("onboarding.page4.title") }
+    static var onboardingPage4Subtitle: String { tr("onboarding.page4.subtitle") }
     static var onboardingNext: String { tr("onboarding.next") }
     static var onboardingSkip: String { tr("onboarding.skip") }
     static var onboardingStart: String { tr("onboarding.start") }
@@ -161,6 +163,34 @@ enum L10n {
     static var coinStoreProductUnavailable: String { tr("coin_store.product_unavailable") }
     static var coinStorePurchaseFailed: String { tr("coin_store.purchase_failed") }
     static var coinStorePurchasePending: String { tr("coin_store.purchase_pending") }
+
+    // MARK: - Privacy & AI Consent
+    static var privacySectionTitle: String { tr("privacy.section.title") }
+    static var privacyPolicyTitle: String { tr("privacy.policy.title") }
+    static var aiConsentTitle: String { tr("ai.consent.title") }
+    static var aiConsentSubtitle: String { tr("ai.consent.subtitle") }
+    static var aiConsentDataTitle: String { tr("ai.consent.data.title") }
+    static var aiConsentDataBody: String { tr("ai.consent.data.body") }
+    static var aiConsentRecipientTitle: String { tr("ai.consent.recipient.title") }
+    static var aiConsentRecipientBody: String { tr("ai.consent.recipient.body") }
+    static var aiConsentPurposeTitle: String { tr("ai.consent.purpose.title") }
+    static var aiConsentPurposeBody: String { tr("ai.consent.purpose.body") }
+    static var aiConsentRetentionTitle: String { tr("ai.consent.retention.title") }
+    static var aiConsentRetentionBody: String { tr("ai.consent.retention.body") }
+    static var aiConsentPrivacyLink: String { tr("ai.consent.privacy_link") }
+    static var aiConsentAgree: String { tr("ai.consent.agree") }
+    static var aiConsentDecline: String { tr("ai.consent.decline") }
+    static var aiConsentFootnote: String { tr("ai.consent.footnote") }
+    static var aiConsentRequiredError: String { tr("ai.consent.required_error") }
+    static var aiConsentBSideBlocked: String { tr("ai.consent.bside_blocked") }
+    static var aiConsentStatusTitle: String { tr("ai.consent.status.title") }
+    static var aiConsentStatusGranted: String { tr("ai.consent.status.granted") }
+    static var aiConsentStatusNotGranted: String { tr("ai.consent.status.not_granted") }
+    static var aiConsentRevoke: String { tr("ai.consent.revoke") }
+    static var aiConsentRevokeTitle: String { tr("ai.consent.revoke.title") }
+    static var aiConsentRevokeConfirm: String { tr("ai.consent.revoke.confirm") }
+    static var aiConsentRevokeMessage: String { tr("ai.consent.revoke.message") }
+
     static var cancel: String { tr("common.cancel") }
     static var done: String { tr("common.done") }
     static var retry: String { tr("common.retry") }

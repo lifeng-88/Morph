@@ -36,6 +36,13 @@ struct ContentView: View {
             OnboardingView()
                 .environmentObject(appState)
         }
+        .sheet(isPresented: $appState.showAIDataConsent) {
+            AIDataConsentSheet(
+                onGrant: { appState.grantAIDataConsentAndContinue() },
+                onDecline: { appState.declineAIDataConsent() }
+            )
+            .interactiveDismissDisabled()
+        }
     }
 
     @ViewBuilder

@@ -263,6 +263,16 @@ final class MorphH5Bridge: NSObject, WKScriptMessageHandler, WKNavigationDelegat
             respond(requestId: requestId, result: ["saved": saved])
         case "pickPhoto":
             debugLog("call \(typeName)")
+            guard AIDataConsentManager.hasGranted else {
+                respond(requestId: requestId, error: [
+                    "code": "AI_CONSENT_REQUIRED",
+                    "message": "User consent is required before sharing photos with AI services."
+                ])
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(name: .morphAIDataConsentRequired, object: nil)
+                }
+                return
+            }
             guard pendingPhotoRequestId == nil else {
                 respond(requestId: requestId, error: [
                     "code": "PHOTO_PICKER_BUSY",

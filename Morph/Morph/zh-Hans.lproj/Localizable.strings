@@ -151,6 +151,8 @@
 "onboarding.page2.subtitle" = "选择清晰的正脸照片，获得最佳效果。";
 "onboarding.page3.title" = "选模板、开始变换";
 "onboarding.page3.subtitle" = "浏览精美模板，见证你的数字蜕变。";
+"onboarding.page4.title" = "隐私与数据说明";
+"onboarding.page4.subtitle" = "使用 AI 功能前，我们会在将照片发送至云端 AI 服务商之前，先征得您的明确同意。";
 "onboarding.next" = "下一步";
 "onboarding.skip" = "跳过";
 "onboarding.start" = "开始体验";
@@ -179,6 +181,34 @@
 "settings.bside.hint" = "在应用内打开网页版体验。";
 "settings.bside.open" = "打开网页版";
 "bside.close" = "返回应用";
+
+/* Privacy & AI Consent */
+"privacy.section.title" = "隐私";
+"privacy.policy.title" = "隐私政策";
+"ai.consent.title" = "AI 数据共享同意";
+"ai.consent.subtitle" = "Morph 使用第三方 AI 服务生成您请求的照片变换效果。继续前请阅读以下说明。";
+"ai.consent.data.title" = "发送哪些数据";
+"ai.consent.data.body" = "您选择或拍摄的照片（可能包含面部），以及处理请求所需的技术信息（模板 ID、画质设置等）。";
+"ai.consent.recipient.title" = "数据发送给谁";
+"ai.consent.recipient.body" = "Glamvid AI — 我们的云端 AI 服务商，域名为 api.glamvid.xin、res.glamvid.xin 及 glamvid.xin（应用内网页功能）。";
+"ai.consent.purpose.title" = "数据用途";
+"ai.consent.purpose.body" = "仅用于生成您请求的 AI 照片变换效果。我们不会将您的照片用于广告画像，也不会出售您的个人信息。";
+"ai.consent.retention.title" = "数据保留期限";
+"ai.consent.retention.body" = "设备图库内容保留至您主动删除。服务器端照片仅在完成处理所需的期限内保留，法律另有要求的除外。";
+"ai.consent.privacy_link" = "查看完整隐私政策";
+"ai.consent.agree" = "同意并允许";
+"ai.consent.decline" = "暂不同意";
+"ai.consent.footnote" = "您可随时在「设置 → 隐私」中撤回同意。";
+"ai.consent.required_error" = "需要先同意 AI 数据共享才能继续。";
+"ai.consent.bside_blocked" = "使用网页功能前，请先阅读并同意 AI 数据共享说明。";
+"ai.consent.status.title" = "AI 数据共享";
+"ai.consent.status.granted" = "已允许";
+"ai.consent.status.not_granted" = "未允许";
+"ai.consent.revoke" = "撤回同意";
+"ai.consent.revoke.title" = "撤回 AI 同意？";
+"ai.consent.revoke.confirm" = "撤回";
+"ai.consent.revoke.message" = "撤回后，在将照片发送至 AI 服务商之前会再次征求您的同意。";
+
 "my.section.gallery" = "我的画廊";
 "my.section.favorites" = "收藏模板";
 

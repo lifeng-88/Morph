@@ -416,6 +416,12 @@ struct DrawingView: View {
 
     private func generateSmartDrawing() {
         guard let referenceImage else { return }
+        appState.requestAIDataConsentThenPerform {
+            performSmartDrawing(with: referenceImage)
+        }
+    }
+
+    private func performSmartDrawing(with referenceImage: UIImage) {
         let style = selectedStyle
         let cost = style.coinCost
         guard appState.startSmartDraw(style: style) else { return }

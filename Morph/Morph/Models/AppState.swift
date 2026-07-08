@@ -121,6 +121,9 @@ final class AppState: ObservableObject {
     @Published var showCoinStore = false
     @Published var selectedGalleryItem: GalleryItem?
     @Published var showOnboarding: Bool
+    @Published var showAIDataConsent = false
+
+    private var pendingConsentAction: (() -> Void)?
 
     let categoryKeys: [String] = [
         "category.all",
@@ -203,6 +206,11 @@ final class AppState: ObservableObject {
     }
 
     func performTransformation() async {
+        guard AIDataConsentManager.hasGranted else {
+            failTransformation(refund: selectedTemplate?.coinCost ?? 0, message: L10n.aiConsentRequiredError)
+            return
+        }
+
         guard let template = selectedTemplate else {
             isProcessing = false
             return
@@ -296,6 +304,27 @@ final class AppState: ObservableObject {
     func completeOnboarding() {
         UserDefaults.standard.set(true, forKey: StorageKey.onboardingCompleted)
         showOnboarding = false
+    }
+
+    func requestAIDataConsentThenPerform(_ action: @escaping () -> Void) {
+        if AIDataConsentManager.hasGranted {
+            action()
+            return
+        }
+        pendingConsentAction = action
+        showAIDataConsent = true
+    }
+
+    func grantAIDataConsentAndContinue() {
+        AIDataConsentManager.grant()
+        showAIDataConsent = false
+        pendingConsentAction?()
+        pendingConsentAction = nil
+    }
+
+    func declineAIDataConsent() {
+        showAIDataConsent = false
+        pendingConsentAction = nil
     }
 
     var hasSourcePhoto: Bool {
