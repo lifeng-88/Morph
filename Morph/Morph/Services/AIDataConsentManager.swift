@@ -2,7 +2,7 @@ import Foundation
 
 /// Tracks explicit user consent before photos may be sent to third-party AI services.
 enum AIDataConsentManager {
-    static let currentPolicyVersion = 1
+    static let currentPolicyVersion = 2
 
     private static let grantedKey = "morph.ai_data_consent.granted"
     private static let versionKey = "morph.ai_data_consent.version"

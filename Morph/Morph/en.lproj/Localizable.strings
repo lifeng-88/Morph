@@ -194,7 +194,7 @@
 "ai.consent.purpose.title" = "How the data is used";
 "ai.consent.purpose.body" = "Solely to generate the AI photo transformation you request. We do not use your photos for advertising profiling or sell your personal information.";
 "ai.consent.retention.title" = "How long data is kept";
-"ai.consent.retention.body" = "On-device gallery items remain until you delete them. Server-side photos are retained only as long as needed to complete processing, unless a longer period is required by law.";
+"ai.consent.retention.body" = "Transient on-device face detection is not retained. Gallery photos remain on your device until you delete them. Server-side photos are deleted within 72 hours after processing completes, unless law requires longer retention.";
 "ai.consent.privacy_link" = "Read full Privacy Policy";
 "ai.consent.agree" = "I Agree and Allow";
 "ai.consent.decline" = "Not Now";

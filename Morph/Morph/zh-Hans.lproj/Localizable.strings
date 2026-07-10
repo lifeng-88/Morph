@@ -194,7 +194,7 @@
 "ai.consent.purpose.title" = "数据用途";
 "ai.consent.purpose.body" = "仅用于生成您请求的 AI 照片变换效果。我们不会将您的照片用于广告画像，也不会出售您的个人信息。";
 "ai.consent.retention.title" = "数据保留期限";
-"ai.consent.retention.body" = "设备图库内容保留至您主动删除。服务器端照片仅在完成处理所需的期限内保留，法律另有要求的除外。";
+"ai.consent.retention.body" = "设备端临时人脸检测数据不保留。图库照片保留在您的设备上直至您删除。服务器端照片在处理完成后 72 小时内删除，法律另有要求的除外。";
 "ai.consent.privacy_link" = "查看完整隐私政策";
 "ai.consent.agree" = "同意并允许";
 "ai.consent.decline" = "暂不同意";

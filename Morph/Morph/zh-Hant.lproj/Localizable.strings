@@ -194,7 +194,7 @@
 "ai.consent.purpose.title" = "資料用途";
 "ai.consent.purpose.body" = "僅用於產生您請求的 AI 照片變換效果。我們不會將您的照片用於廣告画像，也不會出售您的個人資訊。";
 "ai.consent.retention.title" = "資料保留期限";
-"ai.consent.retention.body" = "裝置圖庫內容保留至您主動刪除。伺服器端照片僅在完成處理所需的期限內保留，法律另有要求的除外。";
+"ai.consent.retention.body" = "裝置端臨時人臉偵測資料不保留。圖庫照片保留在您的裝置上直至您刪除。伺服器端照片在處理完成後 72 小時內刪除，法律另有要求的除外。";
 "ai.consent.privacy_link" = "查看完整隱私政策";
 "ai.consent.agree" = "同意並允許";
 "ai.consent.decline" = "暫不同意";

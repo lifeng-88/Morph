@@ -82,7 +82,7 @@
   <div class="wrap">
     <header>
       <h1>隐私政策</h1>
-      <p class="meta">Morph · 生效日期：2026 年 7 月 8 日</p>
+      <p class="meta">Morph · 生效日期：2026 年 7 月 10 日</p>
       <p class="lang"><a href="morph-privacy.html">English</a></p>
     </header>
 
@@ -109,23 +109,69 @@
         Morph 不采集独立的生物识别标识（如 Face ID 模板或用于识别您身份的人脸识别档案）。
         当您使用 AI 变换功能时，我们仅处理您主动提供的、可能包含面部的照片。
       </p>
+
+      <p><strong>本应用中所指的人脸数据</strong></p>
       <ul>
-        <li><strong>处理内容</strong>：您选择或拍摄的照片，可能包含面部图像；</li>
-        <li><strong>设备端检测</strong>：可能使用 Apple Vision 在本地定位人脸区域以进行图像编辑，该坐标信息为临时数据，不会作为独立人脸记录存储；</li>
-        <li><strong>收集方式</strong>：仅在您主动上传、拍摄或提交照片进行处理时；</li>
-        <li><strong>使用目的</strong>：仅用于生成您请求的 AI 照片效果。</li>
+        <li>您选择或拍摄、可能包含面部图像的照片；</li>
+        <li>图像编辑过程中由 Apple Vision 在设备端生成的临时人脸区域坐标（不作为独立记录保存）。</li>
       </ul>
+
+      <p><strong>我们不保留的人脸数据</strong></p>
+      <ul>
+        <li><strong>不会</strong>创建、存储或使用 Face ID 模板、人脸识别档案或其他生物识别标识；</li>
+        <li><strong>不会</strong>在处理完成后将设备端人脸边界框或特征点作为独立人脸数据保存；</li>
+        <li><strong>不会</strong>在服务器上无限期保留人脸数据，用于身份识别、广告或建立人脸识别数据库。</li>
+      </ul>
+
+      <p><strong>我们可能存储的含人脸照片及原因</strong></p>
+      <ul>
+        <li><strong>设备本地（应用内图库）</strong>：若您完成变换，应用可能在本地保存源图与生成结果，供您查看、对比、分享或删除。仅在您选择保留内容并提供图库功能时存储。</li>
+        <li><strong>云端 AI 服务商服务器</strong>：若您同意并将照片提交云端 AI 处理，照片（可能含面部）将传输至 Glamvid AI，仅用于生成您请求的结果。</li>
+      </ul>
+
+      <p><strong>人脸数据保留期限及设定该期限的原因</strong></p>
+      <ul>
+        <li><strong>设备端临时人脸检测数据</strong>：不保留；编辑操作完成后立即丢弃。</li>
+        <li><strong>设备图库中的照片</strong>：保留至您从应用内图库删除该条目或卸载应用。该期限由您自主控制已保存内容而设定。</li>
+        <li><strong>提交至 AI 处理的服务器端照片</strong>：由 Glamvid AI 在变换任务完成后保留最多 <strong>72 小时</strong>，随后从生产系统删除，法律另有要求或为调查您发起的特定客服/滥用举报所需的除外。该有限期限用于交付结果、短时任务重试/恢复及故障排查，<strong>非无限期存储</strong>。</li>
+      </ul>
+
+      <p><strong>我们共享人脸数据的第三方</strong></p>
       <p>
-        在向第三方 AI 服务传输任何照片之前，本应用会在应用内明确说明发送的数据与接收方，并征得您的明示同意。
+        我们仅与 <strong>Glamvid AI</strong>（api.glamvid.xin、res.glamvid.xin、glamvid.xin）共享可能含人脸的照片，且仅在您应用内明示同意后，仅为生成您请求的 AI 照片变换。
+      </p>
+      <p>
+        <strong>我们不会</strong>向 AppsFlyer、Apple（超出您控制的 iOS 相册/相机权限范围）或其他合作伙伴共享人脸数据用于广告或身份识别。
+      </p>
+
+      <p><strong>向 Glamvid AI 共享人脸数据的原因</strong></p>
+      <p>
+        部分 AI 变换需云端处理。Glamvid AI 仅接收完成生成所需的照片及处理元数据，并返回生成结果。
+      </p>
+
+      <p><strong>Glamvid AI 是否存储人脸数据</strong></p>
+      <ul>
+        <li><strong>是否存储</strong>：是，但仅为临时存储。提交的照片在处理期间存于其服务器。</li>
+        <li><strong>存储原因</strong>：执行 AI 变换、向应用返回结果，并支持短时任务重试或失败恢复。</li>
+        <li><strong>存储时长</strong>：任务完成后最多 <strong>72 小时</strong>，随后从生产系统删除，法律另有要求的除外。</li>
+        <li><strong>为何为该时长</strong>：足以完成交付及有限运维需求，<strong>不会无限期保留</strong>。</li>
+        <li><strong>Glamvid AI 隐私实践</strong>：其仅可为提供 Morph 功能而处理所提交照片，采取合理安全措施，不得将照片用于无关广告或生物识别数据库。</li>
+      </ul>
+
+      <p>
+        在向 Glamvid AI 传输任何照片之前，本应用会明确说明发送的数据与接收方，并征得您的明示同意。
       </p>
 
       <h2>3. 第三方 AI 服务</h2>
-      <p>为提供 AI 照片变换，Morph 可能将您提交的照片及相关处理信息发送至我们的云端 AI 服务商：</p>
+      <p>
+        为提供 AI 照片变换，Morph 可能将您提交的照片（可能含第 2 节所述人脸数据）及相关处理信息发送至 Glamvid AI。
+        人脸数据的保留、共享原因及 Glamvid AI 存储实践详见第 2 节。
+      </p>
       <ul>
-        <li><strong>服务商</strong>：Glamvid AI（glamvid.xin 及相关子域名）；</li>
-        <li><strong>发送数据</strong>：您提交的照片（可能包含面部）、模板标识、画质设置等；</li>
+        <li><strong>服务商</strong>：Glamvid AI（api.glamvid.xin、res.glamvid.xin、glamvid.xin）；</li>
+        <li><strong>发送数据</strong>：您提交的照片（可能含面部）、模板标识、画质设置等；</li>
         <li><strong>用途</strong>：生成您请求的变换结果；</li>
-        <li><strong>保护</strong>：我们要求 AI 服务商仅为提供应用功能而处理数据，并采取适当安全措施。服务器端照片仅在完成处理所需的期限内保留，法律另有要求的除外。</li>
+        <li><strong>同意</strong>：仅在您应用内明示授权后才会传输。</li>
       </ul>
       <p>
         您可随时在应用「设置 → 隐私」中撤回 AI 数据共享同意。撤回后，在向 AI 服务商发送照片前，应用将再次征求您的许可。
