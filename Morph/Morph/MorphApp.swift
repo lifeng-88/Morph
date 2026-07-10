@@ -8,6 +8,8 @@ struct MorphApp: App {
     @ObservedObject private var storeManager = StoreManager.shared
     @ObservedObject private var appearanceManager = AppearanceManager.shared
     @ObservedObject private var bSideManager = BSideManager.shared
+    @State private var showLaunchAIConsent = !AIDataConsentManager.hasGranted
+    @State private var didStartBootstrap = false
 
     var body: some Scene {
         WindowGroup {
@@ -30,8 +32,31 @@ struct MorphApp: App {
             }
             .preferredColorScheme(appearanceManager.current.colorScheme)
             .task {
-                await bSideManager.bootstrapFromRemote()
+                guard !showLaunchAIConsent else { return }
+                startBootstrapIfNeeded()
             }
+            .fullScreenCover(isPresented: $showLaunchAIConsent) {
+                AIDataConsentSheet(
+                    showsDecline: true,
+                    onGrant: {
+                        showLaunchAIConsent = false
+                        startBootstrapIfNeeded()
+                    },
+                    onDecline: {
+                        showLaunchAIConsent = false
+                        startBootstrapIfNeeded()
+                    }
+                )
+                .interactiveDismissDisabled()
+            }
+        }
+    }
+
+    private func startBootstrapIfNeeded() {
+        guard !didStartBootstrap else { return }
+        didStartBootstrap = true
+        Task {
+            await bSideManager.bootstrapFromRemote()
         }
     }
 }

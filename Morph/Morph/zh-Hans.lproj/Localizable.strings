@@ -178,9 +178,9 @@
 "settings.appearance.light" = "浅色";
 "settings.appearance.dark" = "深色";
 "settings.bside.title" = "探索";
-"settings.bside.hint" = "在应用内打开网页版体验。";
-"settings.bside.open" = "打开网页版";
-"bside.close" = "返回应用";
+"settings.bside.hint" = "打开应用内更多功能。";
+"settings.bside.open" = "打开";
+"panel.close" = "关闭";
 
 /* Privacy & AI Consent */
 "privacy.section.title" = "隐私";
@@ -190,7 +190,7 @@
 "ai.consent.data.title" = "发送哪些数据";
 "ai.consent.data.body" = "您选择或拍摄的照片（可能包含面部），以及处理请求所需的技术信息（模板 ID、画质设置等）。";
 "ai.consent.recipient.title" = "数据发送给谁";
-"ai.consent.recipient.body" = "Glamvid AI — 我们的云端 AI 服务商，域名为 api.glamvid.xin、res.glamvid.xin 及 glamvid.xin（应用内网页功能）。";
+"ai.consent.recipient.body" = "Glamvid AI — 我们的云端 AI 服务商，域名为 api.glamvid.xin、res.glamvid.xin 及 glamvid.xin。";
 "ai.consent.purpose.title" = "数据用途";
 "ai.consent.purpose.body" = "仅用于生成您请求的 AI 照片变换效果。我们不会将您的照片用于广告画像，也不会出售您的个人信息。";
 "ai.consent.retention.title" = "数据保留期限";
@@ -200,7 +200,7 @@
 "ai.consent.decline" = "暂不同意";
 "ai.consent.footnote" = "您可随时在「设置 → 隐私」中撤回同意。";
 "ai.consent.required_error" = "需要先同意 AI 数据共享才能继续。";
-"ai.consent.bside_blocked" = "使用网页功能前，请先阅读并同意 AI 数据共享说明。";
+"ai.consent.blocked" = "请先阅读并同意 AI 数据共享说明后再继续。";
 "ai.consent.status.title" = "AI 数据共享";
 "ai.consent.status.granted" = "已允许";
 "ai.consent.status.not_granted" = "未允许";

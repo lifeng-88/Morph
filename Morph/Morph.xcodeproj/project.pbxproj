@@ -39,6 +39,8 @@
 		A100002000000001 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200002300000001 /* OnboardingView.swift */; };
 		A100002100000001 /* AppSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200002400000001 /* AppSettingsSection.swift */; };
 		A100002200000001 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = A200002500000001 /* PrivacyInfo.xcprivacy */; };
+		A100005400000001 /* morph-privacy.html in Resources */ = {isa = PBXBuildFile; fileRef = A200005400000001 /* morph-privacy.html */; };
+		A100005500000001 /* morph-privacy-zh.html in Resources */ = {isa = PBXBuildFile; fileRef = A200005500000001 /* morph-privacy-zh.html */; };
 		A100002300000001 /* DrawingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200002600000001 /* DrawingView.swift */; };
 		A100002400000001 /* SmartDrawService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200002700000001 /* SmartDrawService.swift */; };
 		A100002500000001 /* AppearanceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200002800000001 /* AppearanceManager.swift */; };
@@ -122,6 +124,8 @@
 		A200005100000001 /* AIDataConsentSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIDataConsentSheet.swift; sourceTree = "<group>"; };
 		A200005200000001 /* PrivacyPolicyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyPolicyView.swift; sourceTree = "<group>"; };
 		A200005300000001 /* PrivacySettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacySettingsSection.swift; sourceTree = "<group>"; };
+		A200005400000001 /* morph-privacy.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = "morph-privacy.html"; sourceTree = "<group>"; };
+		A200005500000001 /* morph-privacy-zh.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = "morph-privacy-zh.html"; sourceTree = "<group>"; };
 		A200003100000001 /* MorphH5Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorphH5Config.swift; sourceTree = "<group>"; };
 		A200003200000001 /* MorphJSONCacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorphJSONCacheManager.swift; sourceTree = "<group>"; };
 		A200003300000001 /* MorphVideoCacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorphVideoCacheManager.swift; sourceTree = "<group>"; };
@@ -185,8 +189,18 @@
 				A200003F00000001 /* MorphRelease.entitlements */,
 				A200002200000001 /* Products.storekit */,
 				A200002500000001 /* PrivacyInfo.xcprivacy */,
+				A500000D00000001 /* Resources */,
 			);
 			path = Morph;
+			sourceTree = "<group>";
+		};
+		A500000D00000001 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				A200005400000001 /* morph-privacy.html */,
+				A200005500000001 /* morph-privacy-zh.html */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		A500000300000001 /* Products */ = {
@@ -378,6 +392,8 @@
 				A100001100000001 /* InfoPlist.strings in Resources */,
 				A100001D00000001 /* Products.storekit in Resources */,
 				A100002200000001 /* PrivacyInfo.xcprivacy in Resources */,
+				A100005400000001 /* morph-privacy.html in Resources */,
+				A100005500000001 /* morph-privacy-zh.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

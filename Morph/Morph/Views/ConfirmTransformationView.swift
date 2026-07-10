@@ -103,7 +103,7 @@ struct ConfirmTransformationView: View {
                 label: L10n.sourcePhoto,
                 labelColor: MorphColors.primary,
                 borderColor: MorphColors.primary,
-                action: { showSourceOptions = true },
+                action: requestSourcePhotoSelection,
                 showsChangeBadge: appState.hasSourcePhoto
             ) {
                 if appState.hasSourcePhoto {
@@ -353,11 +353,11 @@ struct ConfirmTransformationView: View {
                 isEnabled: appState.hasSourcePhoto
             ) {
                 guard appState.hasSourcePhoto else {
-                    showSourceOptions = true
+                    requestSourcePhotoSelection()
                     return
                 }
                 appState.requestAIDataConsentThenPerform {
-                    appState.startTransformation()
+                    _ = appState.startTransformation()
                 }
             }
             .padding(.horizontal, 20)
@@ -365,6 +365,12 @@ struct ConfirmTransformationView: View {
             .padding(.bottom, 24)
             .background(.ultraThinMaterial)
             .background(MorphColors.background.opacity(0.92))
+        }
+    }
+
+    private func requestSourcePhotoSelection() {
+        appState.requestAIDataConsentThenPerform {
+            showSourceOptions = true
         }
     }
 }

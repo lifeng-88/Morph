@@ -15,6 +15,7 @@ enum FaceSwapError: LocalizedError {
     case invalidResponse
     case jobFailed
     case imageEncodingFailed
+    case consentRequired
     case network(Error)
 
     var errorDescription: String? {
@@ -22,6 +23,7 @@ enum FaceSwapError: LocalizedError {
         case .invalidResponse: return "Invalid server response."
         case .jobFailed: return "Face swap job failed."
         case .imageEncodingFailed: return "Could not encode image."
+        case .consentRequired: return L10n.aiConsentRequiredError
         case .network(let error): return error.localizedDescription
         }
     }
@@ -254,6 +256,10 @@ final class RemoteFaceSwapService: FaceSwapServiceProtocol {
     }
 
     func swap(_ request: FaceSwapRequest, progress: @escaping (Double) -> Void) async throws -> UIImage {
+        guard AIDataConsentManager.hasGranted else {
+            throw FaceSwapError.consentRequired
+        }
+
         guard let baseURL = MorphAPIConfig.baseURL,
               let apiKey = MorphAPIConfig.apiKey else {
             throw FaceSwapError.invalidResponse

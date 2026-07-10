@@ -23,7 +23,7 @@ struct BSideView: View {
                 consentPlaceholder
             }
         }
-        .sheet(isPresented: $showConsentSheet) {
+        .fullScreenCover(isPresented: $showConsentSheet) {
             AIDataConsentSheet(
                 showsDecline: true,
                 onGrant: {
@@ -80,7 +80,7 @@ struct BSideView: View {
             .buttonStyle(.plain)
             .padding(.trailing, 16)
             .padding(.top, 8)
-            .accessibilityLabel(L10n.bsideClose)
+            .accessibilityLabel(L10n.panelClose)
         }
     }
 
@@ -89,7 +89,7 @@ struct BSideView: View {
             Image(systemName: "shield.lefthalf.filled")
                 .font(.system(size: 42))
                 .foregroundStyle(MorphColors.primary)
-            Text(L10n.aiConsentBSideBlocked)
+            Text(L10n.aiConsentBlocked)
                 .font(MorphFont.bodyMD())
                 .foregroundStyle(MorphColors.onSurfaceVariant)
                 .multilineTextAlignment(.center)

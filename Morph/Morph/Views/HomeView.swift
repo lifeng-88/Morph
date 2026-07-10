@@ -142,8 +142,10 @@ struct HomeView: View {
 
     private var uploadPrompt: some View {
         Button {
-            withAnimation(.spring(response: 0.5)) {
-                appState.showPhotoGuide = true
+            appState.requestAIDataConsentThenPerform {
+                withAnimation(.spring(response: 0.5)) {
+                    appState.showPhotoGuide = true
+                }
             }
         } label: {
             HStack(spacing: 10) {
@@ -168,6 +170,7 @@ struct PhotoGuideSheet: View {
     @EnvironmentObject private var appState: AppState
     @State private var photoPickerItem: PhotosPickerItem?
     @State private var showCamera = false
+    @State private var showPhotosPicker = false
 
     private var tips: [(icon: String, color: Color, title: String, subtitle: String)] {
         [
@@ -259,6 +262,7 @@ struct PhotoGuideSheet: View {
                 }
             }
         }
+        .photosPicker(isPresented: $showPhotosPicker, selection: $photoPickerItem, matching: .images)
     }
 
     private func finishPhotoSelection(_ image: UIImage) {
@@ -296,7 +300,11 @@ struct PhotoGuideSheet: View {
 
     private var actionBar: some View {
         HStack(spacing: 12) {
-            PhotosPicker(selection: $photoPickerItem, matching: .images) {
+            Button {
+                appState.requestAIDataConsentThenPerform {
+                    showPhotosPicker = true
+                }
+            } label: {
                 HStack(spacing: 8) {
                     Image(systemName: "photo.on.rectangle")
                     Text(L10n.guideSelectGallery)
@@ -309,9 +317,12 @@ struct PhotoGuideSheet: View {
                 .clipShape(RoundedRectangle(cornerRadius: 16))
                 .shadow(color: MorphColors.primaryContainer.opacity(0.4), radius: 15)
             }
+            .buttonStyle(ScaleButtonStyle())
 
             Button {
-                showCamera = true
+                appState.requestAIDataConsentThenPerform {
+                    showCamera = true
+                }
             } label: {
                 Image(systemName: "camera.fill")
                     .font(.system(size: 22))

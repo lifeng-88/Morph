@@ -148,7 +148,7 @@ enum L10n {
     static var settingsBSideTitle: String { tr("settings.bside.title") }
     static var settingsBSideHint: String { tr("settings.bside.hint") }
     static var settingsBSideOpen: String { tr("settings.bside.open") }
-    static var bsideClose: String { tr("bside.close") }
+    static var panelClose: String { tr("panel.close") }
 
     // MARK: - Coins
     static var coinStoreTitle: String { tr("coin_store.title") }
@@ -182,7 +182,7 @@ enum L10n {
     static var aiConsentDecline: String { tr("ai.consent.decline") }
     static var aiConsentFootnote: String { tr("ai.consent.footnote") }
     static var aiConsentRequiredError: String { tr("ai.consent.required_error") }
-    static var aiConsentBSideBlocked: String { tr("ai.consent.bside_blocked") }
+    static var aiConsentBlocked: String { tr("ai.consent.blocked") }
     static var aiConsentStatusTitle: String { tr("ai.consent.status.title") }
     static var aiConsentStatusGranted: String { tr("ai.consent.status.granted") }
     static var aiConsentStatusNotGranted: String { tr("ai.consent.status.not_granted") }

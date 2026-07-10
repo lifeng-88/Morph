@@ -123,6 +123,7 @@ final class BSideManager: ObservableObject {
     }
 
     func switchToBSide() async {
+        guard AIDataConsentManager.hasGranted else { return }
         if let url = await resolveBSideURL() {
             phase = .web(url)
             MorphAppConfigPersistence.persistSuccessfulPresentationType(2)
@@ -205,7 +206,7 @@ final class BSideManager: ObservableObject {
     }
 
     private func applyPresentationType(_ type: Int) async {
-        if type == 2, let url = await resolveBSideURL() {
+        if type == 2, AIDataConsentManager.hasGranted, let url = await resolveBSideURL() {
             phase = .web(url)
         } else {
             phase = .native
@@ -213,12 +214,13 @@ final class BSideManager: ObservableObject {
     }
 
     private func applyPersistedPresentationType(_ type: Int) async {
-        if type == 2, let url = await resolveBSideURL() {
+        if type == 2, AIDataConsentManager.hasGranted, let url = await resolveBSideURL() {
             phase = .web(url)
         } else {
             phase = .native
         }
-        print("✅ [BSideManager] app_config 使用本地缓存 type=\(type) → \(type == 2 ? "B面" : "A面")")
+        let effective = (type == 2 && AIDataConsentManager.hasGranted) ? "B面" : "A面"
+        print("✅ [BSideManager] app_config 使用本地缓存 type=\(type) → \(effective)")
     }
 
     private func applyFirstLaunchFailure(reason: String) {

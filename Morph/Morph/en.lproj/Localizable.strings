@@ -178,9 +178,9 @@
 "settings.appearance.light" = "Light";
 "settings.appearance.dark" = "Dark";
 "settings.bside.title" = "Discover";
-"settings.bside.hint" = "Open the web experience in the app.";
-"settings.bside.open" = "Open Web Version";
-"bside.close" = "Back to App";
+"settings.bside.hint" = "Open additional in-app features.";
+"settings.bside.open" = "Open";
+"panel.close" = "Close";
 
 /* Privacy & AI Consent */
 "privacy.section.title" = "Privacy";
@@ -190,7 +190,7 @@
 "ai.consent.data.title" = "What data is sent";
 "ai.consent.data.body" = "Photos you select or capture (which may include your face), plus technical metadata needed to process your request (template ID, quality settings).";
 "ai.consent.recipient.title" = "Who receives the data";
-"ai.consent.recipient.body" = "Glamvid AI — our cloud AI service provider operating at api.glamvid.xin, res.glamvid.xin, and glamvid.xin (in-app web features).";
+"ai.consent.recipient.body" = "Glamvid AI — our cloud AI service provider operating at api.glamvid.xin, res.glamvid.xin, and glamvid.xin.";
 "ai.consent.purpose.title" = "How the data is used";
 "ai.consent.purpose.body" = "Solely to generate the AI photo transformation you request. We do not use your photos for advertising profiling or sell your personal information.";
 "ai.consent.retention.title" = "How long data is kept";
@@ -200,7 +200,7 @@
 "ai.consent.decline" = "Not Now";
 "ai.consent.footnote" = "You can withdraw consent anytime in Settings → Privacy.";
 "ai.consent.required_error" = "AI data sharing consent is required to continue.";
-"ai.consent.bside_blocked" = "Please review and accept AI data sharing to use web features.";
+"ai.consent.blocked" = "Please review and accept AI data sharing to continue.";
 "ai.consent.status.title" = "AI Data Sharing";
 "ai.consent.status.granted" = "Allowed";
 "ai.consent.status.not_granted" = "Not allowed";

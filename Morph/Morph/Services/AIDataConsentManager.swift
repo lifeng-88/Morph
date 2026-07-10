@@ -8,7 +8,7 @@ enum AIDataConsentManager {
     private static let versionKey = "morph.ai_data_consent.version"
 
     static let thirdPartyProviderName = "Glamvid AI"
-    static let thirdPartyDomains = "api.glamvid.xin, res.glamvid.xin, and glamvid.xin (H5)"
+    static let thirdPartyDomains = "api.glamvid.xin, res.glamvid.xin, and glamvid.xin"
 
     static var hasGranted: Bool {
         UserDefaults.standard.bool(forKey: grantedKey)

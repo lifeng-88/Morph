@@ -20,7 +20,6 @@ struct MyGalleryView: View {
                         VStack(alignment: .leading, spacing: 24) {
                             AppSettingsSection()
                             PrivacySettingsSection()
-                            BSideSwitchSection()
                             AppearanceSettingsSection()
                             LanguageSettingsSection()
                             favoritesSection

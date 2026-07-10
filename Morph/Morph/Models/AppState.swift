@@ -192,6 +192,7 @@ final class AppState: ObservableObject {
 
     @discardableResult
     func startTransformation() -> Bool {
+        guard AIDataConsentManager.hasGranted else { return false }
         guard let template = selectedTemplate else { return false }
         guard hasSourcePhoto else { return false }
         guard coins >= template.coinCost else {
@@ -277,6 +278,7 @@ final class AppState: ObservableObject {
 
     @discardableResult
     func startSmartDraw(style: SmartDrawStyle) -> Bool {
+        guard AIDataConsentManager.hasGranted else { return false }
         let cost = style.coinCost
         guard coins >= cost else {
             showInsufficientCoins = true

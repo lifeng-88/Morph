@@ -60,6 +60,8 @@ struct OnboardingView: View {
                 Button {
                     if page < pages.count - 1 {
                         withAnimation { page += 1 }
+                    } else if AIDataConsentManager.hasGranted {
+                        appState.completeOnboarding()
                     } else {
                         showConsentSheet = true
                     }
@@ -76,7 +78,11 @@ struct OnboardingView: View {
 
                 if page < pages.count - 1 {
                     Button(L10n.onboardingSkip) {
-                        appState.completeOnboarding()
+                        if AIDataConsentManager.hasGranted {
+                            appState.completeOnboarding()
+                        } else {
+                            showConsentSheet = true
+                        }
                     }
                     .font(MorphFont.labelMD())
                     .foregroundStyle(MorphColors.onSurfaceVariant)
@@ -84,10 +90,10 @@ struct OnboardingView: View {
             }
             .padding(.bottom, 40)
         }
-        .sheet(isPresented: $showConsentSheet) {
+        .fullScreenCover(isPresented: $showConsentSheet) {
             AIDataConsentSheet(
                 onGrant: { appState.completeOnboarding() },
-                onDecline: { showConsentSheet = false }
+                onDecline: { appState.completeOnboarding() }
             )
             .interactiveDismissDisabled()
         }

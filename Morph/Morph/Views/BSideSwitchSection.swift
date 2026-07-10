@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct BSideSwitchSection: View {
+    @EnvironmentObject private var appState: AppState
     @EnvironmentObject private var bSideManager: BSideManager
     @State private var isSwitching = false
 
@@ -49,16 +50,19 @@ struct BSideSwitchSection: View {
     }
 
     private func openBSide() {
-        isSwitching = true
-        Task {
-            await bSideManager.switchToBSide()
-            isSwitching = false
+        appState.requestAIDataConsentThenPerform {
+            isSwitching = true
+            Task {
+                await bSideManager.switchToBSide()
+                isSwitching = false
+            }
         }
     }
 }
 
 #Preview {
     BSideSwitchSection()
+        .environmentObject(AppState())
         .environmentObject(BSideManager.shared)
         .padding()
         .background(MorphColors.background)
