@@ -47,12 +47,40 @@ final class MockFaceSwapService: FaceSwapServiceProtocol {
             try await Task.sleep(nanoseconds: 300_000_000)
             progress(Double(step) / 10.0)
         }
-        return LocalFaceSwapCompositor.compose(
-            source: request.sourceImage,
-            template: request.templateImage,
-            categoryKey: request.templateCategoryKey,
-            faceEnhancement: request.faceEnhancement
-        )
+        return await Task.detached(priority: .userInitiated) {
+            autoreleasepool {
+                LocalFaceSwapCompositor.compose(
+                    source: request.sourceImage,
+                    template: request.templateImage,
+                    categoryKey: request.templateCategoryKey,
+                    faceEnhancement: request.faceEnhancement
+                )
+            }
+        }.value
+    }
+}
+
+enum FaceSwapImagePreparer {
+    static func prepared(_ image: UIImage, maxDimension: CGFloat = 1600) -> UIImage {
+        let normalized = normalizedOrientation(image)
+        let size = normalized.size
+        let maxSide = max(size.width, size.height)
+        guard maxSide > maxDimension else { return normalized }
+
+        let scale = maxDimension / maxSide
+        let newSize = CGSize(width: size.width * scale, height: size.height * scale)
+        let renderer = UIGraphicsImageRenderer(size: newSize)
+        return renderer.image { _ in
+            normalized.draw(in: CGRect(origin: .zero, size: newSize))
+        }
+    }
+
+    private static func normalizedOrientation(_ image: UIImage) -> UIImage {
+        guard image.imageOrientation != .up else { return image }
+        let renderer = UIGraphicsImageRenderer(size: image.size)
+        return renderer.image { _ in
+            image.draw(in: CGRect(origin: .zero, size: image.size))
+        }
     }
 }
 

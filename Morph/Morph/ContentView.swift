@@ -28,6 +28,20 @@ struct ContentView: View {
             ProcessingView()
                 .environmentObject(appState)
         }
+        .fullScreenCover(isPresented: $appState.showResult) {
+            NavigationStack {
+                ResultShareView()
+                    .environmentObject(appState)
+            }
+        }
+        .alert(L10n.processingErrorTitle, isPresented: Binding(
+            get: { appState.processingError != nil },
+            set: { if !$0 { appState.processingError = nil } }
+        )) {
+            Button(L10n.done) { appState.processingError = nil }
+        } message: {
+            Text(appState.processingError ?? "")
+        }
         .sheet(isPresented: $appState.showCoinStore) {
             CoinStoreSheet()
                 .environmentObject(appState)

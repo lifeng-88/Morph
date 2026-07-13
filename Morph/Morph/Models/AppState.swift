@@ -217,13 +217,14 @@ final class AppState: ObservableObject {
             return
         }
 
-        guard let source = sourceUIImage(),
-              let templateImage = PhotoLibraryService.loadUIImage(named: template.imageAsset) else {
+        guard let sourceRaw = sourceUIImage(),
+              let templateRaw = PhotoLibraryService.loadUIImage(named: template.imageAsset) else {
             failTransformation(refund: template.coinCost, message: L10n.processingErrorNoPhoto)
             return
         }
 
-        let service = FaceSwapServiceFactory.make()
+        let source = FaceSwapImagePreparer.prepared(sourceRaw)
+        let templateImage = FaceSwapImagePreparer.prepared(templateRaw, maxDimension: 1200)
         let request = FaceSwapRequest(
             sourceImage: source,
             templateId: template.id,
@@ -232,25 +233,28 @@ final class AppState: ObservableObject {
             hdQuality: hdQuality,
             faceEnhancement: faceEnhancement
         )
+        let service = FaceSwapServiceFactory.make()
+        let coinCost = template.coinCost
 
         do {
-            let result = try await service.swap(request) { [weak self] value in
-                Task { @MainActor in
-                    self?.processingProgress = value
+            let result = try await Task.detached(priority: .userInitiated) {
+                try await service.swap(request) { value in
+                    Task { @MainActor in
+                        self.processingProgress = value
+                    }
                 }
-            }
+            }.value
             completeTransformation(with: result)
         } catch {
-            failTransformation(refund: template.coinCost, message: error.localizedDescription)
+            failTransformation(refund: coinCost, message: error.localizedDescription)
         }
     }
 
     func completeTransformation(with image: UIImage) {
         resultImage = image
         resultPhotoAsset = nil
-        isProcessing = false
         processingProgress = 1
-        showResult = true
+        isProcessing = false
 
         if let template = selectedTemplate {
             let filename = (try? ResultImageStore.save(image)) ?? nil
@@ -266,6 +270,11 @@ final class AppState: ObservableObject {
                 at: 0
             )
             persistGallery()
+        }
+
+        Task { @MainActor in
+            try? await Task.sleep(for: .milliseconds(300))
+            showResult = true
         }
     }
 

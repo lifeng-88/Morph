@@ -2,7 +2,6 @@ import SwiftUI
 
 struct ResultShareView: View {
     @EnvironmentObject private var appState: AppState
-    @Environment(\.dismiss) private var dismiss
     @State private var downloadState: DownloadState = .idle
     @State private var showShareSheet = false
 
@@ -159,7 +158,6 @@ struct ResultShareView: View {
 
     private func returnToTemplates() {
         appState.returnToTemplatesFromResult()
-        dismiss()
     }
 
     private func saveResult() {

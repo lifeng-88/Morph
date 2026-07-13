@@ -458,26 +458,53 @@ struct ParticleBackground: View {
     @Environment(\.colorScheme) private var colorScheme
     @State private var animate = false
 
+    private struct ParticleSpec {
+        let xFactor: CGFloat
+        let size: CGFloat
+        let opacity: Double
+        let duration: Double
+        let delay: Double
+    }
+
+    private static let particles: [ParticleSpec] = [
+        ParticleSpec(xFactor: 0.08, size: 3, opacity: 0.18, duration: 12, delay: 0.0),
+        ParticleSpec(xFactor: 0.17, size: 5, opacity: 0.24, duration: 16, delay: 0.5),
+        ParticleSpec(xFactor: 0.26, size: 4, opacity: 0.14, duration: 14, delay: 1.0),
+        ParticleSpec(xFactor: 0.35, size: 6, opacity: 0.22, duration: 18, delay: 1.5),
+        ParticleSpec(xFactor: 0.44, size: 3, opacity: 0.16, duration: 11, delay: 2.0),
+        ParticleSpec(xFactor: 0.53, size: 5, opacity: 0.20, duration: 15, delay: 2.5),
+        ParticleSpec(xFactor: 0.62, size: 4, opacity: 0.12, duration: 13, delay: 3.0),
+        ParticleSpec(xFactor: 0.71, size: 6, opacity: 0.26, duration: 17, delay: 3.5),
+        ParticleSpec(xFactor: 0.80, size: 3, opacity: 0.15, duration: 12, delay: 4.0),
+        ParticleSpec(xFactor: 0.89, size: 5, opacity: 0.21, duration: 19, delay: 4.5),
+        ParticleSpec(xFactor: 0.95, size: 4, opacity: 0.17, duration: 14, delay: 5.0),
+        ParticleSpec(xFactor: 0.50, size: 2, opacity: 0.10, duration: 20, delay: 5.5)
+    ]
+
     var body: some View {
         GeometryReader { geo in
-            ForEach(0..<12, id: \.self) { i in
+            ForEach(Array(Self.particles.enumerated()), id: \.offset) { index, particle in
                 Circle()
-                    .fill(MorphColors.primary.opacity(colorScheme == .dark ? Double.random(in: 0.1...0.3) : Double.random(in: 0.04...0.12)))
-                    .frame(width: CGFloat.random(in: 2...6))
+                    .fill(MorphColors.primary.opacity(adjustedOpacity(particle.opacity)))
+                    .frame(width: particle.size, height: particle.size)
                     .position(
-                        x: CGFloat.random(in: 0...geo.size.width),
+                        x: geo.size.width * particle.xFactor,
                         y: animate ? -20 : geo.size.height + 20
                     )
                     .animation(
-                        .linear(duration: Double.random(in: 10...20))
+                        .linear(duration: particle.duration)
                         .repeatForever(autoreverses: false)
-                        .delay(Double(i) * 0.5),
+                        .delay(particle.delay),
                         value: animate
                     )
             }
         }
         .onAppear { animate = true }
         .allowsHitTesting(false)
+    }
+
+    private func adjustedOpacity(_ base: Double) -> Double {
+        colorScheme == .dark ? base : base * 0.45
     }
 }
 

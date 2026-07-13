@@ -5,7 +5,6 @@ struct ConfirmTransformationView: View {
     let template: TemplateItem
     @EnvironmentObject private var appState: AppState
     @Environment(\.dismiss) private var dismiss
-    @State private var navigateToResult = false
     @State private var showSourceOptions = false
     @State private var showTemplatePicker = false
     @State private var showCamera = false
@@ -43,12 +42,6 @@ struct ConfirmTransformationView: View {
             }
         }
         .navigationBarHidden(true)
-        .onChange(of: appState.showResult) { _, show in
-            if show { navigateToResult = true }
-        }
-        .navigationDestination(isPresented: $navigateToResult) {
-            ResultShareView()
-        }
         .sheet(isPresented: $showSourceOptions) {
             sourcePhotoPickerSheet
         }
@@ -86,14 +79,6 @@ struct ConfirmTransformationView: View {
         .sheet(isPresented: $appState.showCoinStore) {
             CoinStoreSheet()
                 .environmentObject(appState)
-        }
-        .alert(L10n.processingErrorTitle, isPresented: .init(
-            get: { appState.processingError != nil },
-            set: { if !$0 { appState.processingError = nil } }
-        )) {
-            Button(L10n.done) { appState.processingError = nil }
-        } message: {
-            Text(appState.processingError ?? "")
         }
     }
 
