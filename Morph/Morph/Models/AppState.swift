@@ -409,11 +409,20 @@ enum MorphCoinCatalog {
     /// 与 B 面 H5 充值套餐一致（packageId + App Store productID + 金币数量）
     static let packs: [CoinPack] = [
         CoinPack(
+            id: "coins_5",
+            packageId: 1_780_024_370,
+            gold: 5,
+            bonus: 0,
+            productID: "MorphApp.coins_5",
+            fallbackPrice: "$0.99",
+            isRecommended: false
+        ),
+        CoinPack(
             id: "coins_20",
             packageId: 1_780_024_391,
             gold: 20,
             bonus: 0,
-            productID: "com.morph.app.coins_20",
+            productID: "MorphApp.coins_20",
             fallbackPrice: "$4.99",
             isRecommended: false
         ),
@@ -422,7 +431,7 @@ enum MorphCoinCatalog {
             packageId: 1_780_024_409,
             gold: 40,
             bonus: 10,
-            productID: "com.morph.app.coins_40",
+            productID: "MorphApp.coins_40",
             fallbackPrice: "$9.99",
             isRecommended: true
         ),
@@ -431,7 +440,7 @@ enum MorphCoinCatalog {
             packageId: 1_780_024_435,
             gold: 80,
             bonus: 40,
-            productID: "com.morph.app.coins_80",
+            productID: "MorphApp.coins_80",
             fallbackPrice: "$19.99",
             isRecommended: false
         ),
@@ -440,7 +449,7 @@ enum MorphCoinCatalog {
             packageId: 1_780_024_488,
             gold: 200,
             bonus: 140,
-            productID: "com.morph.app.coins_200",
+            productID: "MorphApp.coins_200",
             fallbackPrice: "$49.99",
             isRecommended: false
         ),
@@ -449,26 +458,8 @@ enum MorphCoinCatalog {
             packageId: 1_780_024_507,
             gold: 400,
             bonus: 400,
-            productID: "com.morph.app.coins_400",
+            productID: "MorphApp.coins_400",
             fallbackPrice: "$99.99",
-            isRecommended: false
-        ),
-        CoinPack(
-            id: "coins_800",
-            packageId: 1_780_024_556,
-            gold: 800,
-            bonus: 1200,
-            productID: "com.morph.app.coins_800",
-            fallbackPrice: "$199.99",
-            isRecommended: false
-        ),
-        CoinPack(
-            id: "coins_1200",
-            packageId: 1_780_024_583,
-            gold: 1200,
-            bonus: 2400,
-            productID: "com.morph.app.coins_1200",
-            fallbackPrice: "$299.99",
             isRecommended: false
         )
     ]
