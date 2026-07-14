@@ -220,6 +220,16 @@
 "coin_store.product_unavailable" = "This product is currently unavailable.";
 "coin_store.purchase_failed" = "Purchase Failed";
 "coin_store.purchase_pending" = "Purchase is pending approval.";
+"coin_store.products_unavailable" = "Unable to load coin packs from the App Store. Please check your connection and try again.";
+"coin_store.retry" = "Retry";
+"coin_store.purchase_success.title" = "Purchase Complete";
+"coin_store.purchase_success.message" = "You received %lld coins.";
+"coin_store.restore" = "Restore Purchases";
+"coin_store.consumable_notice" = "Coin packs are consumable and are delivered immediately after purchase.";
+"coin_store.verification_failed" = "We could not verify this purchase. Please try again.";
+"coin_store.purchase_not_allowed" = "Purchases are not allowed on this device.";
+"coin_store.partial_products" = "Some coin packs are temporarily unavailable.";
+"coin_store.estimated_price" = "Est.";
 "coin_pack.starter.price" = "Mock · $0.99";
 "coin_pack.popular.price" = "Mock · $2.99";
 "coin_pack.pro.price" = "Mock · $6.99";

@@ -163,6 +163,19 @@ enum L10n {
     static var coinStoreProductUnavailable: String { tr("coin_store.product_unavailable") }
     static var coinStorePurchaseFailed: String { tr("coin_store.purchase_failed") }
     static var coinStorePurchasePending: String { tr("coin_store.purchase_pending") }
+    static var coinStoreProductsUnavailable: String { tr("coin_store.products_unavailable") }
+    static var coinStoreRetry: String { tr("coin_store.retry") }
+    static var coinStorePurchaseSuccessTitle: String { tr("coin_store.purchase_success.title") }
+    static var coinStoreRestore: String { tr("coin_store.restore") }
+    static var coinStoreConsumableNotice: String { tr("coin_store.consumable_notice") }
+    static var coinStoreVerificationFailed: String { tr("coin_store.verification_failed") }
+    static var coinStorePurchaseNotAllowed: String { tr("coin_store.purchase_not_allowed") }
+    static var coinStorePartialProducts: String { tr("coin_store.partial_products") }
+    static var coinStoreEstimatedPrice: String { tr("coin_store.estimated_price") }
+
+    static func coinStorePurchaseSuccessMessage(_ coins: Int) -> String {
+        String(format: tr("coin_store.purchase_success.message"), coins)
+    }
 
     // MARK: - Privacy & AI Consent
     static var privacySectionTitle: String { tr("privacy.section.title") }

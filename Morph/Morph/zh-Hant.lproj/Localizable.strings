@@ -220,6 +220,16 @@
 "coin_store.product_unavailable" = "該商品暫不可用，請稍後重試。";
 "coin_store.purchase_failed" = "購買失敗";
 "coin_store.purchase_pending" = "購買正在等待批准。";
+"coin_store.products_unavailable" = "無法從 App Store 載入金幣套餐，請檢查網路後重試。";
+"coin_store.retry" = "重試";
+"coin_store.purchase_success.title" = "購買成功";
+"coin_store.purchase_success.message" = "你已獲得 %lld 枚金幣。";
+"coin_store.restore" = "恢復購買";
+"coin_store.consumable_notice" = "金幣包為消耗型商品，購買成功後將立即到帳。";
+"coin_store.verification_failed" = "無法驗證此次購買，請稍後重試。";
+"coin_store.purchase_not_allowed" = "此裝置不允許進行購買。";
+"coin_store.partial_products" = "部分金幣套餐暫時不可用。";
+"coin_store.estimated_price" = "約";
 "coin_pack.starter.price" = "模擬 · $0.99";
 "coin_pack.popular.price" = "模擬 · $2.99";
 "coin_pack.pro.price" = "模擬 · $6.99";

@@ -18,6 +18,7 @@ struct ContentView: View {
         }
         .task {
             await storeManager.processUnfinishedTransactions()
+            storeManager.preloadProductsIfNeeded()
         }
         .onChange(of: storeManager.pendingCoinGrant) { _, coins in
             guard let coins else { return }

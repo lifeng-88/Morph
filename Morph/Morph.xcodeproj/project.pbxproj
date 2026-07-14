@@ -72,6 +72,7 @@
 		A100004200000001 /* MorphDeviceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200004200000001 /* MorphDeviceManager.swift */; };
 		A100004300000001 /* MorphAppConfigAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200004300000001 /* MorphAppConfigAPI.swift */; };
 		A100004400000001 /* MorphAFRemoteConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200004400000001 /* MorphAFRemoteConfig.swift */; };
+		A100004500000001 /* MorphIAPSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200004500000001 /* MorphIAPSupport.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -146,6 +147,7 @@
 		A200004200000001 /* MorphDeviceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorphDeviceManager.swift; sourceTree = "<group>"; };
 		A200004300000001 /* MorphAppConfigAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorphAppConfigAPI.swift; sourceTree = "<group>"; };
 		A200004400000001 /* MorphAFRemoteConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorphAFRemoteConfig.swift; sourceTree = "<group>"; };
+		A200004500000001 /* MorphIAPSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorphIAPSupport.swift; sourceTree = "<group>"; };
 		A300000100000001 /* Morph.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Morph.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -287,6 +289,7 @@
 				A200001E00000001 /* FaceSwapService.swift */,
 				A200002700000001 /* SmartDrawService.swift */,
 				A200001F00000001 /* StoreManager.swift */,
+				A200004500000001 /* MorphIAPSupport.swift */,
 				A200002A00000001 /* BSideService.swift */,
 				A200005000000001 /* AIDataConsentManager.swift */,
 				A500000C00000001 /* H5 */,
@@ -351,6 +354,9 @@
 					A600000100000001 = {
 						CreatedOnToolsVersion = 15.2;
 						SystemCapabilities = {
+							com.apple.InAppPurchase = {
+								enabled = 1;
+							};
 							com.apple.Push = {
 								enabled = 1;
 							};
@@ -434,6 +440,7 @@
 				A100001B00000001 /* FaceSwapService.swift in Sources */,
 				A100002400000001 /* SmartDrawService.swift in Sources */,
 				A100001C00000001 /* StoreManager.swift in Sources */,
+				A100004500000001 /* MorphIAPSupport.swift in Sources */,
 				A100002000000001 /* OnboardingView.swift in Sources */,
 				A100002100000001 /* AppSettingsSection.swift in Sources */,
 				A100002500000001 /* AppearanceManager.swift in Sources */,

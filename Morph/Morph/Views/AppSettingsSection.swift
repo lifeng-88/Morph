@@ -4,6 +4,7 @@ struct AppSettingsSection: View {
     @EnvironmentObject private var storeManager: StoreManager
     @State private var isRestoring = false
     @State private var showRestoreAlert = false
+    @State private var restoreMessage = ""
 
     private var appVersion: String {
         let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
@@ -50,7 +51,7 @@ struct AppSettingsSection: View {
         .alert(L10n.settingsRestoreTitle, isPresented: $showRestoreAlert) {
             Button(L10n.done, role: .cancel) {}
         } message: {
-            Text(L10n.settingsRestoreMessage)
+            Text(restoreMessage)
         }
     }
 
@@ -76,8 +77,16 @@ struct AppSettingsSection: View {
     private func restorePurchases() {
         isRestoring = true
         Task {
-            await storeManager.restorePurchases()
+            let result = await storeManager.restorePurchases()
             isRestoring = false
+            switch result {
+            case .recovered(let coins):
+                restoreMessage = L10n.coinStorePurchaseSuccessMessage(coins)
+            case .synced:
+                restoreMessage = L10n.settingsRestoreMessage
+            case .failed(let message):
+                restoreMessage = message
+            }
             showRestoreAlert = true
         }
     }

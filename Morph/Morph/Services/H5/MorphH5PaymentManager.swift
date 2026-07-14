@@ -54,12 +54,27 @@ final class MorphH5PaymentManager {
         }
 
         do {
-            guard let product = try await Product.products(for: [productId]).first else {
+            var lastError: String?
+            var product: Product?
+
+            for attempt in 0..<3 {
+                let fetched = try await Product.products(for: [productId])
+                if let resolved = fetched.first {
+                    product = resolved
+                    break
+                }
+                lastError = "Apple product is unavailable."
+                if attempt < 2 {
+                    try? await Task.sleep(nanoseconds: UInt64((attempt + 1) * 500_000_000))
+                }
+            }
+
+            guard let product else {
                 return [
                     "opened": false,
                     "status": "failed",
                     "code": "PRODUCT_NOT_FOUND",
-                    "message": "Apple product is unavailable."
+                    "message": lastError ?? "Apple product is unavailable."
                 ]
             }
 
@@ -139,7 +154,7 @@ final class MorphH5PaymentManager {
         var restored: [[String: Any]] = []
 
         for await result in Transaction.unfinished {
-            if case .verified(let transaction) = result {
+            if case .verified(let transaction) = result, MorphIAPSupport.isH5Managed(transaction) {
                 pendingTransactions[transaction.id] = transaction
                 restored.append(transactionPayload(transaction, status: "restored", opened: true))
             }
@@ -173,14 +188,15 @@ final class MorphH5PaymentManager {
     }
 
     private func capture(_ result: VerificationResult<Transaction>) async {
-        if case .verified(let transaction) = result {
-            pendingTransactions[transaction.id] = transaction
-            NotificationCenter.default.post(
-                name: .morphPaymentTransactionUpdated,
-                object: nil,
-                userInfo: ["payload": transactionPayload(transaction, status: "success", opened: true)]
-            )
-        }
+        guard case .verified(let transaction) = result else { return }
+        guard MorphIAPSupport.isH5Managed(transaction) else { return }
+
+        pendingTransactions[transaction.id] = transaction
+        NotificationCenter.default.post(
+            name: .morphPaymentTransactionUpdated,
+            object: nil,
+            userInfo: ["payload": transactionPayload(transaction, status: "success", opened: true)]
+        )
     }
 
     private func transactionPayload(
