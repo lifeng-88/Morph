@@ -180,6 +180,7 @@ final class BSideManager: ObservableObject {
             source: attribution.source,
             channel: channel,
             version: version,
+            afId: attribution.afId,
             afAttributionJson: attribution.attributionJson
         )
         print("📱 [BSideManager] 请求 /v1/app_config channel=\(channel) version=\(version)")

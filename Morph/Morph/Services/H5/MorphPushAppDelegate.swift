@@ -30,6 +30,24 @@ final class MorphPushAppDelegate: NSObject, UIApplicationDelegate, UNUserNotific
         return true
     }
 
+    func application(
+        _ app: UIApplication,
+        open url: URL,
+        options: [UIApplication.OpenURLOptionsKey: Any] = [:]
+    ) -> Bool {
+        MorphAFSDKBridge.handleOpen(url: url, options: options)
+        return true
+    }
+
+    func application(
+        _ application: UIApplication,
+        continue userActivity: NSUserActivity,
+        restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void
+    ) -> Bool {
+        MorphAFSDKBridge.continueUserActivity(userActivity)
+        return true
+    }
+
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         MorphPushManager.shared.updateDeviceToken(deviceToken)
     }

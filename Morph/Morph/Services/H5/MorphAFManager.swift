@@ -4,6 +4,7 @@
 //
 
 import Foundation
+import UIKit
 
 #if canImport(AppsFlyerLib)
 import AppsFlyerLib
@@ -283,6 +284,23 @@ enum MorphAFSDKBridge {
         #endif
     }
 
+    static func handleOpen(url: URL, options: [UIApplication.OpenURLOptionsKey: Any]) {
+        #if canImport(AppsFlyerLib)
+        AppsFlyerLib.shared().handleOpen(url, options: options)
+        #else
+        _ = url
+        _ = options
+        #endif
+    }
+
+    static func continueUserActivity(_ userActivity: NSUserActivity) {
+        #if canImport(AppsFlyerLib)
+        AppsFlyerLib.shared().continue(userActivity, restorationHandler: nil)
+        #else
+        _ = userActivity
+        #endif
+    }
+
     static func logEvent(
         name: String,
         values: [String: Any]?,
@@ -318,12 +336,21 @@ private final class MorphAFDelegateWrapper: NSObject, AppsFlyerLibDelegate {
 
     func onConversionDataSuccess(_ conversionInfo: [AnyHashable: Any]) {
         let afId = AppsFlyerLib.shared().getAppsFlyerUID()
-        let attributionJson = (try? JSONSerialization.data(withJSONObject: conversionInfo))
+        var payload = conversionInfo.reduce(into: [String: Any]()) { result, pair in
+            if let key = pair.key as? String {
+                result[key] = pair.value
+            }
+        }
+        let trimmedAfId = afId.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !trimmedAfId.isEmpty {
+            payload["appsflyer_id"] = trimmedAfId
+        }
+        let attributionJson = (try? JSONSerialization.data(withJSONObject: payload))
             .flatMap { String(data: $0, encoding: .utf8) }
         let source = conversionInfo["media_source"] as? String
         Task { @MainActor in
             MorphAFManager.shared.setAttribution(
-                afId: afId,
+                afId: trimmedAfId.isEmpty ? nil : trimmedAfId,
                 adId: nil,
                 source: source,
                 attributionJson: attributionJson

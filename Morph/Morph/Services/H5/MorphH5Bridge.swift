@@ -119,7 +119,6 @@ final class MorphH5Bridge: NSObject, WKScriptMessageHandler, WKNavigationDelegat
             debugLog("call \(typeName)")
             viewModel?.markReady()
             respond(requestId: requestId, result: ["ready": true])
-        #if DEBUG
         case "logAnalyticsEvent":
             debugLog("call \(typeName)")
             let params = Self.params(from: body)
@@ -143,6 +142,7 @@ final class MorphH5Bridge: NSObject, WKScriptMessageHandler, WKNavigationDelegat
                     }
                 }
             }
+        #if DEBUG
         case "debugLog":
             if MorphH5Config.debugLogging {
                 let params = body["params"] as? [String: Any]
