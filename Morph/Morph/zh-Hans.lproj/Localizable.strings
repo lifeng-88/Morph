@@ -166,6 +166,8 @@
 "settings.restore_purchases" = "恢复购买";
 "settings.restore.title" = "恢复完成";
 "settings.restore.message" = "已同步 App Store 购买记录。消耗型金币包无法恢复。";
+"settings.dev_id.copied.title" = "已复制";
+"settings.dev_id.copied.message" = "设备 ID 已复制到剪贴板。";
 "settings.language" = "语言";
 "settings.language.hint" = "切换后立即应用至整个 App。";
 "settings.language.system" = "跟随系统";

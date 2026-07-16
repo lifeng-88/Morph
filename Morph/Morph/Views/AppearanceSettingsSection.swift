@@ -69,6 +69,7 @@ struct AppearanceSettingsSection: View {
                 RoundedRectangle(cornerRadius: 12)
                     .stroke(isSelected ? MorphColors.primary.opacity(0.35) : MorphColors.separator, lineWidth: 1)
             )
+            .fullWidthRowTapArea()
         }
         .buttonStyle(.plain)
     }

@@ -86,5 +86,6 @@ struct PrivacySettingsSection: View {
             trailing
         }
         .padding(.vertical, 14)
+        .fullWidthRowTapArea()
     }
 }

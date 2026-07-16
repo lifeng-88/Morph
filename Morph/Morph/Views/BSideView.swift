@@ -10,7 +10,8 @@ struct BSideView: View {
 
     init(url: URL) {
         self.url = url
-        _webViewModel = StateObject(wrappedValue: MorphH5WebViewModel(pageURL: url))
+        let viewModel = MorphH5Preloader.takeViewModel(for: url) ?? MorphH5WebViewModel(pageURL: url)
+        _webViewModel = StateObject(wrappedValue: viewModel)
     }
 
     var body: some View {
@@ -53,7 +54,8 @@ struct BSideView: View {
     private var webContent: some View {
         ZStack {
             MorphH5WebView(viewModel: webViewModel)
-                .opacity(webViewModel.isReady ? 1 : 0)
+                .opacity(webViewModel.isReady ? 1 : 0.15)
+                .animation(.easeOut(duration: 0.2), value: webViewModel.isReady)
                 .ignoresSafeArea(edges: .bottom)
 
             if !webViewModel.isReady, webViewModel.errorMessage == nil {
@@ -65,22 +67,6 @@ struct BSideView: View {
             if let errorMessage = webViewModel.errorMessage {
                 errorOverlay(message: errorMessage)
             }
-        }
-        .overlay(alignment: .topTrailing) {
-            Button(action: bSideManager.switchToNative) {
-                Image(systemName: "xmark")
-                    .font(.system(size: 13, weight: .bold))
-                    .foregroundStyle(MorphColors.onSurface)
-                    .frame(width: 34, height: 34)
-                    .background(.ultraThinMaterial)
-                    .background(MorphColors.floatingFill)
-                    .clipShape(Circle())
-                    .shadow(color: MorphColors.elevatedShadow, radius: 8, y: 2)
-            }
-            .buttonStyle(.plain)
-            .padding(.trailing, 16)
-            .padding(.top, 8)
-            .accessibilityLabel(L10n.panelClose)
         }
     }
 

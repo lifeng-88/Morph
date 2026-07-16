@@ -140,6 +140,8 @@ enum L10n {
     static var settingsRestorePurchases: String { tr("settings.restore_purchases") }
     static var settingsRestoreTitle: String { tr("settings.restore.title") }
     static var settingsRestoreMessage: String { tr("settings.restore.message") }
+    static var settingsDevIdCopiedTitle: String { tr("settings.dev_id.copied.title") }
+    static var settingsDevIdCopiedMessage: String { tr("settings.dev_id.copied.message") }
     static var settingsAppearance: String { tr("settings.appearance") }
     static var settingsAppearanceHint: String { tr("settings.appearance.hint") }
     static var appearanceSystem: String { tr("settings.appearance.system") }

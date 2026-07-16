@@ -1,15 +1,17 @@
 import SwiftUI
+import UIKit
 
 struct AppSettingsSection: View {
     @EnvironmentObject private var storeManager: StoreManager
     @State private var isRestoring = false
     @State private var showRestoreAlert = false
     @State private var restoreMessage = ""
+    @State private var versionTapCount = 0
+    @State private var lastVersionTapAt: Date?
+    @State private var showDevIdCopiedAlert = false
 
     private var appVersion: String {
-        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
-        let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"
-        return "\(version) (\(build))"
+        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
     }
 
     var body: some View {
@@ -23,7 +25,12 @@ struct AppSettingsSection: View {
             }
 
             VStack(spacing: 0) {
-                settingsRow(title: L10n.settingsVersion, value: appVersion)
+                Button {
+                    handleVersionRowTap()
+                } label: {
+                    settingsRow(title: L10n.settingsVersion, value: appVersion)
+                }
+                .buttonStyle(.plain)
                 divider
                 Button {
                     restorePurchases()
@@ -41,6 +48,7 @@ struct AppSettingsSection: View {
                         }
                     }
                     .padding(.vertical, 14)
+                    .fullWidthRowTapArea()
                 }
                 .buttonStyle(.plain)
                 .disabled(isRestoring)
@@ -52,6 +60,11 @@ struct AppSettingsSection: View {
             Button(L10n.done, role: .cancel) {}
         } message: {
             Text(restoreMessage)
+        }
+        .alert(L10n.settingsDevIdCopiedTitle, isPresented: $showDevIdCopiedAlert) {
+            Button(L10n.done, role: .cancel) {}
+        } message: {
+            Text(L10n.settingsDevIdCopiedMessage)
         }
     }
 
@@ -72,6 +85,28 @@ struct AppSettingsSection: View {
                 .foregroundStyle(valueColor)
         }
         .padding(.vertical, 14)
+        .fullWidthRowTapArea()
+    }
+
+    private func handleVersionRowTap() {
+        let now = Date()
+        if let lastVersionTapAt, now.timeIntervalSince(lastVersionTapAt) > 2 {
+            versionTapCount = 0
+        }
+        lastVersionTapAt = now
+        versionTapCount += 1
+
+        guard versionTapCount >= 10 else { return }
+        versionTapCount = 0
+        lastVersionTapAt = nil
+
+        Task {
+            let devId = await MorphDeviceManager.shared.getDeviceId()
+            await MainActor.run {
+                UIPasteboard.general.string = devId
+                showDevIdCopiedAlert = true
+            }
+        }
     }
 
     private func restorePurchases() {

@@ -16,7 +16,7 @@ private let nativeAFAttributionJSONKey = "af_attribution_json"
 private let nativeAFAfIDKey = "af_af_id"
 private let nativeAFAdIDKey = "af_ad_id"
 private let nativeAFSourceKey = "af_source"
-private let nativeAFAttributionTimeoutSeconds: TimeInterval = 10
+private let nativeAFAttributionTimeoutSeconds: TimeInterval = 5
 
 struct AFAttributionResult {
     var afId: String?

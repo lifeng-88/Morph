@@ -524,3 +524,11 @@ struct CircuitLinesBackground: View {
         }
     }
 }
+
+extension View {
+    /// 让 HStack 行内 Spacer 空白区域也能响应点击。
+    func fullWidthRowTapArea(alignment: Alignment = .leading) -> some View {
+        frame(maxWidth: .infinity, alignment: alignment)
+            .contentShape(Rectangle())
+    }
+}

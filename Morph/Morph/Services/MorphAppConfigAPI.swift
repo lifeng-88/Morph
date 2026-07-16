@@ -53,6 +53,7 @@ enum MorphAppConfigPersistence {
     static let presentationTypeKey = "morph.v1.app_config.presentation_type"
     static let fetchSucceededKey = "morph.v1.app_config.fetch_succeeded"
     static let lastRemoteRefreshKey = "morph.v1.app_config.last_remote_refresh"
+    static let cachedBSideURLKey = "morph.v1.bside.cached_url"
 
     static var hasPersistedSuccessfulFetch: Bool {
         UserDefaults.standard.bool(forKey: fetchSucceededKey)

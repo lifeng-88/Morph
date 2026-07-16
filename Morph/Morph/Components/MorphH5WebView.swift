@@ -16,6 +16,9 @@ final class MorphH5WebViewModel: ObservableObject {
     private var readyFallbackWorkItem: DispatchWorkItem?
     private var loadSequence = 0
 
+    private static let sharedProcessPool = WKProcessPool()
+    private static let readyFallbackDelay: TimeInterval = 2.5
+
     init(pageURL: URL) {
         self.pageURL = pageURL
         MorphH5Config.configure(pageURL: pageURL)
@@ -28,20 +31,20 @@ final class MorphH5WebViewModel: ObservableObject {
     func loadIfNeeded() {
         guard !didLoad else { return }
         didLoad = true
+        MorphH5PaymentManager.shared.startListening()
+        load()
         Task {
             await MorphAFManager.shared.initAFAsync(channelId: MorphH5Config.channel)
         }
-        MorphH5PaymentManager.shared.startListening()
-        load()
     }
 
     func reload() {
         isReady = false
         errorMessage = nil
+        load()
         Task {
             await MorphAFManager.shared.initAFAsync(channelId: MorphH5Config.channel)
         }
-        load()
     }
 
     func markReady() {
@@ -64,7 +67,7 @@ final class MorphH5WebViewModel: ObservableObject {
             self.markReady()
         }
         readyFallbackWorkItem = workItem
-        DispatchQueue.main.asyncAfter(deadline: .now() + 8, execute: workItem)
+        DispatchQueue.main.asyncAfter(deadline: .now() + Self.readyFallbackDelay, execute: workItem)
     }
 
     private func load() {
@@ -87,6 +90,7 @@ final class MorphH5WebViewModel: ObservableObject {
         contentController.add(bridge, name: MorphH5Bridge.messageName)
 
         let configuration = WKWebViewConfiguration()
+        configuration.processPool = Self.sharedProcessPool
         configuration.userContentController = contentController
         configuration.defaultWebpagePreferences.allowsContentJavaScript = true
         configuration.allowsInlineMediaPlayback = true

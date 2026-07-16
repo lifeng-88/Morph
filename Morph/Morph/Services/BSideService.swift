@@ -80,6 +80,9 @@ final class BSideManager: ObservableObject {
 
     private init() {
         phase = Self.initialPhase()
+        if case .web(let url) = phase {
+            MorphH5Preloader.preload(url: url)
+        }
     }
 
     func bootstrapFromRemote() async {
@@ -125,13 +128,15 @@ final class BSideManager: ObservableObject {
     func switchToBSide() async {
         guard AIDataConsentManager.hasGranted else { return }
         if let url = await resolveBSideURL() {
-            phase = .web(url)
+            presentBSide(at: url)
             MorphAppConfigPersistence.persistSuccessfulPresentationType(2)
         }
     }
 
     func switchToNative() {
         phase = .native
+        MorphH5Preloader.clear()
+        UserDefaults.standard.removeObject(forKey: MorphAppConfigPersistence.cachedBSideURLKey)
         MorphAppConfigPersistence.persistSuccessfulPresentationType(1)
     }
 
@@ -140,10 +145,34 @@ final class BSideManager: ObservableObject {
             return .loading
         }
         let type = MorphAppConfigPersistence.readPersistedPresentationType()
+        if type == 2,
+           BSideConfig.isConfigured,
+           AIDataConsentManager.hasGranted,
+           let cachedURL = cachedBSideURL() {
+            return .web(cachedURL)
+        }
         if type == 2, BSideConfig.isConfigured {
             return .loading
         }
         return .native
+    }
+
+    private static func cachedBSideURL() -> URL? {
+        guard let raw = UserDefaults.standard.string(forKey: MorphAppConfigPersistence.cachedBSideURLKey),
+              let url = URL(string: raw) else {
+            return nil
+        }
+        return url
+    }
+
+    private func cacheBSideURL(_ url: URL) {
+        UserDefaults.standard.set(url.absoluteString, forKey: MorphAppConfigPersistence.cachedBSideURLKey)
+    }
+
+    private func presentBSide(at url: URL) {
+        cacheBSideURL(url)
+        MorphH5Preloader.preload(url: url)
+        phase = .web(url)
     }
 
     private func performFirstLaunchBootstrap() async {
@@ -208,15 +237,21 @@ final class BSideManager: ObservableObject {
 
     private func applyPresentationType(_ type: Int) async {
         if type == 2, AIDataConsentManager.hasGranted, let url = await resolveBSideURL() {
-            phase = .web(url)
+            presentBSide(at: url)
         } else {
             phase = .native
         }
     }
 
     private func applyPersistedPresentationType(_ type: Int) async {
-        if type == 2, AIDataConsentManager.hasGranted, let url = await resolveBSideURL() {
-            phase = .web(url)
+        if type == 2, AIDataConsentManager.hasGranted {
+            if let cached = Self.cachedBSideURL() {
+                presentBSide(at: cached)
+            } else if let url = await resolveBSideURL() {
+                presentBSide(at: url)
+            } else {
+                phase = .native
+            }
         } else {
             phase = .native
         }
@@ -240,7 +275,9 @@ final class BSideManager: ObservableObject {
             baseURL = nil
         }
         guard let baseURL else { return nil }
-        return BSideConfig.urlAppendingDeviceId(baseURL, deviceId: deviceId)
+        let resolved = BSideConfig.urlAppendingDeviceId(baseURL, deviceId: deviceId)
+        cacheBSideURL(resolved)
+        return resolved
     }
 
     private func fetchRemoteURL(from configURL: URL) async -> URL? {

@@ -166,6 +166,8 @@
 "settings.restore_purchases" = "Restore Purchases";
 "settings.restore.title" = "Restore Complete";
 "settings.restore.message" = "Your App Store purchases have been synced. Consumable coin packs cannot be restored.";
+"settings.dev_id.copied.title" = "Copied";
+"settings.dev_id.copied.message" = "Device ID copied to clipboard.";
 "settings.language" = "Language";
 "settings.language.hint" = "Changes apply instantly across the app.";
 "settings.language.system" = "System Default";
