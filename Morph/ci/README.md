@@ -72,11 +72,11 @@ Workflow 只负责上传构建。还需在 App Store Connect：
 
 ## 五、签名说明
 
-- 工程本地可为 Manual；CI 运行 `ci/prepare_ci_signing.py` 切到 Automatic 并写入 `DEVELOPMENT_TEAM`
-- **Archive** 使用 ASC API Key + **Apple Distribution** 签名（含 AppsFlyer 等嵌套 framework）
-- **不使用** `-allowProvisioningDeviceRegistration`，避免每次 CI 新建 Development 证书耗尽配额
-- **Export IPA** 指定 `signingCertificate = Apple Distribution`
-- `ci/generate_export_options.py` 写入 `teamID`，避免 `exportArchive No Team Found in Archive`
+- 工程本地保持 **Manual** 签名即可，CI **不修改** `project.pbxproj`
+- **Archive**：`CODE_SIGNING_ALLOWED=NO`（无签名，不创建 Development 证书）
+- **Patch Archive**：`ci/patch_archive_team.py` 写入 Team，避免 `exportArchive No Team Found in Archive`
+- **Export IPA**：ASC API Key + Automatic + `signingCertificate = Apple Distribution`（重签主包与 AppsFlyer 等嵌套 framework）
+- **Verify IPA**：`ci/verify_ipa_signatures.sh` 上传前校验 Distribution 签名
 
 ---
 
@@ -85,7 +85,7 @@ Workflow 只负责上传构建。还需在 App Store Connect：
 | 现象 | 处理 |
 |------|------|
 | `maximum number of certificates` / `Choose a certificate to revoke` | 打开 [Certificates](https://developer.apple.com/account/resources/certificates/list)，撤销多余的 **Apple Development**（尤其 `Created via API`）；保留本机开发用 1–2 个 + **Apple Distribution** |
-| `Invalid Signature` / `AppsFlyerLib` / code 90035 | 嵌套 framework 未用 Distribution 签名；确认 CI Archive 使用 `Apple Distribution`，且未设置 `CODE_SIGNING_ALLOWED=NO` |
+| `Invalid Signature` / `AppsFlyerLib` / code 90035 | Export 未用 Distribution 重签；确认 `patch_archive_team.py` 已执行，且 ExportOptions 含 `signingCertificate = Apple Distribution` |
 | `No profiles for 'com.morph.net'` | 多为证书配额问题连带错误；先清 Development 证书配额，确认 `APPLE_TEAM_ID` 正确后再跑 |
 | `no devices` | 确认 App ID 已注册；API Key 角色为 Admin/App Manager |
 | Build Number 重复 | 重新 Run（CI 自动 Connect 最新 +1）或手动填更大 build_number |
@@ -99,7 +99,6 @@ Workflow 只负责上传构建。还需在 App Store Connect：
 
 ```bash
 cd Morph
-python3 ci/prepare_ci_signing.py
 
 xcodebuild archive \
   -project Morph.xcodeproj \
@@ -107,14 +106,9 @@ xcodebuild archive \
   -configuration Release \
   -destination "generic/platform=iOS" \
   -archivePath /tmp/Morph.xcarchive \
-  DEVELOPMENT_TEAM="你的 Team ID" \
-  CODE_SIGN_STYLE=Automatic \
-  "CODE_SIGN_IDENTITY[sdk=iphoneos*]=Apple Distribution" \
-  -allowProvisioningUpdates \
-  -authenticationKeyPath ~/private_keys/AuthKey_XXX.p8 \
-  -authenticationKeyID "Key ID" \
-  -authenticationKeyIssuerID "Issuer ID"
+  CODE_SIGNING_ALLOWED=NO
 
+ARCHIVE_PATH=/tmp/Morph.xcarchive APPLE_TEAM_ID="你的 Team ID" python3 ci/patch_archive_team.py
 APPLE_TEAM_ID="你的 Team ID" python3 ci/generate_export_options.py
 
 xcodebuild -exportArchive \
@@ -126,4 +120,6 @@ xcodebuild -exportArchive \
   -authenticationKeyPath ~/private_keys/AuthKey_XXX.p8 \
   -authenticationKeyID "Key ID" \
   -authenticationKeyIssuerID "Issuer ID"
+
+bash ci/verify_ipa_signatures.sh /tmp/export/Morph.ipa
 ```
