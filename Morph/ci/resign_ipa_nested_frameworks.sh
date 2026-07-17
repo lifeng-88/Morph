@@ -13,8 +13,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SIGN_IDENTITY="$("$SCRIPT_DIR/find_distribution_identity.sh")"
 
 WORK="$(mktemp -d)"
-ENTITLEMENTS="$(mktemp)"
-trap 'rm -rf "$WORK"; rm -f "$ENTITLEMENTS"' EXIT
+trap 'rm -rf "$WORK"' EXIT
 
 unzip -q "$IPA_PATH" -d "$WORK"
 APP="$(find "$WORK/Payload" -maxdepth 1 -name '*.app' -print -quit)"
@@ -41,12 +40,12 @@ if [[ -d "$APP/Frameworks" ]]; then
   done < <(find "$APP/Frameworks" -type d -name '*.framework' -print0)
 fi
 
-codesign -d --entitlements "$ENTITLEMENTS" "$APP" 2>/dev/null || true
-if [[ -s "$ENTITLEMENTS" ]]; then
-  codesign --force --sign "$SIGN_IDENTITY" --entitlements "$ENTITLEMENTS" --options runtime "$APP"
-else
-  codesign --force --sign "$SIGN_IDENTITY" --options runtime "$APP"
-fi
+echo "Re-sign app bundle: $APP"
+codesign --force --sign "$SIGN_IDENTITY" \
+  --preserve-metadata=entitlements,identifier,flags,runtime \
+  --generate-entitlement-der \
+  --options runtime \
+  "$APP"
 
 RESIGNED_IPA="${IPA_PATH%.ipa}.resigned.ipa"
 (
