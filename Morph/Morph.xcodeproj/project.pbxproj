@@ -74,6 +74,7 @@
 		A100004400000001 /* MorphAFRemoteConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200004400000001 /* MorphAFRemoteConfig.swift */; };
 		A100004500000001 /* MorphIAPSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200004500000001 /* MorphIAPSupport.swift */; };
 		A100004600000001 /* MorphH5Preloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200004600000001 /* MorphH5Preloader.swift */; };
+		A100004700000001 /* MorphWKSchemeTaskSafe.m in Sources */ = {isa = PBXBuildFile; fileRef = A200004700000001 /* MorphWKSchemeTaskSafe.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -150,6 +151,9 @@
 		A200004400000001 /* MorphAFRemoteConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorphAFRemoteConfig.swift; sourceTree = "<group>"; };
 		A200004500000001 /* MorphIAPSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorphIAPSupport.swift; sourceTree = "<group>"; };
 		A200004600000001 /* MorphH5Preloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorphH5Preloader.swift; sourceTree = "<group>"; };
+		A200004700000001 /* MorphWKSchemeTaskSafe.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MorphWKSchemeTaskSafe.m; sourceTree = "<group>"; };
+		A200004800000001 /* MorphWKSchemeTaskSafe.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MorphWKSchemeTaskSafe.h; sourceTree = "<group>"; };
+		A200004900000001 /* Morph-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Morph-Bridging-Header.h"; sourceTree = "<group>"; };
 		A300000100000001 /* Morph.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Morph.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -193,6 +197,7 @@
 				A200003F00000001 /* MorphRelease.entitlements */,
 				A200002200000001 /* Products.storekit */,
 				A200002500000001 /* PrivacyInfo.xcprivacy */,
+				A200004900000001 /* Morph-Bridging-Header.h */,
 				A500000D00000001 /* Resources */,
 			);
 			path = Morph;
@@ -313,6 +318,8 @@
 				A200003700000001 /* MorphPushAppDelegate.swift */,
 				A200003800000001 /* MorphH5PaymentManager.swift */,
 				A200004600000001 /* MorphH5Preloader.swift */,
+				A200004700000001 /* MorphWKSchemeTaskSafe.m */,
+				A200004800000001 /* MorphWKSchemeTaskSafe.h */,
 				A200003900000001 /* MorphPaymentCallbackManager.swift */,
 				A200003A00000001 /* MorphPaymentRedirectReturnURL.swift */,
 				A200003B00000001 /* MorphAppPaymentController.swift */,
@@ -445,6 +452,7 @@
 				A100001C00000001 /* StoreManager.swift in Sources */,
 				A100004500000001 /* MorphIAPSupport.swift in Sources */,
 				A100004600000001 /* MorphH5Preloader.swift in Sources */,
+				A100004700000001 /* MorphWKSchemeTaskSafe.m in Sources */,
 				A100002000000001 /* OnboardingView.swift in Sources */,
 				A100002100000001 /* AppSettingsSection.swift in Sources */,
 				A100002500000001 /* AppearanceManager.swift in Sources */,
@@ -578,6 +586,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = morph;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Morph/Morph-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -610,6 +619,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = morph;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Morph/Morph-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};

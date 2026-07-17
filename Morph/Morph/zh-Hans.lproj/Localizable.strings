@@ -244,4 +244,5 @@
 /* Common */
 "common.cancel" = "取消";
 "common.retry" = "重试";
+"common.loading" = "加载中…";
 "common.done" = "完成";

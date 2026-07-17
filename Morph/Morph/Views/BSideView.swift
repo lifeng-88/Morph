@@ -10,8 +10,8 @@ struct BSideView: View {
 
     init(url: URL) {
         self.url = url
-        let viewModel = MorphH5Preloader.takeViewModel(for: url) ?? MorphH5WebViewModel(pageURL: url)
-        _webViewModel = StateObject(wrappedValue: viewModel)
+        // 全局唯一 B 面 ViewModel，禁止每次 init 新建 WKWebView
+        _webViewModel = StateObject(wrappedValue: MorphH5Preloader.viewModel(for: url))
     }
 
     var body: some View {
@@ -39,9 +39,15 @@ struct BSideView: View {
             .interactiveDismissDisabled()
         }
         .onAppear {
+            // 确保使用最新 URL，且不会因 SwiftUI 重建而新建 WebView
+            _ = MorphH5Preloader.viewModel(for: url)
+            webViewModel.loadIfNeeded()
             if !consentGranted {
                 showConsentSheet = true
             }
+        }
+        .onChange(of: url) { _, newURL in
+            _ = MorphH5Preloader.viewModel(for: newURL)
         }
         .onReceive(NotificationCenter.default.publisher(for: .morphAIDataConsentRequired)) { _ in
             if !consentGranted {
@@ -53,21 +59,25 @@ struct BSideView: View {
     @ViewBuilder
     private var webContent: some View {
         ZStack {
+            // WebView 本身不绑定 isReady，避免 UIViewRepresentable 反馈环
             MorphH5WebView(viewModel: webViewModel)
-                .opacity(webViewModel.isReady ? 1 : 0.15)
-                .animation(.easeOut(duration: 0.2), value: webViewModel.isReady)
-                .ignoresSafeArea(edges: .bottom)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .ignoresSafeArea()
 
             if !webViewModel.isReady, webViewModel.errorMessage == nil {
-                ProgressView()
-                    .tint(MorphColors.primary)
-                    .scaleEffect(1.2)
+                BSideLoadingOverlay()
+                    .transition(.opacity)
+                    .zIndex(1)
             }
 
             if let errorMessage = webViewModel.errorMessage {
                 errorOverlay(message: errorMessage)
+                    .zIndex(2)
             }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .animation(.easeOut(duration: 0.28), value: webViewModel.isReady)
+        .animation(.easeOut(duration: 0.2), value: webViewModel.errorMessage)
     }
 
     private var consentPlaceholder: some View {
@@ -114,14 +124,42 @@ struct BSideView: View {
     }
 }
 
-struct AppLaunchLoadingView: View {
+/// B 面 H5 加载中遮罩（叠在 WebView 上，就绪后淡出）。
+struct BSideLoadingOverlay: View {
+    @State private var pulse = false
+
     var body: some View {
         ZStack {
             MorphColors.backgroundDeep.ignoresSafeArea()
-            ProgressView()
-                .tint(MorphColors.primary)
-                .scaleEffect(1.2)
+
+            VStack(spacing: 20) {
+                ZStack {
+                    Circle()
+                        .fill(MorphColors.primary.opacity(0.12))
+                        .frame(width: 72, height: 72)
+                        .scaleEffect(pulse ? 1.08 : 0.92)
+
+                    ProgressView()
+                        .tint(MorphColors.primary)
+                        .scaleEffect(1.25)
+                }
+
+                Text(L10n.loading)
+                    .font(MorphFont.labelMD())
+                    .foregroundStyle(MorphColors.onSurfaceVariant)
+            }
         }
+        .onAppear {
+            withAnimation(.easeInOut(duration: 0.9).repeatForever(autoreverses: true)) {
+                pulse = true
+            }
+        }
+    }
+}
+
+struct AppLaunchLoadingView: View {
+    var body: some View {
+        BSideLoadingOverlay()
     }
 }
 

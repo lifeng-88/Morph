@@ -397,6 +397,11 @@ final class MorphH5Bridge: NSObject, WKScriptMessageHandler, WKNavigationDelegat
         viewModel?.fail(error.localizedDescription)
     }
 
+    func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
+        debugLog("webContentProcessDidTerminate")
+        viewModel?.handleWebContentProcessTermination()
+    }
+
     private func respond(requestId: String, result: [String: Any]) {
         send(requestId: requestId, payload: ["ok": true, "result": result])
     }

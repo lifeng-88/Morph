@@ -244,4 +244,5 @@
 /* Common */
 "common.cancel" = "Cancel";
 "common.retry" = "Retry";
+"common.loading" = "Loading…";
 "common.done" = "Done";

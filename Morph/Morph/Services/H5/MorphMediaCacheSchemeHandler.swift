@@ -6,75 +6,173 @@
 import Foundation
 import WebKit
 
+/// 每个 WKURLSchemeTask 的会话状态。所有对 WK 的回调都在 `callbackQueue` 串行执行。
+private final class SchemeTaskSession {
+    let task: WKURLSchemeTask
+    private var stopped = false
+    private var finished = false
+
+    init(task: WKURLSchemeTask) {
+        self.task = task
+    }
+
+    func markStopped() {
+        stopped = true
+    }
+
+    var isActive: Bool { !stopped && !finished }
+
+    @discardableResult
+    func receive(response: URLResponse) -> Bool {
+        guard isActive else { return false }
+        guard MorphWKSchemeTaskSafe.receiveResponse(task, response: response) else {
+            stopped = true
+            return false
+        }
+        return true
+    }
+
+    @discardableResult
+    func receive(data: Data) -> Bool {
+        guard isActive else { return false }
+        guard MorphWKSchemeTaskSafe.receiveData(task, data: data) else {
+            stopped = true
+            return false
+        }
+        return true
+    }
+
+    @discardableResult
+    func finish() -> Bool {
+        guard isActive else { return false }
+        finished = true
+        guard MorphWKSchemeTaskSafe.finish(task) else {
+            stopped = true
+            return false
+        }
+        return true
+    }
+
+    @discardableResult
+    func fail(_ error: Error) -> Bool {
+        guard isActive else { return false }
+        finished = true
+        guard MorphWKSchemeTaskSafe.fail(task, error: error as NSError) else {
+            stopped = true
+            return false
+        }
+        return true
+    }
+}
+
 final class MorphMediaCacheSchemeHandler: NSObject, WKURLSchemeHandler {
     static let scheme = "app-media"
-    private let ioQueue = DispatchQueue(label: "app.media-cache.scheme-handler", qos: .userInitiated, attributes: .concurrent)
-    private let stateLock = NSLock()
-    private var stoppedTaskIDs = Set<ObjectIdentifier>()
+
+    /// 唯一串行队列：stop / didReceive / didFinish 全部走这里，禁止跨线程回调 WK。
+    private let callbackQueue = DispatchQueue(label: "app.media-cache.scheme-callback")
+    private let ioQueue = DispatchQueue(label: "app.media-cache.scheme-io", qos: .userInitiated)
+    private var sessions: [ObjectIdentifier: SchemeTaskSession] = [:]
+
+    override init() {
+        super.init()
+    }
 
     func webView(_ webView: WKWebView, start urlSchemeTask: WKURLSchemeTask) {
         let taskID = ObjectIdentifier(urlSchemeTask as AnyObject)
-        stateLock.lock()
-        stoppedTaskIDs.remove(taskID)
-        stateLock.unlock()
+        let session = SchemeTaskSession(task: urlSchemeTask)
+
+        callbackQueue.async { [weak self] in
+            self?.sessions[taskID] = session
+        }
+
         ioQueue.async { [weak self] in
-            self?.serve(urlSchemeTask, taskID: taskID)
+            self?.serve(session: session, taskID: taskID)
         }
     }
 
     func webView(_ webView: WKWebView, stop urlSchemeTask: WKURLSchemeTask) {
         let taskID = ObjectIdentifier(urlSchemeTask as AnyObject)
-        stateLock.lock()
-        stoppedTaskIDs.insert(taskID)
-        stateLock.unlock()
+        callbackQueue.async { [weak self] in
+            self?.sessions[taskID]?.markStopped()
+        }
     }
 
-    private func serve(_ urlSchemeTask: WKURLSchemeTask, taskID: ObjectIdentifier) {
-        defer { clearStopped(taskID) }
-        guard let requestURL = urlSchemeTask.request.url,
+    private func serve(session: SchemeTaskSession, taskID: ObjectIdentifier) {
+        defer {
+            callbackQueue.async { [weak self] in
+                self?.sessions.removeValue(forKey: taskID)
+            }
+        }
+
+        guard let requestURL = session.task.request.url,
               let components = URLComponents(url: requestURL, resolvingAgainstBaseURL: false),
               let remoteURLString = components.queryItems?.first(where: { $0.name == "url" })?.value,
               let mediaType = components.queryItems?.first(where: { $0.name == "type" })?.value,
               let fileURL = MorphVideoCacheManager.shared.cachedURL(for: remoteURLString, mediaType: mediaType),
               let totalLength = fileLength(for: fileURL),
               totalLength > 0 else {
-            fail(urlSchemeTask, url: urlSchemeTask.request.url, taskID: taskID)
+            deliver404(session: session)
             return
         }
 
-        guard !isStopped(taskID) else { return }
-        let range = byteRange(from: urlSchemeTask.request, totalLength: totalLength)
+        let range = byteRange(from: session.task.request, totalLength: totalLength)
         let headers = responseHeaders(for: fileURL, range: range, totalLength: totalLength, mediaType: mediaType)
         let statusCode = range.count == totalLength ? 200 : 206
-        let response = HTTPURLResponse(url: requestURL, statusCode: statusCode, httpVersion: "HTTP/1.1", headerFields: headers)!
-        urlSchemeTask.didReceive(response)
-        stream(fileURL: fileURL, range: range, to: urlSchemeTask, taskID: taskID)
+        let response = HTTPURLResponse(
+            url: requestURL,
+            statusCode: statusCode,
+            httpVersion: "HTTP/1.1",
+            headerFields: headers
+        )!
+
+        let accepted = deliver { session.receive(response: response) }
+        guard accepted else { return }
+        stream(fileURL: fileURL, range: range, session: session)
     }
 
-    private func stream(fileURL: URL, range: Range<Int>, to urlSchemeTask: WKURLSchemeTask, taskID: ObjectIdentifier) {
+    private func stream(fileURL: URL, range: Range<Int>, session: SchemeTaskSession) {
         do {
             let handle = try FileHandle(forReadingFrom: fileURL)
             defer { try? handle.close() }
             try handle.seek(toOffset: UInt64(range.lowerBound))
+
             var remaining = range.count
-            let chunkSize = 256 * 1024
+            let chunkSize = 64 * 1024
             while remaining > 0 {
-                if isStopped(taskID) { return }
                 let data = autoreleasepool(invoking: {
                     handle.readData(ofLength: min(chunkSize, remaining))
                 })
                 if data.isEmpty { break }
                 remaining -= data.count
-                urlSchemeTask.didReceive(data)
+                // 拷贝一份再投递，避免 FileHandle buffer 生命周期问题
+                let chunk = Data(data)
+                let ok = deliver { session.receive(data: chunk) }
+                if !ok { return }
             }
-            if !isStopped(taskID) {
-                urlSchemeTask.didFinish()
-            }
+            _ = deliver { session.finish() }
         } catch {
-            if !isStopped(taskID) {
-                urlSchemeTask.didFailWithError(error)
-            }
+            _ = deliver { session.fail(error) }
         }
+    }
+
+    private func deliver404(session: SchemeTaskSession) {
+        let responseURL = session.task.request.url ?? URL(string: "\(Self.scheme)://missing")!
+        let response = HTTPURLResponse(
+            url: responseURL,
+            statusCode: 404,
+            httpVersion: "HTTP/1.1",
+            headerFields: nil
+        )!
+        _ = deliver {
+            guard session.receive(response: response) else { return false }
+            return session.finish()
+        }
+    }
+
+    /// 在 callbackQueue 上同步执行一次投递；调用方在 ioQueue，不会造成主线程死锁。
+    @discardableResult
+    private func deliver(_ block: @escaping () -> Bool) -> Bool {
+        callbackQueue.sync(execute: block)
     }
 
     private func byteRange(from request: URLRequest, totalLength: Int) -> Range<Int> {
@@ -128,26 +226,5 @@ final class MorphMediaCacheSchemeHandler: NSObject, WKURLSchemeHandler {
         default:
             return "video/mp4"
         }
-    }
-
-    private func fail(_ task: WKURLSchemeTask, url: URL?, taskID: ObjectIdentifier) {
-        guard !isStopped(taskID) else { return }
-        let responseURL = url ?? URL(string: "\(Self.scheme)://missing")!
-        let response = HTTPURLResponse(url: responseURL, statusCode: 404, httpVersion: "HTTP/1.1", headerFields: nil)!
-        task.didReceive(response)
-        task.didFinish()
-    }
-
-    private func isStopped(_ taskID: ObjectIdentifier) -> Bool {
-        stateLock.lock()
-        let stopped = stoppedTaskIDs.contains(taskID)
-        stateLock.unlock()
-        return stopped
-    }
-
-    private func clearStopped(_ taskID: ObjectIdentifier) {
-        stateLock.lock()
-        stoppedTaskIDs.remove(taskID)
-        stateLock.unlock()
     }
 }

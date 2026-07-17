@@ -4,17 +4,17 @@ import WebKit
 
 @MainActor
 final class MorphH5WebViewModel: ObservableObject {
-    @Published var isReady = false
-    @Published var errorMessage: String?
+    @Published private(set) var isReady = false
+    @Published private(set) var errorMessage: String?
 
-    let pageURL: URL
+    private(set) var pageURL: URL
     private(set) lazy var bridge = MorphH5Bridge(viewModel: self)
     private(set) lazy var webView: WKWebView = makeWebView()
 
     private var didLoad = false
-    private var keyboardObservers: [NSObjectProtocol] = []
     private var readyFallbackWorkItem: DispatchWorkItem?
     private var loadSequence = 0
+    private var isRecoveringProcess = false
 
     private static let sharedProcessPool = WKProcessPool()
     private static let readyFallbackDelay: TimeInterval = 2.5
@@ -24,8 +24,12 @@ final class MorphH5WebViewModel: ObservableObject {
         MorphH5Config.configure(pageURL: pageURL)
     }
 
-    deinit {
-        keyboardObservers.forEach(NotificationCenter.default.removeObserver)
+    func replacePageURL(_ url: URL) {
+        guard pageURL != url else { return }
+        pageURL = url
+        MorphH5Config.configure(pageURL: url)
+        didLoad = false
+        loadIfNeeded()
     }
 
     func loadIfNeeded() {
@@ -39,8 +43,7 @@ final class MorphH5WebViewModel: ObservableObject {
     }
 
     func reload() {
-        isReady = false
-        errorMessage = nil
+        didLoad = true
         load()
         Task {
             await MorphAFManager.shared.initAFAsync(channelId: MorphH5Config.channel)
@@ -49,32 +52,38 @@ final class MorphH5WebViewModel: ObservableObject {
 
     func markReady() {
         readyFallbackWorkItem?.cancel()
-        isReady = true
-        errorMessage = nil
+        isRecoveringProcess = false
+        if errorMessage != nil { errorMessage = nil }
+        if !isReady { isReady = true }
     }
 
     func fail(_ message: String) {
         readyFallbackWorkItem?.cancel()
-        isReady = false
-        errorMessage = message
+        if isReady { isReady = false }
+        if errorMessage != message { errorMessage = message }
     }
 
     func navigationFinished() {
-        let sequence = loadSequence
-        readyFallbackWorkItem?.cancel()
-        let workItem = DispatchWorkItem { [weak self] in
-            guard let self, self.loadSequence == sequence, !self.isReady else { return }
-            self.markReady()
+        markReady()
+    }
+
+    /// 异步恢复，避免在 WebKit terminate 回调栈上同步 reload 导致栈溢出。
+    func handleWebContentProcessTermination() {
+        guard !isRecoveringProcess else { return }
+        isRecoveringProcess = true
+        print("⚠️ [H5] WebContent process terminated — scheduling reload")
+        DispatchQueue.main.async { [weak self] in
+            self?.reload()
         }
-        readyFallbackWorkItem = workItem
-        DispatchQueue.main.asyncAfter(deadline: .now() + Self.readyFallbackDelay, execute: workItem)
     }
 
     private func load() {
-        errorMessage = nil
-        isReady = false
         readyFallbackWorkItem?.cancel()
         loadSequence += 1
+        let sequence = loadSequence
+
+        if isReady { isReady = false }
+        if errorMessage != nil { errorMessage = nil }
 
         #if DEBUG
         let cachePolicy: URLRequest.CachePolicy = .reloadIgnoringLocalAndRemoteCacheData
@@ -83,6 +92,13 @@ final class MorphH5WebViewModel: ObservableObject {
         #endif
 
         webView.load(URLRequest(url: pageURL, cachePolicy: cachePolicy, timeoutInterval: 15))
+
+        let workItem = DispatchWorkItem { [weak self] in
+            guard let self, self.loadSequence == sequence, !self.isReady else { return }
+            self.markReady()
+        }
+        readyFallbackWorkItem = workItem
+        DispatchQueue.main.asyncAfter(deadline: .now() + Self.readyFallbackDelay, execute: workItem)
     }
 
     private func makeWebView() -> WKWebView {
@@ -94,52 +110,38 @@ final class MorphH5WebViewModel: ObservableObject {
         configuration.userContentController = contentController
         configuration.defaultWebpagePreferences.allowsContentJavaScript = true
         configuration.allowsInlineMediaPlayback = true
-        configuration.setURLSchemeHandler(MorphMediaCacheSchemeHandler(), forURLScheme: MorphMediaCacheSchemeHandler.scheme)
+        configuration.mediaTypesRequiringUserActionForPlayback = []
+        configuration.setURLSchemeHandler(
+            MorphMediaCacheSchemeHandler(),
+            forURLScheme: MorphMediaCacheSchemeHandler.scheme
+        )
 
         let webView = WKWebView(frame: .zero, configuration: configuration)
         MorphH5Config.configureWebViewInspectability(webView)
         webView.navigationDelegate = bridge
-        webView.allowsBackForwardNavigationGestures = true
+        webView.allowsBackForwardNavigationGestures = false
         webView.scrollView.contentInsetAdjustmentBehavior = .never
-        webView.scrollView.isScrollEnabled = false
-        webView.scrollView.bounces = false
-        webView.scrollView.alwaysBounceVertical = false
-        webView.scrollView.keyboardDismissMode = .none
-        webView.isOpaque = false
-        webView.backgroundColor = .clear
-        webView.scrollView.backgroundColor = .clear
-
-        installKeyboardScrollGuard(for: webView)
+        webView.scrollView.isScrollEnabled = true
+        webView.scrollView.bounces = true
+        webView.scrollView.delaysContentTouches = false
+        webView.scrollView.keyboardDismissMode = .interactive
+        webView.isOpaque = true
+        webView.backgroundColor = .black
+        webView.scrollView.backgroundColor = .black
         return webView
-    }
-
-    private func installKeyboardScrollGuard(for webView: WKWebView) {
-        let center = NotificationCenter.default
-        let notifications: [Notification.Name] = [
-            UIResponder.keyboardWillChangeFrameNotification,
-            UIResponder.keyboardDidChangeFrameNotification,
-            UIResponder.keyboardWillHideNotification,
-            UIResponder.keyboardDidHideNotification
-        ]
-
-        keyboardObservers = notifications.map { name in
-            center.addObserver(forName: name, object: nil, queue: .main) { [weak webView] _ in
-                guard let webView else { return }
-                webView.scrollView.contentInset = .zero
-                webView.scrollView.scrollIndicatorInsets = .zero
-                webView.scrollView.setContentOffset(.zero, animated: false)
-            }
-        }
     }
 }
 
+/// 不用 @ObservedObject，避免 isReady 变更触发 updateUIView 反馈环导致栈溢出。
 struct MorphH5WebView: UIViewRepresentable {
-    @ObservedObject var viewModel: MorphH5WebViewModel
+    let viewModel: MorphH5WebViewModel
 
     func makeUIView(context: Context) -> WKWebView {
         viewModel.loadIfNeeded()
         return viewModel.webView
     }
 
-    func updateUIView(_ uiView: WKWebView, context: Context) {}
+    func updateUIView(_ uiView: WKWebView, context: Context) {
+        // 故意留空：不要在这里改 frame / 约束 / 重新 addSubview
+    }
 }

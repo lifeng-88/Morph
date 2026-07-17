@@ -209,6 +209,7 @@ enum L10n {
     static var cancel: String { tr("common.cancel") }
     static var done: String { tr("common.done") }
     static var retry: String { tr("common.retry") }
+    static var loading: String { tr("common.loading") }
 
     // MARK: - Helpers
     static func coins(_ count: Int) -> String {

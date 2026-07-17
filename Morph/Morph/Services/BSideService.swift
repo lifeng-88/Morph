@@ -80,8 +80,9 @@ final class BSideManager: ObservableObject {
 
     private init() {
         phase = Self.initialPhase()
+        // 只记录 URL，不在启动时创建 WKWebView（避免 WebProcess 堆积）
         if case .web(let url) = phase {
-            MorphH5Preloader.preload(url: url)
+            MorphH5Preloader.prepare(url: url)
         }
     }
 
@@ -151,9 +152,7 @@ final class BSideManager: ObservableObject {
            let cachedURL = cachedBSideURL() {
             return .web(cachedURL)
         }
-        if type == 2, BSideConfig.isConfigured {
-            return .loading
-        }
+        // type=2 但尚无缓存 URL：先显示 native，后台 bootstrap 再切 B 面，避免卡死启动页
         return .native
     }
 
@@ -171,7 +170,11 @@ final class BSideManager: ObservableObject {
 
     private func presentBSide(at url: URL) {
         cacheBSideURL(url)
-        MorphH5Preloader.preload(url: url)
+        MorphH5Preloader.prepare(url: url)
+        // 已在同一 B 面 URL 时不再重复发布，避免 SwiftUI 反复重建 WebView
+        if case .web(let current) = phase, current == url {
+            return
+        }
         phase = .web(url)
     }
 

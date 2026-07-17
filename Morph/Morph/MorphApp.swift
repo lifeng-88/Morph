@@ -28,6 +28,8 @@ struct MorphApp: App {
                 case .web(let url):
                     BSideView(url: url)
                         .environmentObject(bSideManager)
+                        // 稳定身份，避免 phase 刷新时反复销毁/创建 WKWebView
+                        .id("bside-web")
                 }
             }
             .preferredColorScheme(appearanceManager.current.colorScheme)
