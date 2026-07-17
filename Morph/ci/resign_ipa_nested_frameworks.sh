@@ -3,12 +3,14 @@
 set -euo pipefail
 
 IPA_PATH="${1:-}"
-TEAM_ID="${APPLE_TEAM_ID:-}"
 
 if [[ -z "$IPA_PATH" || ! -f "$IPA_PATH" ]]; then
   echo "::error::用法: resign_ipa_nested_frameworks.sh <path-to.ipa>"
   exit 1
 fi
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SIGN_IDENTITY="$("$SCRIPT_DIR/find_distribution_identity.sh")"
 
 WORK="$(mktemp -d)"
 ENTITLEMENTS="$(mktemp)"
@@ -21,36 +23,7 @@ if [[ -z "$APP" ]]; then
   exit 1
 fi
 
-find_signing_identity() {
-  local candidate=""
-  if [[ -n "$TEAM_ID" ]]; then
-    candidate="$(security find-identity -v -p codesigning 2>/dev/null \
-      | grep -E "Apple Distribution|iPhone Distribution" \
-      | grep "$TEAM_ID" \
-      | head -1 \
-      | sed -E 's/^[[:space:]]*[0-9]+)[[:space:]]*"(.*)"/\1/' || true)"
-  fi
-  if [[ -z "$candidate" ]]; then
-    candidate="$(security find-identity -v -p codesigning 2>/dev/null \
-      | grep -E "Apple Distribution|iPhone Distribution" \
-      | head -1 \
-      | sed -E 's/^[[:space:]]*[0-9]+)[[:space:]]*"(.*)"/\1/' || true)"
-  fi
-  if [[ -n "$candidate" ]]; then
-    echo "$candidate"
-    return 0
-  fi
-  codesign -d -vv "$APP" 2>&1 | awk -F= '/^Authority=/{print $2; exit}'
-}
-
-SIGN_IDENTITY="$(find_signing_identity)"
-if [[ -z "$SIGN_IDENTITY" ]]; then
-  echo "::error::未找到 Apple Distribution 签名身份"
-  security find-identity -v -p codesigning || true
-  exit 1
-fi
-
-echo "Re-signing nested binaries with: $SIGN_IDENTITY"
+echo "Re-signing nested binaries with identity hash: $SIGN_IDENTITY"
 
 if [[ -d "$APP/Frameworks" ]]; then
   while IFS= read -r -d '' path; do

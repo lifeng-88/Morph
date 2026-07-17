@@ -78,6 +78,12 @@ jobs:
           chmod 600 "$KEY_PATH"
           echo "ASC_KEY_PATH=$KEY_PATH" >> "$GITHUB_ENV"
 
+      - name: Prepare signing keychain
+        env:
+          IOS_DISTRIBUTION_P12_BASE64: ${{ secrets.IOS_DISTRIBUTION_P12_BASE64 }}
+          IOS_DISTRIBUTION_P12_PASSWORD: ${{ secrets.IOS_DISTRIBUTION_P12_PASSWORD }}
+        run: bash ci/prepare_signing_keychain.sh
+
       - name: Resolve Build Number
         id: build
         env:
@@ -174,18 +180,15 @@ jobs:
             echo "::error::未找到导出的 IPA"
             exit 1
           fi
-          echo "IPA_PATH=$IPA_PATH" >> "$GITHUB_ENV"
           echo "Exported: $IPA_PATH"
 
-      - name: Re-sign nested frameworks
-        if: github.event_name == 'push' || inputs.upload_to_app_store
-        env:
-          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-        run: bash ci/resign_ipa_nested_frameworks.sh "$IPA_PATH"
+          echo "Available signing identities after export:"
+          security find-identity -v -p codesigning || true
 
-      - name: Verify IPA signatures
-        if: github.event_name == 'push' || inputs.upload_to_app_store
-        run: bash ci/verify_ipa_signatures.sh "$IPA_PATH"
+          bash ci/resign_ipa_nested_frameworks.sh "$IPA_PATH"
+          bash ci/verify_ipa_signatures.sh "$IPA_PATH"
+
+          echo "IPA_PATH=$IPA_PATH" >> "$GITHUB_ENV"
 
       - name: Upload to App Store Connect
         if: github.event_name == 'push' || inputs.upload_to_app_store

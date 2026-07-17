@@ -37,6 +37,8 @@
 | `APP_STORE_CONNECT_ISSUER_ID` | Issuer ID |
 | `APP_STORE_CONNECT_KEY_ID` | Key ID |
 | `APP_STORE_CONNECT_API_PRIVATE_KEY` | `.p8` 全文（含 `BEGIN/END`） |
+| `IOS_DISTRIBUTION_P12_BASE64` | （推荐）Distribution 证书 `.p12` 的 Base64，用于 Export 后重签 AppsFlyerLib |
+| `IOS_DISTRIBUTION_P12_PASSWORD` | 上述 `.p12` 的密码 |
 
 ---
 
@@ -76,7 +78,8 @@ Workflow 只负责上传构建。还需在 App Store Connect：
 - **Archive**：`CODE_SIGNING_ALLOWED=NO`（无签名，不创建 Development 证书）
 - **Patch Archive**：`ci/patch_archive_team.py` 写入 Team，避免 `exportArchive No Team Found in Archive`
 - **Export IPA**：ASC API Key + Automatic + `signingCertificate = Apple Distribution`
-- **Re-sign frameworks**：`ci/resign_ipa_nested_frameworks.sh` 重签 AppsFlyerLib 等嵌套 framework
+- **Re-sign frameworks**：`ci/resign_ipa_nested_frameworks.sh` 用钥匙串中 Distribution 私钥（SHA-1 hash）重签 AppsFlyerLib
+- **Distribution .p12**：建议配置 `IOS_DISTRIBUTION_P12_BASE64` + `IOS_DISTRIBUTION_P12_PASSWORD`（Export 使用临时钥匙串，重签需要本地私钥）
 - **Verify IPA**：`ci/verify_ipa_signatures.sh` 上传前校验 Distribution 签名
 
 ---
@@ -86,7 +89,7 @@ Workflow 只负责上传构建。还需在 App Store Connect：
 | 现象 | 处理 |
 |------|------|
 | `maximum number of certificates` / `Choose a certificate to revoke` | 打开 [Certificates](https://developer.apple.com/account/resources/certificates/list)，撤销多余的 **Apple Development**（尤其 `Created via API`）；保留本机开发用 1–2 个 + **Apple Distribution** |
-| `Invalid Signature` / `AppsFlyerLib` / code 90035 | Export 未用 Distribution 重签；确认 `patch_archive_team.py` 已执行，且 ExportOptions 含 `signingCertificate = Apple Distribution` |
+| `no identity found` / Re-sign 失败 | 配置 `IOS_DISTRIBUTION_P12_BASE64` + `IOS_DISTRIBUTION_P12_PASSWORD`；从 Keychain Access 导出 Apple Distribution `.p12` |
 | `No profiles for 'com.morph.net'` | 多为证书配额问题连带错误；先清 Development 证书配额，确认 `APPLE_TEAM_ID` 正确后再跑 |
 | `no devices` | 确认 App ID 已注册；API Key 角色为 Admin/App Manager |
 | Build Number 重复 | 重新 Run（CI 自动 Connect 最新 +1）或手动填更大 build_number |
