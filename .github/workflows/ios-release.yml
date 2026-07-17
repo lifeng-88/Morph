@@ -177,6 +177,12 @@ jobs:
           echo "IPA_PATH=$IPA_PATH" >> "$GITHUB_ENV"
           echo "Exported: $IPA_PATH"
 
+      - name: Re-sign nested frameworks
+        if: github.event_name == 'push' || inputs.upload_to_app_store
+        env:
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: bash ci/resign_ipa_nested_frameworks.sh "$IPA_PATH"
+
       - name: Verify IPA signatures
         if: github.event_name == 'push' || inputs.upload_to_app_store
         run: bash ci/verify_ipa_signatures.sh "$IPA_PATH"

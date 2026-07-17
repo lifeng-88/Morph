@@ -75,7 +75,8 @@ Workflow 只负责上传构建。还需在 App Store Connect：
 - 工程本地保持 **Manual** 签名即可，CI **不修改** `project.pbxproj`
 - **Archive**：`CODE_SIGNING_ALLOWED=NO`（无签名，不创建 Development 证书）
 - **Patch Archive**：`ci/patch_archive_team.py` 写入 Team，避免 `exportArchive No Team Found in Archive`
-- **Export IPA**：ASC API Key + Automatic + `signingCertificate = Apple Distribution`（重签主包与 AppsFlyer 等嵌套 framework）
+- **Export IPA**：ASC API Key + Automatic + `signingCertificate = Apple Distribution`
+- **Re-sign frameworks**：`ci/resign_ipa_nested_frameworks.sh` 重签 AppsFlyerLib 等嵌套 framework
 - **Verify IPA**：`ci/verify_ipa_signatures.sh` 上传前校验 Distribution 签名
 
 ---

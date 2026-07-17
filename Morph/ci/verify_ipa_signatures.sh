@@ -30,6 +30,8 @@ while IFS= read -r -d '' fw; do
   fi
   echo "Verifying framework: $bin"
   if ! codesign --verify --verbose=2 "$bin"; then
+    echo "::error::$name 签名校验失败，详情："
+    codesign -d -vv "$bin" 2>&1 || true
     fail=1
     continue
   fi
