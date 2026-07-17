@@ -72,11 +72,10 @@ Workflow 只负责上传构建。还需在 App Store Connect：
 
 ## 五、签名说明
 
-- 工程须为 **Automatically manage signing**
-- CI 运行 `ci/prepare_ci_signing.py` 自动写入 `DEVELOPMENT_TEAM` 并移除 Manual 配置
-- CI 运行 `ci/ensure_ci_device.py`：团队 0 台设备时自动注册占位设备
-- CI 运行 `ci/generate_export_options.py` 写入 `teamID`，避免 `exportArchive No Team Found in Archive`
-- Archive 使用 Automatic Signing + API Key；`exportArchive` 重签为 App Store 分发证书
+- 工程本地可为 Manual；CI 运行 `ci/prepare_ci_signing.py` 切到 Automatic 并写入 `DEVELOPMENT_TEAM`
+- **Archive 不签名**（`CODE_SIGNING_ALLOWED=NO`），避免 GitHub runner 每次新建 Development 证书耗尽配额
+- **Export IPA** 再用 ASC API Key + Automatic Signing，复用云端 **Apple Distribution** 证书
+- `ci/generate_export_options.py` 写入 `teamID`，避免 `exportArchive No Team Found in Archive`
 
 ---
 
@@ -84,8 +83,9 @@ Workflow 只负责上传构建。还需在 App Store Connect：
 
 | 现象 | 处理 |
 |------|------|
+| `maximum number of certificates` / `Choose a certificate to revoke` | 打开 [Certificates](https://developer.apple.com/account/resources/certificates/list)，撤销多余的 **Apple Development**（尤其名称含 `Created via API` 的旧证书），保留本机开发用的 1–2 个；然后重新 Run workflow |
+| `No profiles for 'com.morph.net'` | 多为上一问题连带错误；先清证书配额，确认 `APPLE_TEAM_ID` 正确后再跑 |
 | `no devices` | 确认 App ID 已注册；API Key 角色为 Admin/App Manager |
-| `No profiles for 'com.morph.net'` | 确认 `APPLE_TEAM_ID` 正确；重新 Run workflow |
 | Build Number 重复 | 重新 Run（CI 自动 Connect 最新 +1）或手动填更大 build_number |
 | Bundle ID 不匹配 | 工程须为 `com.morph.net` |
 | SDK version issue (iOS 18.x) | 确认 workflow 使用 `macos-26` + `Xcode_26.5.app` |
@@ -99,6 +99,7 @@ Workflow 只负责上传构建。还需在 App Store Connect：
 cd Morph
 python3 ci/prepare_ci_signing.py
 
+# 1) 无签名归档
 xcodebuild archive \
   -project Morph.xcodeproj \
   -scheme Morph \
@@ -107,12 +108,11 @@ xcodebuild archive \
   -archivePath /tmp/Morph.xcarchive \
   DEVELOPMENT_TEAM="你的 Team ID" \
   CODE_SIGN_STYLE=Automatic \
-  -allowProvisioningUpdates \
-  -allowProvisioningDeviceRegistration \
-  -authenticationKeyPath ~/private_keys/AuthKey_XXX.p8 \
-  -authenticationKeyID "Key ID" \
-  -authenticationKeyIssuerID "Issuer ID"
+  CODE_SIGN_IDENTITY=- \
+  CODE_SIGNING_REQUIRED=NO \
+  CODE_SIGNING_ALLOWED=NO
 
+# 2) Export 时签名
 APPLE_TEAM_ID="你的 Team ID" python3 ci/generate_export_options.py
 
 xcodebuild -exportArchive \

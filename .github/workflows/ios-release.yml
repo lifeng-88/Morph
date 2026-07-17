@@ -107,11 +107,9 @@ jobs:
             -project "$PROJECT" \
             -scheme "$SCHEME"
 
-      - name: Archive
+      - name: Archive (unsigned)
         env:
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-          APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
-          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
         run: |
           if [[ -z "$APPLE_TEAM_ID" ]]; then
             echo "::error::APPLE_TEAM_ID Secret 未配置"
@@ -121,6 +119,9 @@ jobs:
           ARCHIVE_PATH="$RUNNER_TEMP/Morph.xcarchive"
           echo "ARCHIVE_PATH=$ARCHIVE_PATH" >> "$GITHUB_ENV"
 
+          # 关键签名归档：避免 ephemeral CI runner 每次 Automatic Signing
+          # 都新建 Apple Development 证书，耗尽账号证书配额。
+          # 真正的 App Store 分发签名在 exportArchive 步骤完成。
           xcodebuild archive \
             -project "$PROJECT" \
             -scheme "$SCHEME" \
@@ -131,17 +132,11 @@ jobs:
             CURRENT_PROJECT_VERSION="$CURRENT_PROJECT_VERSION" \
             DEVELOPMENT_TEAM="$APPLE_TEAM_ID" \
             CODE_SIGN_STYLE=Automatic \
-            -allowProvisioningUpdates \
-            -allowProvisioningDeviceRegistration \
-            -authenticationKeyPath "$ASC_KEY_PATH" \
-            -authenticationKeyID "$APP_STORE_CONNECT_KEY_ID" \
-            -authenticationKeyIssuerID "$APP_STORE_CONNECT_ISSUER_ID"
+            CODE_SIGN_IDENTITY=- \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO
 
-          TEAM_IN_ARCHIVE=$(/usr/libexec/PlistBuddy -c "Print :ApplicationProperties:Team" "$ARCHIVE_PATH/Info.plist" 2>/dev/null || true)
-          echo "Archive Team: ${TEAM_IN_ARCHIVE:-<none>}"
-          if [[ -z "$TEAM_IN_ARCHIVE" ]]; then
-            echo "::warning::Archive 未写入 Team，export 将依赖 ExportOptions.teamID 重签"
-          fi
+          echo "Unsigned archive ready: $ARCHIVE_PATH"
 
       - name: Generate Export Options
         if: github.event_name == 'push' || inputs.upload_to_app_store
