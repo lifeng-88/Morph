@@ -107,9 +107,11 @@ jobs:
             -project "$PROJECT" \
             -scheme "$SCHEME"
 
-      - name: Archive (unsigned)
+      - name: Archive
         env:
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
         run: |
           if [[ -z "$APPLE_TEAM_ID" ]]; then
             echo "::error::APPLE_TEAM_ID Secret 未配置"
@@ -119,9 +121,8 @@ jobs:
           ARCHIVE_PATH="$RUNNER_TEMP/Morph.xcarchive"
           echo "ARCHIVE_PATH=$ARCHIVE_PATH" >> "$GITHUB_ENV"
 
-          # 关键签名归档：避免 ephemeral CI runner 每次 Automatic Signing
-          # 都新建 Apple Development 证书，耗尽账号证书配额。
-          # 真正的 App Store 分发签名在 exportArchive 步骤完成。
+          # 使用 Apple Distribution 签名归档（含 AppsFlyer 等嵌套 framework）。
+          # 不用 -allowProvisioningDeviceRegistration，避免每次 CI 新建 Development 证书。
           xcodebuild archive \
             -project "$PROJECT" \
             -scheme "$SCHEME" \
@@ -132,11 +133,23 @@ jobs:
             CURRENT_PROJECT_VERSION="$CURRENT_PROJECT_VERSION" \
             DEVELOPMENT_TEAM="$APPLE_TEAM_ID" \
             CODE_SIGN_STYLE=Automatic \
-            CODE_SIGN_IDENTITY=- \
-            CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGNING_ALLOWED=NO
+            "CODE_SIGN_IDENTITY[sdk=iphoneos*]=Apple Distribution" \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "$ASC_KEY_PATH" \
+            -authenticationKeyID "$APP_STORE_CONNECT_KEY_ID" \
+            -authenticationKeyIssuerID "$APP_STORE_CONNECT_ISSUER_ID"
 
-          echo "Unsigned archive ready: $ARCHIVE_PATH"
+          TEAM_IN_ARCHIVE=$(/usr/libexec/PlistBuddy -c "Print :ApplicationProperties:Team" "$ARCHIVE_PATH/Info.plist" 2>/dev/null || true)
+          echo "Archive Team: ${TEAM_IN_ARCHIVE:-<none>}"
+
+          APP_PATH="$ARCHIVE_PATH/Products/Applications/Morph.app"
+          if [[ -d "$APP_PATH/Frameworks" ]]; then
+            find "$APP_PATH/Frameworks" -type f -perm +111 -print0 | while IFS= read -r -d '' bin; do
+              echo "codesign verify: $bin"
+              codesign --verify --verbose=2 "$bin" || true
+            done
+          fi
+          codesign --verify --deep --strict --verbose=2 "$APP_PATH"
 
       - name: Generate Export Options
         if: github.event_name == 'push' || inputs.upload_to_app_store

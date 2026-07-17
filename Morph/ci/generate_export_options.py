@@ -24,6 +24,8 @@ def main() -> None:
 \t<string>export</string>
 \t<key>signingStyle</key>
 \t<string>automatic</string>
+\t<key>signingCertificate</key>
+\t<string>Apple Distribution</string>
 \t<key>teamID</key>
 \t<string>{team_id}</string>
 \t<key>uploadSymbols</key>
